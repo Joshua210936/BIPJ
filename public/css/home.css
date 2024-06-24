@@ -1,0 +1,78 @@
+
+#hero {
+    background: url('hero-image.jpg') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 2rem;
+}
+
+.hero-text {
+    max-width: 600px;
+}
+
+#cta-button {
+    background: #CDEEFF;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    border-radius: 30px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+}
+
+#cta-button:hover {
+    background: #bce7fd;
+}
+
+section {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.service-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #f4f4f4;
+    padding: 2rem;
+    margin: 1rem;
+    flex: 1;
+    min-width: 250px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#contact-form {
+    max-width: 600px;
+    margin: auto;
+    text-align: left;
+}
+
+#contact-form input,
+#contact-form textarea {
+    width: 100%;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+}
+
+#contact-form button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    background: #333;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#contact-form button:hover {
+    background: #555;
+}
