@@ -1,5 +1,32 @@
 .loginContainer {
-    border:1px solid yellow;
-    border-radius: 25%;
-    height:500px;
+    height: 500px;
+    width: 60%;
+    display: flex;
+    font-family: 'Koulen';
+    border:4px solid rgb(195, 161, 37);
+    border-radius: 5px;
+    margin: 0px auto;
+}
+
+.left {
+    width:50%;
+    padding:10px;
+    background-color: #FFD43B;
+
+}
+.right {
+    width:50%;
+    padding:10px;
+    background-color:white;
+}
+.left h2{
+    color:darkblue;
+}
+.right h2{
+    color:rgb(195, 161, 37);
+}
+
+.loginContainer input[type="text"]::placeholder {
+    font-size: 10px;
+    text-align: center;
 }
