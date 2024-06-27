@@ -30,6 +30,9 @@ app.get('/',function(req,res){ //home page
 app.get('/login',function(req,res){ //home page
     res.render('login',{layout:'main'})
 });
+app.get('/savingplanner',function(req,res){
+    res.render('savingplanner',{layout:'main'})
+});
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });

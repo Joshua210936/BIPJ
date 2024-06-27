@@ -1,1 +1,70 @@
-hello!
+   <div class="container hero-container">
+        <section class="hero">
+          <h1>Simplify saving, amplify wealth</h1>
+          <p>Our savings tracker lets you set goals, track progress and make informed decisions effortlessly. To begin, sign up now and take control of your financial future today!</p>
+          <button class="btn-create-account">Create account / Login</button>
+        </section>
+        <aside class="hero-image">
+          <img src="images/savings.png" alt="Savings Image">
+        </aside>
+      </div>
+
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px 0;
+}
+
+.hero {
+  max-width: 50%;
+}
+
+.hero h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.btn-create-account {
+  background-color: #FFA500;
+  border: none;
+  color: white;
+  padding: 15px 30px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.hero-image img {
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+  }
+ 
+}
+</style>
