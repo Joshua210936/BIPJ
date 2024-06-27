@@ -5,12 +5,13 @@ body {
   }
 
   .gradient{
-    background-image: linear-gradient(white, #CDEEFF);
+    background-image: linear-gradient(white, #FFD43B);
     padding-bottom:20px;
 }
 
 .navbar {
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+  background-color: #FFD43B;
 }
 
   .navbar-nav {
@@ -19,6 +20,7 @@ body {
     width: 100%;
     padding: .5rem;
     gap: 2rem;
+
 }
   
   .nav-link,
@@ -26,7 +28,7 @@ body {
     background: none;
     border: none;
     text-decoration: none;
-    color: #777;
+    color: black;
     font-family: inherit;
     font-size: inherit;
     cursor: pointer;
@@ -36,7 +38,7 @@ body {
   .dropdown.active > .nav-link,
   .nav-link:hover,
   .link-button:hover {
-    color: black;
+    color: #777;
   }
   
   .dropdown {
