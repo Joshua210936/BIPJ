@@ -27,7 +27,9 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.get('/',function(req,res){ //home page
     res.render('home',{layout:'main'})
 });
-
+app.get('/login',function(req,res){ //home page
+    res.render('login',{layout:'main'})
+});
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
