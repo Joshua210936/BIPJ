@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{courseTitle}}</title>
+</head>
+<body>
+    <h1>{{courseTitle}}</h1>
+    <p>{{courseDescription}}</p>
+    
+    <h2>Course Details</h2>
+    <ul>
+        <li><strong>Instructor:</strong> {{instructor}}</li>
+        <li><strong>Duration:</strong> {{duration}}</li>
+        <li><strong>Start Date:</strong> {{startDate}}</li>
+    </ul>
+    
+    <h2>Course Modules</h2>
+    <ul>
+        {{#each modules}}
+            <li>{{this}}</li>
+        {{/each}}
+    </ul>
+    
+    <h2>Course Resources</h2>
+    <ul>
+        {{#each resources}}
+            <li><a href="{{this.url}}">{{this.title}}</a></li>
+        {{/each}}
+    </ul>
+</body>
+</html>
