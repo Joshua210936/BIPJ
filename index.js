@@ -26,7 +26,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
 
-
+//guest
 app.get('/',function(req,res){ //home page
     res.render('home',{layout:'main'})
 });
@@ -42,6 +42,14 @@ app.get('/addgoal',function(req,res){
 app.get('/workshops',function(req,res){
     res.render('workshops',{layout:'main'})
 });
+
+
+//admin
+app.get('/adminWorkshops', function(req, res){
+    res.render('adminWorkshops', {layout:'adminMain'});
+});
+
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
