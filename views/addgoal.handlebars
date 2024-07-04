@@ -9,14 +9,14 @@
         <button class="go-back" >Go Back</button>
         <h1>Add a new goal</h1>
         <p>Let's save for something awesome!</p>
-        <form action="/submit-goal" method="post">
+        <form method="post">
             <div class="section">
                 <h2>Goal Details</h2>
                 <label for="goal_name">Goal Name:</label>
                 <input type="text" id="goal_name" name="goal_name" required>
 
                 <label for="target_amount">Target Amount to Save:</label>
-                <input type="number" id="target_amount" name="target_amount" required>
+                <input type="text" id="target_amount" name="target_amount" required>
             </div>
 
             <div class="section">
@@ -61,10 +61,11 @@
     cursor: pointer;
     border-radius: 5px;
     color: #000;
+    margin-bottom: 10px;
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 30px;
     margin-bottom: 10px;
 }
 
@@ -78,9 +79,9 @@ p {
 }
 
 h2 {
-    font-size: 18px;
+    font-size: 20px;
     margin-bottom: 10px;
-    color: #007bff;
+    color: black;
 }
 
 label {

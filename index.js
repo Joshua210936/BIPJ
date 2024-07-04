@@ -8,6 +8,7 @@ const path = require('path');
 // Database
 const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
+const Saving = require('./models/savings');
 
 let port = 3001;
 
@@ -39,6 +40,25 @@ app.get('/savingplanner',function(req,res){
 app.get('/addgoal',function(req,res){
     res.render('addgoal',{layout:'main'})
 });
+
+app.post('/addgoal', function(req,res){
+    let{ goal_name, target_amount, start_date, end_date, add_picture } = req.body;
+    
+    Saving.create({
+        Saving_goalName: goal_name,
+        Saving_amount: target_amount,
+        Saving_startDate: start_date,
+        Saving_endDate: end_date,
+        Saving_picture: add_picture,     
+    })
+    .then(agent => {
+        res.status(201).send({ message: 'Agent registered successfully!', agent });
+      })
+    .catch(err => {
+    res.status(400).send({ message: 'Error registering agent', error: err });
+    });
+});
+
 app.get('/workshops',function(req,res){
     res.render('workshops',{layout:'main'})
 });
