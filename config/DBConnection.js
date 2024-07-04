@@ -5,7 +5,7 @@ const user = require('../models/custUser');
 const setUpDB = (drop) => {
     mySQLDB.authenticate()
         .then(() => {
-            console.log('Fullstack DB database connected');
+            console.log('BIPJ DB database connected');
         })
         .then(() => {
             /*user.hasMany(video);*/
