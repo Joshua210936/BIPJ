@@ -33,6 +33,9 @@ app.get('/login',function(req,res){ //home page
 app.get('/savingplanner',function(req,res){
     res.render('savingplanner',{layout:'main'})
 });
+app.get('/workshops',function(req,res){
+    res.render('workshops',{layout:'main'})
+});
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
