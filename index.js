@@ -1,10 +1,13 @@
+// Required libraries
 const express = require('express');
-
 const bodyParser = require("body-parser"); 
-
 const app = express();
 const exphbs = require('express-handlebars')
 const path = require('path');
+
+// Database
+const bipjDB = require('./config/DBConnection');
+bipjDB.setUpDB(false);
 
 let port = 3001;
 
