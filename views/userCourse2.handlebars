@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Courses on Beginner Investing</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Online Courses on Beginner Investing</h1>
+    <p>Welcome to our online learning center, where you can find courses to help you get started with investing. Explore the courses below to begin your journey.</p>
+  </header>
+  
+  <main>
+    {{#each courses}}
+    <section class="course">
+      <div class="course-header">
+        <h2>{{this.title}}</h2>
+        <img src="{{this.image}}" alt="{{this.title}}">
+        <p>By {{this.author}}</p>
+      </div>
+      <div class="course-details">
+        <ul>
+          {{#each this.details}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </section>
+    {{/each}}
+  </main>
+
+  <footer>
+    <p>&copy; 2024 InvestGrid. All rights reserved.</p>
+  </footer>
+</body>
+</html>

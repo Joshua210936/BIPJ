@@ -42,6 +42,11 @@ app.get('/addgoal',function(req,res){
 app.get('/workshops',function(req,res){
     res.render('workshops',{layout:'main'})
 });
+
+app.get('/userCourse',function(req,res){
+    res.render('userCourse2',{layout:'main'})
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
