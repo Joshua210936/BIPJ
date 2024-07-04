@@ -1,0 +1,134 @@
+
+.property-listing-page {
+    display: flex;
+    width: 100%;
+    max-width: 1440px;
+    height: auto;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.listing-box {
+    width: 100%;
+    max-width: 800px;
+    padding: 36px 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-header h1, .form-header h2 {
+    font-size: 31px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.input-group label {
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    height: 45px;
+    padding: 0 27px;
+    font-size: 14px;
+    font-weight: 300;
+    border: 1px solid #282828;
+    border-radius: 6px;
+}
+
+.input-group textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.input-group input[type="range"] {
+    width: calc(100% - 20px);
+    margin: 0 10px;
+}
+
+.input-group input[type="file"] {
+    border: none;
+}
+
+.formbutton {
+    width: 100%;
+    height: 45px;
+    background: #FFD43B;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.formbutton:hover {
+    background: #ffcd17;
+}
+
+.range-counter {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* modal css */
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    margin-right:auto;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

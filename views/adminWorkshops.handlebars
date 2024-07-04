@@ -1,0 +1,76 @@
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="css/adminWorkshops.css">
+    <script src="js/adminWorkshops.js" defer></script>
+</head>
+<button class="filter-icon" >Add Workshop</button>
+
+{{!-- add workshop popup --}}
+<div class="modal" id="filterModal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <div class="property-listing-page">
+            <div class="listing-box">
+                <div class="form-header">
+                    <h1>Add Workshop Form</h1>
+                </div>
+                <form action="/adminWorkshops" method="post">
+                    <!-- First Section -->
+                    <div class="input-group">
+                        <label for="workshopName">Workshop Name</label>
+                        <input type="text" id="workshopName" name="workshopName" placeholder="Enter Workshop Name">
+                    </div>
+                    <div class="input-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" placeholder="Enter Workshop Description"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="propertyPictures">Upload pictures of property</label>
+                        <input type="file" id="propertyPictures" name="propertyPictures" multiple accept="image/*" onchange="previewImages()" required>
+                    </div>
+                    <div id="image-preview"></div>
+                    <button class="formbutton" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+
+ <script>
+    function updateCounter(id, value) {
+        document.getElementById(id + '-counter').textContent = value;
+    }
+
+    function previewImages() {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
+        const files = document.getElementById('property-pictures').files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'image-container';
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '150px';
+                img.style.margin = '10px';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Remove';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.addEventListener('click', function() {
+                    imgContainer.remove(); // Remove the image container
+                });
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteBtn);
+                preview.appendChild(imgContainer);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
