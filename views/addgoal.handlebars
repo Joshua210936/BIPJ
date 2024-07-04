@@ -1,0 +1,113 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a New Goal</title>
+    
+</head>
+<body>
+    <div class="container">
+        <button class="go-back" >Go Back</button>
+        <h1>Add a new goal</h1>
+        <p>Let's save for something awesome!</p>
+        <form action="/submit-goal" method="post">
+            <div class="section">
+                <h2>Goal Details</h2>
+                <label for="goal_name">Goal Name:</label>
+                <input type="text" id="goal_name" name="goal_name" required>
+
+                <label for="target_amount">Target Amount to Save:</label>
+                <input type="number" id="target_amount" name="target_amount" required>
+            </div>
+
+            <div class="section">
+                <h2>Timeline</h2>
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" required>
+
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" required>
+
+                <label for="add_picture">Add Picture:</label>
+                <input type="file" id="add_picture" name="add_picture">
+            </div>
+
+            <button type="submit" class="confirm-goal">Confirm Goal</button>
+        </form>
+    </div>
+
+
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.go-back {
+    background-color: #ffcc00;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #000;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.confirm-goal {
+    background-color: #ffcc00;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #000;
+}
+
+</style>
