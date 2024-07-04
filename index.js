@@ -42,13 +42,15 @@ app.get('/addgoal',function(req,res){
 });
 
 app.post('/addgoal', function(req,res){
-    let{ goal_name, target_amount, start_date, end_date, add_picture } = req.body;
+    let{ goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings,add_picture } = req.body;
     
     Saving.create({
         Saving_goalName: goal_name,
         Saving_amount: target_amount,
         Saving_startDate: start_date,
         Saving_endDate: end_date,
+        Saving_frequency: savings_frequency,
+        Saving_calculate: calculated_savings,
         Saving_picture: add_picture,     
     })
     .then(agent => {
