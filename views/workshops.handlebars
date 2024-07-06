@@ -5,4 +5,43 @@
 {{!-- do map api here --}}
 <br>
 <h1 style="text-align:center;">Upcoming Workshops</h1>
-
+<div class="container">
+    {{#if workshops}}
+        <table border="2">
+            {{#each workshops}}
+                <tr>
+                    <td>Workshop Name:</td>
+                    <td>{{workshopName}}</td>
+                </tr>
+                <tr>
+                    <td>Workshop Start Date:</td>
+                    <td>{{workshopStartDate}}</td>
+                </tr>
+                <tr>
+                    <td>Workshop End Date:</td>
+                    <td>{{workshopEndDate}}</td>
+                </tr>
+                <tr>
+                    <td>Workshop Time:</td>
+                    <td>{{startTime}}</td>
+                    <td>to</td>
+                    <td>{{endTime}}</td>
+                </tr>
+                <tr>
+                    <td>Workshop Address:</td>
+                    <td>{{workshopAddress}}</td>
+                </tr>
+                <tr>
+                    <td>Workshop Description:</td>
+                    <td>{{description}}</td>
+                </tr>
+                <tr>
+                    <td>Workshop Image:</td>
+                    <td>{{workshopImage}}</td>
+                </tr>
+            {{/each}}
+        </table>
+        {{else}}
+        No Current Workshops
+    {{/if}}
+</div>

@@ -62,9 +62,22 @@ app.post('/addgoal', function(req,res){
     });
 });
 
-app.get('/workshops',function(req,res){
-    res.render('workshops',{layout:'main'})
+app.get('/workshops', function(req, res) {
+    addWorkshops.findAll()
+        .then(workshops => {
+            res.render('workshops', { 
+                layout: 'main',
+                workshops: workshops 
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching workshops:', err);
+            if (!res.headersSent) {
+                res.status(500).send('Internal Server Error');
+            }
+        });
 });
+
 
 
 //admin
@@ -84,7 +97,10 @@ app.post('/adminWorkshops', function(req,res){
         Workshop_Address: workshopAddress,
         Workshop_Description: description,
         Workshop_Image: workshopImage
+    }) .then((workshops) =>{
+        res.redirect('/workshops');
     })
+    .catch(err=> console.log(err))
 });
 
 
