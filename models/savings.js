@@ -15,10 +15,16 @@ const Savings = db.define('savings', {
         type: sequelize.INTEGER
     },
     Saving_startDate: {
-        type: sequelize.DATE
+        type: sequelize.DATEONLY
     },
     Saving_endDate: {
-        type: sequelize.DATE
+        type: sequelize.DATEONLY
+    },
+    Saving_frequency: {
+        type: sequelize.STRING
+    },
+    Saving_calculate: {
+        type: sequelize.INTEGER
     },
     Saving_picture: {
         type: sequelize.STRING
