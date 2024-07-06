@@ -22,8 +22,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const form = modal.querySelector('form');
     form.addEventListener('submit', (event) => {
         event.preventDefault();
-        // Add form submission logic here (e.g., AJAX call)
+        form.submit(); // Now submit the form
         modal.style.display = 'none'; // Close modal after handling the form data
+        alert("Workshop added successfully!"); // Show confirmation popup 
     });
     
     // Prevent clicks inside the modal from propagating to the window click listener

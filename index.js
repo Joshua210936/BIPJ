@@ -9,6 +9,7 @@ const path = require('path');
 const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
+const addWorkshops = require('./models/addWorkshops');
 
 let port = 3001;
 
@@ -82,14 +83,8 @@ app.post('/adminWorkshops', function(req,res){
         Workshop_EndTime: endTime,
         Workshop_Address: workshopAddress,
         Workshop_Description: description,
-        Workshop_Image: workshopImage,
+        Workshop_Image: workshopImage
     })
-    .then(property => {
-        res.status(201).send({ message: 'Property listed successfully!', property });
-      })
-    .catch(err => {
-    res.status(400).send({ message: 'Error listing property', error: err });
-    });
 });
 
 
