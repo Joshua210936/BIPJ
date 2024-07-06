@@ -69,6 +69,27 @@ app.get('/adminWorkshops', function(req, res){
     res.render('adminWorkshops', {layout:'adminMain'});
 });
 
+app.post('/adminWorkshops', function(req,res){
+    let{workshopName, workshopStartDate, workshopEndDate,startTime, endTime, workshopAddress, description, workshopImage } = req.body;
+    
+    addWorkshops.create({
+        Workshop_Name: workshopName,
+        Workshop_StartDate: workshopStartDate,
+        Workshop_EndDate: workshopEndDate,
+        Workshop_StartTime: startTime,
+        Workshop_EndTime: endTime,
+        Workshop_Address: workshopAddress,
+        Workshop_Description: description,
+        Workshop_Image: workshopImage,
+    })
+    .then(property => {
+        res.status(201).send({ message: 'Property listed successfully!', property });
+      })
+    .catch(err => {
+    res.status(400).send({ message: 'Error listing property', error: err });
+    });
+});
+
 
 
 app.get('/userCourse',function(req,res){
