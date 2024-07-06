@@ -12,10 +12,10 @@ const addWorkshops = db.define('addWorkshops', {
         type: sequelize.STRING
     },
     Workshop_StartDate:{
-        type: sequelize.STRING
+        type: sequelize.DATE
     },
     Workshop_EndDate:{
-        type: sequelize.STRING
+        type: sequelize.DATE
     },
     Workshop_StartTime:{
         type: sequelize.STRING

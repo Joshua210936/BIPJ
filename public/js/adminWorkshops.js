@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         event.preventDefault();
         form.submit(); // Now submit the form
         modal.style.display = 'none'; // Close modal after handling the form data
-        alert("Workshop added successfully!"); // Show confirmation popup 
+        alert("Workshop added successfully!"); // Show confirmation popup
     });
     
     // Prevent clicks inside the modal from propagating to the window click listener
