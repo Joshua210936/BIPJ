@@ -2,7 +2,7 @@
     <link rel="stylesheet" href="css/workshopsUser.css">
     <script src="js/workshopMap.js"></script>
     <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY0zEGiZRJ6kmm79kgqTkxuGnkXgJ0zhg&loading=async&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY0zEGiZRJ6kmm79kgqTkxuGnkXgJ0zhg&loading=async&callback=initMap">
     </script>
 </head>
 <h1>Find Your Financial Literacy Workshop</h1>
@@ -16,13 +16,11 @@
         <div id="map"></div>
     </div>
 </div>
-    
-
 
 <br>
 <h1 style="text-align:center;">Upcoming Workshops</h1>
 <div class="container">
-    {{#if workshops}}
+    {{#if workshops.length}}
         <div class="flex-container">
         {{#each workshops}}
             <table class="workshopTables">

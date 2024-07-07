@@ -26,6 +26,12 @@ const addWorkshops = db.define('addWorkshops', {
     Workshop_Address:{
         type: sequelize.STRING
     },
+    Workshop_Latitude:{
+        type: sequelize.STRING
+    },
+    Workshop_Longitude:{
+        type: sequelize.STRING
+    },
     Workshop_Description:{
         type: sequelize.STRING
     },

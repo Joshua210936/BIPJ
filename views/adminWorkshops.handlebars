@@ -4,6 +4,7 @@
     <script src="js/adminWorkshops.js" defer></script>
 </head>
 <button class="filter-icon" >Add Workshop</button>
+<button class="mapModalButton" id="mapModalButton">Add Event</button>
 
 {{!-- add workshop popup --}}
 <div class="modal" id="filterModal">
@@ -14,7 +15,7 @@
                 <div class="form-header">
                     <h1>Add Workshop</h1>
                 </div>
-                <form action="/adminWorkshops" method="post">
+                <form action="/adminWorkshops" method="post" class="addWorkshopForm">
                     <!-- First Section -->
                     <div class="input-group">
                         <label for="workshopName">Workshop Name</label>
@@ -43,6 +44,14 @@
                         <input type="text" id="workshopAddress" name="workshopAddress" placeholder="Enter Workshop Address">
                     </div>
                     <div class="input-group">
+                        <label for="workshopLatitude">Workshop Latitude</label>
+                        <input type="text" id="workshopLatitude" name="workshopLatitude" placeholder="Enter Workshop Latitude">
+                    </div>
+                    <div class="input-group">
+                        <label for="workshopLongitude">Workshop Longitude</label>
+                        <input type="text" id="workshopLongitude" name="workshopLongitude" placeholder="Enter Workshop Longitude">
+                    </div>
+                    <div class="input-group">
                         <label for="description">Description</label>
                         <textarea id="description" name="description" placeholder="Enter Workshop Description"></textarea>
                     </div>
@@ -58,6 +67,23 @@
     </div>
 </div>
 
+<div class="modal" id="mapModal">
+    <div class="map-modal-content">
+        <span class="map-close-button">&times;</span>
+        <div class="property-listing-page">
+            <div class="listing-box">
+                <div class="form-header">
+                    <h1>Add Map Info</h1>
+                </div>
+                <form action="/mapLocation" method="post" class="addMapForm">
+                    <!-- Event form fields -->
+                    
+                    <button class="formbutton" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
  
 
  <script>

@@ -79,13 +79,14 @@ app.get('/workshops', function(req, res) {
 
 
 
+
 //admin
 app.get('/adminWorkshops', function(req, res){
     res.render('adminWorkshops', {layout:'adminMain'});
 });
 
 app.post('/adminWorkshops', function(req,res){
-    let{workshopName, workshopStartDate, workshopEndDate,startTime, endTime, workshopAddress, description, workshopImage } = req.body;
+    let{workshopName, workshopStartDate, workshopEndDate,startTime, endTime, workshopAddress, workshopLatitude, workshopLongitude, description, workshopImage } = req.body;
     
     addWorkshops.create({
         Workshop_Name: workshopName,
@@ -94,6 +95,8 @@ app.post('/adminWorkshops', function(req,res){
         Workshop_StartTime: startTime,
         Workshop_EndTime: endTime,
         Workshop_Address: workshopAddress,
+        Workshop_Latitude: workshopLatitude,
+        Workshop_Longitude: workshopLongitude,
         Workshop_Description: description,
         Workshop_Image: workshopImage
     }) .then((workshops) =>{
