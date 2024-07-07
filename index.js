@@ -24,7 +24,6 @@ app.set('view engine','handlebars');
 
 app.set('views', path.join(__dirname, 'views'));
 
-
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
 
@@ -67,7 +66,7 @@ app.get('/workshops', function(req, res) {
         .then(workshops => {
             res.render('workshops', { 
                 layout: 'main',
-                workshops: workshops 
+                workshops: workshops.map(workshop => workshop.get({ plain: true })) // Convert to plain objects 
             });
         })
         .catch(err => {

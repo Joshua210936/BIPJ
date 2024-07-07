@@ -1,3 +1,6 @@
+<head>
+    <link rel="stylesheet" href="css/workshopsUser.css">
+</head>
 <h1>Find Your Financial Literacy Workshop</h1>
 <p>Explore our interactive map to find where our upcoming partnered financial literacy workshops are located.</p>
 <p>Use our map to sort by distance and find the fastest route there!</p>
@@ -7,41 +10,42 @@
 <h1 style="text-align:center;">Upcoming Workshops</h1>
 <div class="container">
     {{#if workshops}}
-        <table border="2">
-            {{#each workshops}}
+        <div class="flex-container">
+        {{#each workshops}}
+            <table class="workshopTables">
                 <tr>
-                    <td>Workshop Name:</td>
-                    <td>{{workshopName}}</td>
+                    <td colspan="2" class="workshopImage">
+                        <img src="/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}"/>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Workshop Start Date:</td>
-                    <td>{{workshopStartDate}}</td>
+                    <th>Workshop Name:</th>
+                    <td>{{this.Workshop_Name}}</td>
                 </tr>
                 <tr>
-                    <td>Workshop End Date:</td>
-                    <td>{{workshopEndDate}}</td>
+                    <th>Workshop Start Date:</th>
+                    <td>{{this.Workshop_StartDate}}</td>
                 </tr>
                 <tr>
-                    <td>Workshop Time:</td>
-                    <td>{{startTime}}</td>
-                    <td>to</td>
-                    <td>{{endTime}}</td>
+                    <th>Workshop End Date:</th>
+                    <td>{{this.Workshop_EndDate}}</td>
                 </tr>
                 <tr>
-                    <td>Workshop Address:</td>
-                    <td>{{workshopAddress}}</td>
+                    <th>Workshop Time:</th>
+                    <td>{{this.Workshop_StartTime}} to {{this.Workshop_EndTime}}</td>
                 </tr>
                 <tr>
-                    <td>Workshop Description:</td>
-                    <td>{{description}}</td>
+                    <th>Workshop Address:</th>
+                    <td>{{this.Workshop_Address}}</td>
                 </tr>
                 <tr>
-                    <td>Workshop Image:</td>
-                    <td>{{workshopImage}}</td>
+                    <th>Workshop Description:</th>
+                    <td>{{this.Workshop_Description}}</td>
                 </tr>
-            {{/each}}
-        </table>
-        {{else}}
+            </table>
+        {{/each}}
+        </div>
+    {{else}}
         No Current Workshops
     {{/if}}
 </div>
