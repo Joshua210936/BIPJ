@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Add a New Goal</title>
     
 </head>
@@ -53,7 +51,7 @@
         <h3>Savings Calculation</h3>
         <p id="savings-result"></p>
         <button class="edit-popup" onclick="closePopup()">Edit</button>
-        <a href="/goalsPage"><button class="submit-goal" onclick="submitGoal()">Create Goal</button></a>
+       <button type="button" class="submit-goal" onclick="submitGoal()">Create Goal</button>
     </div>
 </body>
 
@@ -98,10 +96,10 @@
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('popup').style.display = 'none';
         }
-
         function submitGoal() {
             document.getElementById('goal-form').submit();
         }
+
     </script>
 
 <style>
