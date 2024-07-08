@@ -111,6 +111,10 @@ app.get('/userCourse',function(req,res){
     res.render('userCourse2',{layout:'main'})
 });
 
+app.get('/adminQuiz',function(req,res){
+    res.render('adminQuiz',{layout:'adminMain'})
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });

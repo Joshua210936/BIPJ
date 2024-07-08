@@ -31,8 +31,52 @@
     {{/each}}
   </main>
 
+  <br>
+<h1 style="text-align:center;">Upcoming Workshops</h1>
+<div class="container">
+    {{#if workshops.length}}
+        <div class="flex-container">
+        {{#each workshops}}
+            <table class="workshopTables">
+                <tr class="workshopImage">
+                    <td colspan="2">
+                        <img src="/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Workshop Name:</th>
+                    <td>{{this.Workshop_Name}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Start Date:</th>
+                    <td>{{this.Workshop_StartDate}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop End Date:</th>
+                    <td>{{this.Workshop_EndDate}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Time:</th>
+                    <td>{{this.Workshop_StartTime}} to {{this.Workshop_EndTime}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Address:</th>
+                    <td>{{this.Workshop_Address}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Description:</th>
+                    <td>{{this.Workshop_Description}}</td>
+                </tr>
+            </table>
+        {{/each}}
+        </div>
+    {{else}}
+        No Current Workshops
+    {{/if}}
+</div>
+
   <footer>
-    <p>&copy; 2024 InvestGrid. All rights reserved.</p>
+    <p>&copy; 2024 Financial Flare. All rights reserved.</p>
   </footer>
 </body>
 </html>
