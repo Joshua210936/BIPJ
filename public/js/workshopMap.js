@@ -5,51 +5,30 @@ function initMap(){
         mapId: '7eb9cb155077df0'
     });
 
+    //1.3365408985337843, 103.96105621086166
     //Name
     //Lat, Long,
     //Img URL
     //scaledSize width, height
-    const markers=[
-        [
-            "NYP Financial Literacy Workshop",
-            1.3801001587360433,
-            103.84918473018321,
-            "images/map-marker.png",
-            38,
-            38
-        ],
-        [
-            "Singapore Fintech Festival",
-            1.3336538111576972,
-            103.95955845767105,
-            "images/map-marker.png",
-            38,
-            38
-        ]
-    ];
-
-    for (let i = 0; i<markers.length; i++){
-        const currMarker = markers[i];
-
+    workshops.forEach(workshops => {
         const marker = new google.maps.Marker({
-            position: {lat: currMarker[1], lng: currMarker[2]},
+            position: {lat: parseFloat(workshops.Workshop_Latitude), lng: parseFloat(workshops.Workshop_Longitude)},
             map,
-            title: currMarker[0],
+            title: workshops.Workshop_Name,
             icon: {
-                url: currMarker[3],
-                scaledSize: new google.maps.Size(currMarker[4], currMarker[5])
+                url: "images/map-marker.png",
+                scaledSize: new google.maps.Size(38, 38)
             },
             animation: google.maps.Animation.DROP
         });
-    
+        
         const infowindow = new google.maps.InfoWindow({
-            content: currMarker[0],
+            content: workshops.Workshop_Name,
         }); //adds content to infowindow
     
         marker.addListener("click", ()=>{
             infowindow.open(map,marker);
         }); //opens infowindow on click
-    }
-    }
-
+    })
+};
     
