@@ -78,7 +78,9 @@ app.get('/workshops', function(req, res) {
         });
 });
 
-
+app.get('/subscription',function(req,res){
+    res.render('subscription',{layout:'main'})
+});
 
 
 //admin
