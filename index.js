@@ -37,12 +37,32 @@ app.get('/login',function(req,res){ //home page
 app.get('/savingplanner',function(req,res){
     res.render('savingplanner',{layout:'main'})
 });
+
+
+app.get('/goalsPage', function(req, res) {
+    Saving.findAll()
+        .then(savings => {
+            res.render('goalsPage', { 
+                layout: 'main',
+                savings: savings.map(saving => {
+                    saving = saving.get({ plain: true });
+                    
+                    return saving;
+                })
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching savings:', err);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
 app.get('/addgoal',function(req,res){
     res.render('addgoal',{layout:'main'})
 });
 
-app.post('/addgoal', function(req,res){
-    let{ goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings,add_picture } = req.body;
+app.post('/addgoal', function(req, res){
+    let { goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
     
     Saving.create({
         Saving_goalName: goal_name,
@@ -53,20 +73,26 @@ app.post('/addgoal', function(req,res){
         Saving_calculate: calculated_savings,
         Saving_picture: add_picture,     
     })
-    .then(agent => {
-        res.status(201).send({ message: 'Agent registered successfully!', agent });
-      })
+    .then(() => {
+        res.redirect('/goalsPage'); 
+    })
     .catch(err => {
-    res.status(400).send({ message: 'Error registering agent', error: err });
+        console.error('Error creating saving:', err);
+        res.status(400).send({ message: 'Error registering saving', error: err });
     });
 });
+
+
+
+
 
 app.get('/workshops', function(req, res) {
     addWorkshops.findAll()
         .then(workshops => {
             res.render('workshops', { 
                 layout: 'main',
-                workshops: workshops.map(workshop => workshop.get({ plain: true })) // Convert to plain objects 
+                workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
+                json: JSON.stringify // Pass JSON.stringify to the template
             });
         })
         .catch(err => {
@@ -77,7 +103,9 @@ app.get('/workshops', function(req, res) {
         });
 });
 
-
+app.get('/subscription',function(req,res){
+    res.render('subscription',{layout:'main'})
+});
 
 
 //admin
