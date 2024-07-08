@@ -61,6 +61,11 @@
     resize: vertical;
 }
 
+.input-group textarea[type="range"] {
+    width: calc(100% - 20px);
+    margin: 0 10px;
+}
+
 .input-group input[type="range"] {
     width: calc(100% - 20px);
     margin: 0 10px;
@@ -92,6 +97,10 @@
     margin-top: 5px;
 }
 
+.workshopTime{
+    width:50%;
+}
+
 /* modal css */
 
 .modal {
@@ -118,6 +127,17 @@
     border-radius: 10px;
 }
 
+.map-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
 .close-button {
     color: #aaa;
     float: right;
@@ -132,3 +152,19 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.map-close-button {
+    color: #aaa;
+    float: left;
+    margin-right:auto;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.map-close-button:hover,
+.map-close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+

@@ -9,6 +9,7 @@ const path = require('path');
 const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
+const addWorkshops = require('./models/addWorkshops');
 
 let port = 3001;
 
@@ -22,7 +23,6 @@ app.engine('handlebars', exphbs.engine({ //part of handlebars setup
 app.set('view engine','handlebars');
 
 app.set('views', path.join(__dirname, 'views'));
-
 
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(express.static(path.join(__dirname, '/public'))); 
@@ -61,18 +61,57 @@ app.post('/addgoal', function(req,res){
     });
 });
 
+<<<<<<< HEAD
 app.get('/goalsPage',function(req,res){
     res.render('goalsPage',{layout:'main'})
 });
 
 app.get('/workshops',function(req,res){
     res.render('workshops',{layout:'main'})
+=======
+app.get('/workshops', function(req, res) {
+    addWorkshops.findAll()
+        .then(workshops => {
+            res.render('workshops', { 
+                layout: 'main',
+                workshops: workshops.map(workshop => workshop.get({ plain: true })) // Convert to plain objects 
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching workshops:', err);
+            if (!res.headersSent) {
+                res.status(500).send('Internal Server Error');
+            }
+        });
+>>>>>>> d63fff121998276ab46f4fa8439a5f6965ff6424
 });
+
+
 
 
 //admin
 app.get('/adminWorkshops', function(req, res){
     res.render('adminWorkshops', {layout:'adminMain'});
+});
+
+app.post('/adminWorkshops', function(req,res){
+    let{workshopName, workshopStartDate, workshopEndDate,startTime, endTime, workshopAddress, workshopLatitude, workshopLongitude, description, workshopImage } = req.body;
+    
+    addWorkshops.create({
+        Workshop_Name: workshopName,
+        Workshop_StartDate: workshopStartDate,
+        Workshop_EndDate: workshopEndDate,
+        Workshop_StartTime: startTime,
+        Workshop_EndTime: endTime,
+        Workshop_Address: workshopAddress,
+        Workshop_Latitude: workshopLatitude,
+        Workshop_Longitude: workshopLongitude,
+        Workshop_Description: description,
+        Workshop_Image: workshopImage
+    }) .then((workshops) =>{
+        res.redirect('/workshops');
+    })
+    .catch(err=> console.log(err))
 });
 
 

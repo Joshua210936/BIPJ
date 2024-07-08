@@ -1,8 +1,62 @@
+<head>
+    <link rel="stylesheet" href="css/workshopsUser.css">
+    <script src="js/workshopMap.js"></script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY0zEGiZRJ6kmm79kgqTkxuGnkXgJ0zhg&loading=async&callback=initMap">
+    </script>
+</head>
 <h1>Find Your Financial Literacy Workshop</h1>
 <p>Explore our interactive map to find where our upcoming partnered financial literacy workshops are located.</p>
 <p>Use our map to sort by distance and find the fastest route there!</p>
 
-{{!-- do map api here --}}
+{{!-- map api here --}}
+
+<div class="container">
+    <div class="flex-container">
+        <div id="map"></div>
+    </div>
+</div>
+
 <br>
 <h1 style="text-align:center;">Upcoming Workshops</h1>
-
+<div class="container">
+    {{#if workshops.length}}
+        <div class="flex-container">
+        {{#each workshops}}
+            <table class="workshopTables">
+                <tr class="workshopImage">
+                    <td colspan="2">
+                        <img src="/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Workshop Name:</th>
+                    <td>{{this.Workshop_Name}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Start Date:</th>
+                    <td>{{this.Workshop_StartDate}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop End Date:</th>
+                    <td>{{this.Workshop_EndDate}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Time:</th>
+                    <td>{{this.Workshop_StartTime}} to {{this.Workshop_EndTime}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Address:</th>
+                    <td>{{this.Workshop_Address}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Description:</th>
+                    <td>{{this.Workshop_Description}}</td>
+                </tr>
+            </table>
+        {{/each}}
+        </div>
+    {{else}}
+        No Current Workshops
+    {{/if}}
+</div>
