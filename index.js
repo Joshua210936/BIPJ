@@ -66,7 +66,8 @@ app.get('/workshops', function(req, res) {
         .then(workshops => {
             res.render('workshops', { 
                 layout: 'main',
-                workshops: workshops.map(workshop => workshop.get({ plain: true })) // Convert to plain objects 
+                workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
+                json: JSON.stringify // Pass JSON.stringify to the template
             });
         })
         .catch(err => {
