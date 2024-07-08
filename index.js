@@ -61,6 +61,10 @@ app.post('/addgoal', function(req,res){
     });
 });
 
+app.get('/goalsPage',function(req,res){
+    res.render('goalsPage',{layout:'main'})
+});
+
 app.get('/workshops',function(req,res){
     res.render('workshops',{layout:'main'})
 });
