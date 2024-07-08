@@ -61,14 +61,6 @@ app.post('/addgoal', function(req,res){
     });
 });
 
-<<<<<<< HEAD
-app.get('/goalsPage',function(req,res){
-    res.render('goalsPage',{layout:'main'})
-});
-
-app.get('/workshops',function(req,res){
-    res.render('workshops',{layout:'main'})
-=======
 app.get('/workshops', function(req, res) {
     addWorkshops.findAll()
         .then(workshops => {
@@ -83,7 +75,6 @@ app.get('/workshops', function(req, res) {
                 res.status(500).send('Internal Server Error');
             }
         });
->>>>>>> d63fff121998276ab46f4fa8439a5f6965ff6424
 });
 
 
