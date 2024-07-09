@@ -1,11 +1,9 @@
 <head>
-
     <title>Savings Goals</title>
-   
 </head>
 <body>
-    <h1>Savings Goals</h1>
     <div class="container">
+        <h1>Savings Goals</h1>
         {{#if savings.length}}
             {{#each savings}}
                 <div class="goal-header">
@@ -18,11 +16,11 @@
                     <p>Start date: {{this.Saving_startDate}}</p>
                     <p>End date: {{this.Saving_endDate}}</p>
                 </div>
-               
                 <div class="goal-buttons">
                     <button class="edit">Edit goal</button>
                     <button class="view">View all goals</button>
                 </div>
+               
             {{/each}}
         {{else}}
             <p>No Current Savings Goals</p>
@@ -30,8 +28,7 @@
     </div>
 </body>
 
- <style>
-
+    <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -48,11 +45,53 @@
         }
         h1 {
             text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
         .goal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
+        }
+        .goal-header h2 {
+            font-size: 20px;
+            margin: 0;
+        }
+        .goal-header button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            color: #000;
+        }
+        .goal-details {
+            margin-bottom: 20px;
+        }
+        .goal-details p {
+            margin: 5px 0;
+        }
+        .goal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .goal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .goal-buttons .edit {
+            background-color: #ffcc00;
+            color: #000;
+        }
+        .goal-buttons .view {
+            background-color: #28a745;
+            color: #fff;
         }
         .goal-overview {
             margin-top: 20px;
@@ -65,34 +104,41 @@
         }
         .goal-chart div {
             width: 50px;
-            height: 100px;
             background-color: green;
             margin: 0 5px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
             color: white;
+            padding: 10px;
+            border-radius: 5px;
         }
         .goal-chart div.missed {
             background-color: red;
         }
-        .goal-buttons {
+        .overview-header {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            align-items: center;
+            margin-bottom: 20px;
         }
-        .goal-buttons button {
-            padding: 10px 20px;
+        .overview-header button {
+            background-color: #ffcc00;
             border: none;
-            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
+            border-radius: 5px;
+            color: #000;
         }
-        .goal-buttons .edit {
-            background-color: yellow;
-            color: black;
-        }
-        .goal-buttons .view {
-            background-color: green;
-            color: white;
+        .goal-overview button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            color: #000;
         }
     </style>
+
