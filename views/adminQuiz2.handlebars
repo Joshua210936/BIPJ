@@ -1,0 +1,159 @@
+<head>Create Quizzes for Users</head>
+<form action="/createQuiz" method="POST">
+    <label for="quizID">Test ID</label>
+    <input type="text" id="quizID" name="quizID" placeholder="Enter Quiz ID"><br>
+    
+    <label for="quizModule">Module</label>
+    <select id="quizModule" name="quizModule">
+        <option value="1">Module 1</option>
+        <option value="2">Module 2</option>
+        <option value="3">Module 3</option>
+        <option value="4">Module 4</option>
+        <option value="5">Module 5</option>
+    </select><br>
+    
+    {{!-- Repeat this block for each question --}}
+    {{!-- {{#each questions}} --}}
+    <h3>Question 1</h3>
+    <div>
+        <div class="input-group">
+            <label for="quizName1">Quiz Name</label>
+            <input type="text" id="quizName1" name="quizName1" placeholder="Enter Quiz Name">
+        </div>
+        <div>
+            <label for="quizPoints1">Points</label>
+            <input type="number" id="quizPoints1" name="quizPoints1" placeholder="Enter Points"><br>
+            
+            <label for="quizOption">First Option</label>
+            <input type="radio" id="q1O1" name="quizCorrectOption1" value="1">
+            <input type="text" id="quizOption1" name="quizOption1" placeholder="Enter Option 1"><br>
+            
+            <label for="quizOption2">Second Option</label>
+            <input type="radio" id="q1O2" name="quizCorrectOption1" value="2">
+            <input type="text" id="quizOption2" name="quizOption2" placeholder="Enter Option 2"><br>
+            
+            <label for="quizOption3">Third Option</label>
+            <input type="radio" id="q1O3" name="quizCorrectOption1" value="3">
+            <input type="text" id="quizOption3" name="quizOption3" placeholder="Enter Option 3"><br>
+            
+            <label for="quizOption4">Fourth Option</label>
+            <input type="radio" id="q1O4" name="quizCorrectOption1" value="4">
+            <input type="text" id="quizOption4" name="quizOption4" placeholder="Enter Option 4"><br>
+        </div>
+    </div>
+    {{!-- {{/each}} --}}
+    
+    <h3>Question 2</h3>
+    <div>
+        <div class="input-group">
+            <label for="quizName1">Quiz Name</label>
+            <input type="text" id="quizName1" name="quizName1" placeholder="Enter Quiz Name">
+        </div>
+        <div>
+            <label for="quizPoints1">Points</label>
+            <input type="number" id="quizPoints1" name="quizPoints1" placeholder="Enter Points"><br>
+            
+            <label for="quizOption">First Option</label>
+            <input type="radio" id="q1O1" name="quizCorrectOption1" value="1">
+            <input type="text" id="quizOption1" name="quizOption1" placeholder="Enter Option 1"><br>
+            
+            <label for="quizOption2">Second Option</label>
+            <input type="radio" id="q1O2" name="quizCorrectOption1" value="2">
+            <input type="text" id="quizOption2" name="quizOption2" placeholder="Enter Option 2"><br>
+            
+            <label for="quizOption3">Third Option</label>
+            <input type="radio" id="q1O3" name="quizCorrectOption1" value="3">
+            <input type="text" id="quizOption3" name="quizOption3" placeholder="Enter Option 3"><br>
+            
+            <label for="quizOption4">Fourth Option</label>
+            <input type="radio" id="q1O4" name="quizCorrectOption1" value="4">
+            <input type="text" id="quizOption4" name="quizOption4" placeholder="Enter Option 4"><br>
+        </div>
+    </div>
+
+    <h3>Question 3</h3>
+    <div>
+        <div class="input-group">
+            <label for="quizName1">Quiz Name</label>
+            <input type="text" id="quizName1" name="quizName1" placeholder="Enter Quiz Name">
+        </div>
+        <div>
+            <label for="quizPoints1">Points</label>
+            <input type="number" id="quizPoints1" name="quizPoints1" placeholder="Enter Points"><br>
+            
+            <label for="quizOption">First Option</label>
+            <input type="radio" id="q1O1" name="quizCorrectOption1" value="1">
+            <input type="text" id="quizOption1" name="quizOption1" placeholder="Enter Option 1"><br>
+            
+            <label for="quizOption2">Second Option</label>
+            <input type="radio" id="q1O2" name="quizCorrectOption1" value="2">
+            <input type="text" id="quizOption2" name="quizOption2" placeholder="Enter Option 2"><br>
+            
+            <label for="quizOption3">Third Option</label>
+            <input type="radio" id="q1O3" name="quizCorrectOption1" value="3">
+            <input type="text" id="quizOption3" name="quizOption3" placeholder="Enter Option 3"><br>
+            
+            <label for="quizOption4">Fourth Option</label>
+            <input type="radio" id="q1O4" name="quizCorrectOption1" value="4">
+            <input type="text" id="quizOption4" name="quizOption4" placeholder="Enter Option 4"><br>
+        </div>
+    </div>
+
+    <h3>Question 4</h3>
+    <div>
+        <div class="input-group">
+            <label for="quizName1">Quiz Name</label>
+            <input type="text" id="quizName1" name="quizName1" placeholder="Enter Quiz Name">
+        </div>
+        <div>
+            <label for="quizPoints1">Points</label>
+            <input type="number" id="quizPoints1" name="quizPoints1" placeholder="Enter Points"><br>
+            
+            <label for="quizOption">First Option</label>
+            <input type="radio" id="q1O1" name="quizCorrectOption1" value="1">
+            <input type="text" id="quizOption1" name="quizOption1" placeholder="Enter Option 1"><br>
+            
+            <label for="quizOption2">Second Option</label>
+            <input type="radio" id="q1O2" name="quizCorrectOption1" value="2">
+            <input type="text" id="quizOption2" name="quizOption2" placeholder="Enter Option 2"><br>
+            
+            <label for="quizOption3">Third Option</label>
+            <input type="radio" id="q1O3" name="quizCorrectOption1" value="3">
+            <input type="text" id="quizOption3" name="quizOption3" placeholder="Enter Option 3"><br>
+            
+            <label for="quizOption4">Fourth Option</label>
+            <input type="radio" id="q1O4" name="quizCorrectOption1" value="4">
+            <input type="text" id="quizOption4" name="quizOption4" placeholder="Enter Option 4"><br>
+        </div>
+    </div>
+
+    <h3>Question 5</h3>
+    <div>
+        <div class="input-group">
+            <label for="quizName1">Quiz Name</label>
+            <input type="text" id="quizName1" name="quizName1" placeholder="Enter Quiz Name">
+        </div>
+        <div>
+            <label for="quizPoints1">Points</label>
+            <input type="number" id="quizPoints1" name="quizPoints1" placeholder="Enter Points"><br>
+            
+            <label for="quizOption">First Option</label>
+            <input type="radio" id="q1O1" name="quizCorrectOption1" value="1">
+            <input type="text" id="quizOption1" name="quizOption1" placeholder="Enter Option 1"><br>
+            
+            <label for="quizOption2">Second Option</label>
+            <input type="radio" id="q1O2" name="quizCorrectOption1" value="2">
+            <input type="text" id="quizOption2" name="quizOption2" placeholder="Enter Option 2"><br>
+            
+            <label for="quizOption3">Third Option</label>
+            <input type="radio" id="q1O3" name="quizCorrectOption1" value="3">
+            <input type="text" id="quizOption3" name="quizOption3" placeholder="Enter Option 3"><br>
+            
+            <label for="quizOption4">Fourth Option</label>
+            <input type="radio" id="q1O4" name="quizCorrectOption1" value="4">
+            <input type="text" id="quizOption4" name="quizOption4" placeholder="Enter Option 4"><br>
+        </div>
+    </div>
+
+    <br><button type="submit">Submit Quiz</button>
+</form>

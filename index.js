@@ -143,6 +143,13 @@ app.get('/adminQuiz',function(req,res){
     res.render('adminQuiz',{layout:'adminMain'})
 });
 
+app.get('/adminQuiz2',function(req,res){
+    const context = {
+        question: Array(5).fill({})
+    };
+    res.render('adminQuiz2',{layout:'adminMain'})
+});
+
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)
 });
