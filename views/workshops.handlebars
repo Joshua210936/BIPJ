@@ -27,7 +27,7 @@
     {{#if workshops.length}}
         <div class="flex-container">
         {{#each workshops}}
-            <table class="workshopTables" onclick="openWorkshopModal({{json this}})">
+            <table class="workshopTables">
                 <tr class="workshopImage">
                     <td colspan="2">
                         <img src="/images/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}" class="workshopTableImage"/>
@@ -39,7 +39,7 @@
                 </tr>
                 <tr>
                     <th></th>
-                    <td>Read More</td>
+                    <td onclick="openWorkshopModal({{json this}})" class="readMoreButton">Read More</td>
                 </tr>
             </table>
         {{/each}}

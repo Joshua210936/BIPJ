@@ -70,3 +70,8 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Open Modal */
+.readMoreButton{
+    text-align:right;
+}
