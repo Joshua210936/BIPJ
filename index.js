@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const exphbs = require('express-handlebars')
 const path = require('path');
+const Handlebars = require('handlebars');
 
 // Database
 const bipjDB = require('./config/DBConnection');
@@ -18,6 +19,12 @@ app.engine('handlebars', exphbs.engine({ //part of handlebars setup
     layoutsDir:__dirname+'/views/layouts',
     partialsDir:__dirname+'/views/partials'
 }));
+
+//JSON for handlebars (idk i need it for my modal)
+Handlebars.registerHelper('json', function(context) {
+    return JSON.stringify(context);
+});
+
 
 //sets apps to use handlebars engine
 app.set('view engine','handlebars');

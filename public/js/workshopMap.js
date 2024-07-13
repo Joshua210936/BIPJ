@@ -31,4 +31,40 @@ function initMap(){
         }); //opens infowindow on click
     })
 };
+
+//modal js
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Get the modal
+    const modal = document.getElementById("workshopModal");
+
+    // Get the <span> element that closes the modal
+    const span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Function to open the modal with specific workshop details
+    window.openWorkshopModal = function(workshop) {
+        const modalContent = document.getElementById("modalWorkshopContent");
+        modalContent.innerHTML = `
+            <h2>${workshop.Workshop_Name}</h2>
+            <p><strong>Start Date:</strong> ${workshop.Workshop_StartDate}</p>
+            <p><strong>End Date:</strong> ${workshop.Workshop_EndDate}</p>
+            <p><strong>Time:</strong> ${workshop.Workshop_StartTime} to ${workshop.Workshop_EndTime}</p>
+            <p><strong>Address:</strong> ${workshop.Workshop_Address}</p>
+            <p><strong>Description:</strong> ${workshop.Workshop_Description}</p>
+            <img src="/images/${workshop.Workshop_Image}" alt="${workshop.Workshop_Image}" class="workshopTableImage"/>
+        `;
+        modal.style.display = "block";
+    }
+});
     
