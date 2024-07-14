@@ -30,32 +30,16 @@
             <table class="workshopTables">
                 <tr class="workshopImage">
                     <td colspan="2">
-                        <img src="/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}"/>
+                        <img src="/images/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}" class="workshopTableImage"/>
                     </td>
                 </tr>
                 <tr>
-                    <th>Workshop Name:</th>
-                    <td>{{this.Workshop_Name}}</td>
+                    <th>{{this.Workshop_Name}}</th>
+                    <td></td>
                 </tr>
                 <tr>
-                    <th>Workshop Start Date:</th>
-                    <td>{{this.Workshop_StartDate}}</td>
-                </tr>
-                <tr>
-                    <th>Workshop End Date:</th>
-                    <td>{{this.Workshop_EndDate}}</td>
-                </tr>
-                <tr>
-                    <th>Workshop Time:</th>
-                    <td>{{this.Workshop_StartTime}} to {{this.Workshop_EndTime}}</td>
-                </tr>
-                <tr>
-                    <th>Workshop Address:</th>
-                    <td>{{this.Workshop_Address}}</td>
-                </tr>
-                <tr>
-                    <th>Workshop Description:</th>
-                    <td>{{this.Workshop_Description}}</td>
+                    <th></th>
+                    <td onclick="openWorkshopModal({{json this}})" class="readMoreButton">Read More</td>
                 </tr>
             </table>
         {{/each}}
@@ -63,4 +47,13 @@
     {{else}}
         No Current Workshops
     {{/if}}
+</div>
+
+{{!-- Modal --}}
+
+<div id="workshopModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modalWorkshopContent"></div>
+    </div>
 </div>
