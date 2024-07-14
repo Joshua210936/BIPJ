@@ -85,7 +85,6 @@ app.post('/addgoal', function(req, res){
 
 
 
-
 app.get('/workshops', function(req, res) {
     addWorkshops.findAll()
         .then(workshops => {

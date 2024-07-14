@@ -1,0 +1,149 @@
+
+<head>
+
+    <title>Update Savings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .calendar-nav button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .calendar-nav button:hover {
+            background-color: #0056b3;
+        }
+        .calendar-nav span {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        .calendar div {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .calendar input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        button.update-savings {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        button.update-savings:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Savings</h1>
+        <p>Track your savings progress with our easy-to-use Savings Tracker. Use the calendar below to input your daily savings. This helps you stay on track and visualize your progress toward your financial goals.</p>
+        <div class="calendar-nav">
+            <button onclick="changeMonth(-1)">&#9664; Previous</button>
+            <span id="calendar-month-year"></span>
+            <button onclick="changeMonth(1)">Next &#9654;</button>
+        </div>
+        <div class="calendar">
+            <!-- Calendar days will be generated here -->
+        </div>
+        <button class="update-savings" onclick="updateSavings()">Update savings</button>
+    </div>
+
+    <script>
+        let currentMonth = new Date().getMonth() + 1; // Months are 0-based, so add 1
+        let currentYear = new Date().getFullYear();
+
+        function generateCalendar(month, year) {
+            const calendar = document.querySelector('.calendar');
+            calendar.innerHTML = ''; // Clear previous calendar
+            const monthYearLabel = document.getElementById('calendar-month-year');
+            monthYearLabel.innerText = `${new Date(year, month - 1).toLocaleString('default', { month: 'long' })} ${year}`;
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.textContent = `${day}/${month}/${year}`;
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.placeholder = 'Amount';
+                dayDiv.appendChild(input);
+                calendar.appendChild(dayDiv);
+            }
+        }
+
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth === 0) {
+                currentMonth = 12;
+                currentYear--;
+            } else if (currentMonth === 13) {
+                currentMonth = 1;
+                currentYear++;
+            }
+            generateCalendar(currentMonth, currentYear);
+        }
+
+        function updateSavings() {
+            const calendar = document.querySelector('.calendar');
+            const inputs = calendar.querySelectorAll('input');
+            const savingsData = Array.from(inputs).map(input => ({
+                date: input.parentElement.textContent.trim(),
+                amount: input.value
+            }));
+            console.log('Savings Data:', savingsData);
+            // Here you can perform any additional actions, such as sending data to a server or updating a database
+            // Example: window.location.href = 'confirmation-page.html'; // Redirect to confirmation page
+        }
+
+        // Initial calendar generation
+        generateCalendar(currentMonth, currentYear);
+    </script>
+</body>
+
