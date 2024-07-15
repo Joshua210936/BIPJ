@@ -207,6 +207,9 @@ app.get('/subscription',function(req,res){
     res.render('subscription',{layout:'main'})
 });
 
+app.get('/aboutUs',function(req,res){
+    res.render('aboutUs',{layout:'main'})
+});
 
 //admin
 app.get('/adminWorkshops', function(req, res){
@@ -301,6 +304,7 @@ app.post('/adminQuiz2', async function(req, res){
         res.status(500).send({ message: 'Error creating quiz', error });
     }
 });
+
 
 const adminRoute = require('./routes/admin_routes');
 app.use(adminRoute);
