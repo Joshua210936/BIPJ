@@ -14,14 +14,11 @@ const Customer = db.define('customer', {
     Customer_lName: {
         type: sequelize.STRING
     },
-    Customer_Phone: {
-        type: sequelize.INTEGER
-    },
     Customer_Email: {
         type: sequelize.STRING
     },
-    Customer_Birthday: {
-        type: sequelize.DATE
+    Customer_Phone: {
+        type: sequelize.INTEGER
     },
     Customer_Password: {
         type: sequelize.STRING

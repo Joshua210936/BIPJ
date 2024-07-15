@@ -11,7 +11,8 @@ const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
 const addWorkshops = require('./models/addWorkshops');
-const Test = require('./models/Test');
+const Test = require('./models/test');
+const Customer = require('./models/custUser');
 
 let port = 3001;
 
@@ -39,9 +40,30 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.get('/',function(req,res){ //home page
     res.render('home',{layout:'main'})
 });
-app.get('/login',function(req,res){ //home page
-    res.render('login',{layout:'main'})
+app.get('/register',function(req,res){ //home page
+    res.render('register',{layout:'main'})
 });
+
+app.post('/register',function(req,res){
+    let {fName, lName, email, phone,password, cPassword} = req.body;
+
+    Customer.create({
+        Customer_fName: fName,
+        Customer_lName: lName,
+        Customer_Email: email,
+        Customer_Phone: phone,
+        Customer_Password: password,
+        Customer_cPassword: cPassword
+    })
+    .then(() => {
+        res.redirect('/'); 
+    })
+    .catch(err => {
+        console.error('Error creating account:', err);
+        res.status(400).send({ message: 'Error registering account', error: err });
+    });
+});
+
 app.get('/savingplanner',function(req,res){
     res.render('savingplanner',{layout:'main'})
 });
