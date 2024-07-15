@@ -130,6 +130,58 @@ app.post('/goalsPage', function(req, res) {
     });
 });
 
+app.post('/editGoal', function(req, res) {
+    let { saving_id, goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
+
+    Saving.update(
+        {
+            Saving_goalName: goal_name,
+            Saving_amount: target_amount,
+            Saving_startDate: start_date,
+            Saving_endDate: end_date,
+            Saving_frequency: savings_frequency,
+            Saving_calculate: calculated_savings,
+            Saving_picture: add_picture
+        },
+        {
+            where: { Saving_id: saving_id }
+        }
+    )
+    .then(() => {
+        res.redirect('/goalsPage');
+    })
+    .catch(err => {
+        console.error('Error updating saving goal:', err);
+        res.status(400).send({ message: 'Error updating saving goal', error: err });
+    });
+});
+
+
+app.post('/goalsPage/delete', async function(req, res) {
+    const savingId = req.body.saving_id;
+
+    try {
+        // Delete from SavingsEntry first
+        await SavingsEntry.destroy({
+            where: {
+                Saving_id: savingId
+            }
+        });
+
+        // Then delete from Saving
+        await Saving.destroy({
+            where: {
+                Saving_id: savingId
+            }
+        });
+
+        res.status(200).send({ message: 'Goal deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting goal:', error);
+        res.status(500).send({ message: 'Error deleting goal', error });
+    }
+});;
+
 
 
 
