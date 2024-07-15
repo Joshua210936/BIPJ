@@ -2,6 +2,8 @@ const sequelize = require('sequelize');
 
 const db = require('../config/DBConfig');
 
+const SavingsEntry = require('./SavingsEntry');
+
 const Savings = db.define('savings', {
     Saving_id: {
         type: sequelize.INTEGER,
@@ -30,5 +32,8 @@ const Savings = db.define('savings', {
         type: sequelize.STRING
     }
 });
+
+Savings.hasMany(SavingsEntry, { foreignKey: 'Saving_id' });
+
 
 module.exports = Savings;

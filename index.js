@@ -11,6 +11,7 @@ const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
 const addWorkshops = require('./models/addWorkshops');
+const SavingsEntry = require('./models/SavingsEntry');
 
 let port = 3001;
 
@@ -88,6 +89,24 @@ app.post('/addgoal', function(req, res){
         res.status(400).send({ message: 'Error registering saving', error: err });
     });
 });
+
+app.post('/goalsPage', function(req, res) {
+    let { saving_id, saving_date, saving_amount } = req.body;
+
+    SavingsEntry.create({
+        Saving_id: saving_id,
+        Entry_date: saving_date,
+        Amount_saved: saving_amount
+    })
+    .then(() => {
+        res.redirect('/goalsPage');
+    })
+    .catch(err => {
+        console.error('Error adding saving entry:', err);
+        res.status(400).send({ message: 'Error adding saving entry', error: err });
+    });
+});
+
 
 
 
