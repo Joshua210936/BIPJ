@@ -1,38 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    {{!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"> --}}
     <title>Create Quizzes for Users</title>
     <style>
         .question {
             margin-bottom: 1em;
+            color: burlywood;
         }
 
         .add-question-button {
             display: block;
             margin: 1em 0;
         }
+
+        #quizModule, .question input, .question input::placeholder {
+            background-color: white;
+            color: gray;
+        }
+
+        #quizForm label {
+            color: black;
+        }
+
+        .header {
+            color: black;
+        }
+
+        label {
+            display: inline-block !important;
+        }
     </style>
 </head>
 
 <body>
-    <nav class="container-fluid">
-        <ul>
-            <li><strong>Quiz Creator</strong></li>
-        </ul>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#" role="button">Contact</a></li>
-        </ul>
-    </nav>
     <main class="container">
         <form action="/createQuiz" method="POST" id="quizForm">
-            <label for="quizID">Quiz ID</label>
+            <label for="quizID">Test ID</label>
             <input type="text" id="quizID" name="quizID" placeholder="Enter Quiz ID"><br>
+            
             <label for="quizModule">Module</label>
             <select id="quizModule" name="quizModule">
                 <option value="1">Module 1</option>
@@ -40,33 +44,34 @@
                 <option value="3">Module 3</option>
                 <option value="4">Module 4</option>
                 <option value="5">Module 5</option>
-            </select>
-
+            </select><br>
+            
             <div id="questions">
                 <div class="question" id="question1">
-                    <h3>Question 1</h3>
+                    <h3 class="header">Question 1</h3>
                     <div class="input-group">
                         <label for="quizName1">Quiz Name</label>
                         <input type="text" id="quizName1" name="quizName1" placeholder="Enter Quiz Name">
                     </div>
                     <div>
-                        <label>Options</label>
-                        <div>
-                            <input type="radio" id="q1O1" name="quizOption1">
-                            <input type="text" name="q1O1Text" placeholder="Enter option text">
-                        </div>
-                        <div>
-                            <input type="radio" id="q1O2" name="quizOption1">
-                            <input type="text" name="q1O2Text" placeholder="Enter option text">
-                        </div>
-                        <div>
-                            <input type="radio" id="q1O3" name="quizOption1">
-                            <input type="text" name="q1O3Text" placeholder="Enter option text">
-                        </div>
-                        <div>
-                            <input type="radio" id="q1O4" name="quizOption1">
-                            <input type="text" name="q1O4Text" placeholder="Enter option text">
-                        </div>
+                        <label for="quizPoints1">Points</label>
+                        <input type="number" id="quizPoints1" name="quizPoints1" placeholder="Enter Points"><br>
+                        
+                        <label for="quizOption1_1">First Option</label>
+                        <input type="radio" id="quizOption1_1" name="quizOption1" value="1">
+                        <input type="text" id="quizOption1_1Text" name="quizOption1_1Text" placeholder="Enter Option 1"><br>
+                        
+                        <label for="quizOption1_2">Second Option</label>
+                        <input type="radio" id="quizOption1_2" name="quizOption1" value="2">
+                        <input type="text" id="quizOption1_2Text" name="quizOption1_2Text" placeholder="Enter Option 2"><br>
+                        
+                        <label for="quizOption1_3">Third Option</label>
+                        <input type="radio" id="quizOption1_3" name="quizOption1" value="3">
+                        <input type="text" id="quizOption1_3Text" name="quizOption1_3Text" placeholder="Enter Option 3"><br>
+                        
+                        <label for="quizOption1_4">Fourth Option</label>
+                        <input type="radio" id="quizOption1_4" name="quizOption1" value="4">
+                        <input type="text" id="quizOption1_4Text" name="quizOption1_4Text" placeholder="Enter Option 4"><br>
                     </div>
                 </div>
             </div>
@@ -75,9 +80,6 @@
             <button type="submit">Submit Quiz</button>
         </form>
     </main>
-    <footer class="container">
-        <small><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></small>
-    </footer>
 
     <script>
         let questionCount = 1;
@@ -88,34 +90,33 @@
             newQuestion.classList.add('question');
             newQuestion.id = `question${questionCount}`;
             newQuestion.innerHTML = `
-                <h3>Question ${questionCount}</h3>
+                <h3 class="header">Question ${questionCount}</h3>
                 <div class="input-group">
                     <label for="quizName${questionCount}">Quiz Name</label>
                     <input type="text" id="quizName${questionCount}" name="quizName${questionCount}" placeholder="Enter Quiz Name">
                 </div>
                 <div>
-                    <label>Options</label>
-                    <div>
-                        <input type="radio" id="q${questionCount}O1" name="quizOption${questionCount}">
-                        <input type="text" name="q${questionCount}O1Text" placeholder="Enter option text">
-                    </div>
-                    <div>
-                        <input type="radio" id="q${questionCount}O2" name="quizOption${questionCount}">
-                        <input type="text" name="q${questionCount}O2Text" placeholder="Enter option text">
-                    </div>
-                    <div>
-                        <input type="radio" id="q${questionCount}O3" name="quizOption${questionCount}">
-                        <input type="text" name="q${questionCount}O3Text" placeholder="Enter option text">
-                    </div>
-                    <div>
-                        <input type="radio" id="q${questionCount}O4" name="quizOption${questionCount}">
-                        <input type="text" name="q${questionCount}O4Text" placeholder="Enter option text">
-                    </div>
+                    <label for="quizPoints${questionCount}">Points</label>
+                    <input type="number" id="quizPoints${questionCount}" name="quizPoints${questionCount}" placeholder="Enter Points"><br>
+                    
+                    <label for="quizOption${questionCount}_1">First Option</label>
+                    <input type="radio" id="quizOption${questionCount}_1" name="quizOption${questionCount}" value="1">
+                    <input type="text" id="quizOption${questionCount}_1Text" name="quizOption${questionCount}_1Text" placeholder="Enter Option 1"><br>
+                    
+                    <label for="quizOption${questionCount}_2">Second Option</label>
+                    <input type="radio" id="quizOption${questionCount}_2" name="quizOption${questionCount}" value="2">
+                    <input type="text" id="quizOption${questionCount}_2Text" name="quizOption${questionCount}_2Text" placeholder="Enter Option 2"><br>
+                    
+                    <label for="quizOption${questionCount}_3">Third Option</label>
+                    <input type="radio" id="quizOption${questionCount}_3" name="quizOption${questionCount}" value="3">
+                    <input type="text" id="quizOption${questionCount}_3Text" name="quizOption${questionCount}_3Text" placeholder="Enter Option 3"><br>
+                    
+                    <label for="quizOption${questionCount}_4">Fourth Option</label>
+                    <input type="radio" id="quizOption${questionCount}_4" name="quizOption${questionCount}" value="4">
+                    <input type="text" id="quizOption${questionCount}_4Text" name="quizOption${questionCount}_4Text" placeholder="Enter Option 4"><br>
                 </div>
             `;
             document.getElementById('questions').appendChild(newQuestion);
         });
     </script>
 </body>
-
-</html>
