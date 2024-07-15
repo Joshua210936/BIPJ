@@ -4,6 +4,10 @@
     border-radius:20px;
 }
 
+.title-div{
+    margin-left:20px;
+}
+
 .flex-container {
     display: flex;
     flex-wrap: wrap; /* Allows wrapping of items to the next line if they overflow */
