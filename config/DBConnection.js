@@ -2,6 +2,7 @@ const mySQLDB = require('./DBConfig');
 // This part would be need to change according to the model name
 const user = require('../models/custUser');
 const saving = require('../models/savings');
+const Test = require('../models/test');
 
 const setUpDB = (drop) => {
     mySQLDB.authenticate()

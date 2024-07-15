@@ -11,6 +11,8 @@ const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
 const addWorkshops = require('./models/addWorkshops');
+const Test = require('./models/test');
+const Customer = require('./models/custUser');
 const SavingsEntry = require('./models/SavingsEntry');
 
 let port = 3001;
@@ -39,9 +41,30 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.get('/',function(req,res){ //home page
     res.render('home',{layout:'main'})
 });
-app.get('/login',function(req,res){ //home page
-    res.render('login',{layout:'main'})
+app.get('/register',function(req,res){ //home page
+    res.render('register',{layout:'main'})
 });
+
+app.post('/register',function(req,res){
+    let {fName, lName, email, phone,password, cPassword} = req.body;
+
+    Customer.create({
+        Customer_fName: fName,
+        Customer_lName: lName,
+        Customer_Email: email,
+        Customer_Phone: phone,
+        Customer_Password: password,
+        Customer_cPassword: cPassword
+    })
+    .then(() => {
+        res.redirect('/'); 
+    })
+    .catch(err => {
+        console.error('Error creating account:', err);
+        res.status(400).send({ message: 'Error registering account', error: err });
+    });
+});
+
 app.get('/savingplanner',function(req,res){
     res.render('savingplanner',{layout:'main'})
 });
@@ -174,6 +197,61 @@ app.get('/adminQuiz2',function(req,res){
     };
     res.render('adminQuiz2',{layout:'adminMain'})
 });
+
+app.post('/adminQuiz2', async function(req, res){
+    let { quizID, quizModule, quizName1, quizPoints1, quizOption1, quizOption2, quizOption3, quizOption4, quizCorrectOption1,
+        quizName2, quizPoints2, quizOption2_1, quizOption2_2, quizOption2_3, quizOption2_4, quizCorrectOption2,
+        quizName3, quizPoints3, quizOption3_1, quizOption3_2, quizOption3_3, quizOption3_4, quizCorrectOption3,
+        quizName4, quizPoints4, quizOption4_1, quizOption4_2, quizOption4_3, quizOption4_4, quizCorrectOption4,
+        quizName5, quizPoints5, quizOption5_1, quizOption5_2, quizOption5_3, quizOption5_4, quizCorrectOption5 } = req.body;
+
+    try {
+        // Create a new test
+        const newTest = await Test.create({ testName: quizID, module: quizModule });
+
+        // Array to store question data
+        const questions = [
+            { quizName: quizName1, quizPoints: quizPoints1, options: [quizOption1, quizOption2, quizOption3, quizOption4], correctOption: quizCorrectOption1 },
+            { quizName: quizName2, quizPoints: quizPoints2, options: [quizOption2_1, quizOption2_2, quizOption2_3, quizOption2_4], correctOption: quizCorrectOption2 },
+            { quizName: quizName3, quizPoints: quizPoints3, options: [quizOption3_1, quizOption3_2, quizOption3_3, quizOption3_4], correctOption: quizCorrectOption3 },
+            { quizName: quizName4, quizPoints: quizPoints4, options: [quizOption4_1, quizOption4_2, quizOption4_3, quizOption4_4], correctOption: quizCorrectOption4 },
+            { quizName: quizName5, quizPoints: quizPoints5, options: [quizOption5_1, quizOption5_2, quizOption5_3, quizOption5_4], correctOption: quizCorrectOption5 }
+        ];
+
+        // Iterate over each question and create them along with their options
+
+        for (const questionData of questions) {
+            const { quizName, quizPoints, options, correctOption } = questionData;
+
+            // Create the question
+            const newQuestion = await Question.create({
+                questionText: quizName,
+                points: quizPoints,
+                testId: newTest.id
+            });
+
+            // Create the options for the question
+            for (let i = 0; i < options.length; i++) {
+                const optionText = options[i];
+                const isCorrect = correctOption == i + 1;
+
+                await Option.create({
+                    optionText,
+                    isCorrect,
+                    questionId: newQuestion.id
+                });
+            }
+        }
+
+        res.status(201).send({ message: 'Quiz created successfully!' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Error creating quiz', error });
+    }
+});
+
+const adminRoute = require('./routes/admin_routes');
+app.use(adminRoute);
 
 app.listen(port, ()=>{
     console.log(`Server running on  http://localhost:${port}`)

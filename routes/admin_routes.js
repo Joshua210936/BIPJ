@@ -1,47 +1,55 @@
 const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser');
-const moment = require('moment');
-router.use(bodyParser.urlencoded({ extended: false }));
+const { Test, Question, Option } = require('../models/test');
 
-// Database import
-const AdminQuiz = require('../models/adminQuiz');
-const QuizQuestion = require('../models/quizQuestion');
-const QuizAnswer = require('../models/quizAnswer');
+router.post('/createQuiz', async (req, res) => {
+    const { quizID, quizModule, quizName1, quizPoints1, quizOption1, quizOption2, quizOption3, quizOption4, quizCorrectOption1,
+            quizName2, quizPoints2, quizOption2_1, quizOption2_2, quizOption2_3, quizOption2_4, quizCorrectOption2,
+            quizName3, quizPoints3, quizOption3_1, quizOption3_2, quizOption3_3, quizOption3_4, quizCorrectOption3,
+            quizName4, quizPoints4, quizOption4_1, quizOption4_2, quizOption4_3, quizOption4_4, quizCorrectOption4,
+            quizName5, quizPoints5, quizOption5_1, quizOption5_2, quizOption5_3, quizOption5_4, quizCorrectOption5 } = req.body;
 
-// Create a new AdminQuiz
-router.post('/adminQuiz', async (req, res) => {
     try {
-        const { Quiz_Module } = req.body;
-        const newAdminQuiz = await AdminQuiz.create({ Quiz_Module });
-        res.status(201).json(newAdminQuiz);
-    } catch (error) {
-        console.error('Error creating AdminQuiz:', error);
-        res.status(500).json({ error: 'Failed to create AdminQuiz' });
-    }
-});
+        // Create a new test
+        const newTest = await Test.create({ TestID: quizID, module: quizModule });
 
-// Create a new QuizQuestion
-router.post('/quizQuestion', async (req, res) => {
-    try {
-        const { Test_ID, Quiz_Question, Points } = req.body;
-        const newQuizQuestion = await QuizQuestion.create({ Test_ID, Quiz_Question, Points });
-        res.status(201).json(newQuizQuestion);
-    } catch (error) {
-        console.error('Error creating QuizQuestion:', error);
-        res.status(500).json({ error: 'Failed to create QuizQuestion' });
-    }
-});
+        // Array to store question data
+        const questions = [
+            { quizName: quizName1, quizPoints: quizPoints1, options: [quizOption1, quizOption2, quizOption3, quizOption4], correctOption: quizCorrectOption1 },
+            { quizName: quizName2, quizPoints: quizPoints2, options: [quizOption2_1, quizOption2_2, quizOption2_3, quizOption2_4], correctOption: quizCorrectOption2 },
+            { quizName: quizName3, quizPoints: quizPoints3, options: [quizOption3_1, quizOption3_2, quizOption3_3, quizOption3_4], correctOption: quizCorrectOption3 },
+            { quizName: quizName4, quizPoints: quizPoints4, options: [quizOption4_1, quizOption4_2, quizOption4_3, quizOption4_4], correctOption: quizCorrectOption4 },
+            { quizName: quizName5, quizPoints: quizPoints5, options: [quizOption5_1, quizOption5_2, quizOption5_3, quizOption5_4], correctOption: quizCorrectOption5 }
+        ];
 
-// Create a new QuizAnswer
-router.post('/quizAnswer', async (req, res) => {
-    try {
-        const { Question_ID, Answer_Text, Is_Correct } = req.body;
-        const newQuizAnswer = await QuizAnswer.create({ Question_ID, Answer_Text, Is_Correct });
-        res.status(201).json(newQuizAnswer);
+        // Iterate over each question and create them along with their options
+        for (const questionData of questions) {
+            const { quizName, quizPoints, options, correctOption } = questionData;
+
+            // Create the question
+            const newQuestion = await Question.create({
+                questionText: quizName,
+                points: quizPoints,
+                testId: newTest.id
+            });
+
+            // Create the options for the question
+            for (let i = 0; i < options.length; i++) {
+                const optionText = options[i];
+                const isCorrect = correctOption == i + 1;
+
+                await Option.create({
+                    optionText,
+                    isCorrect,
+                    questionId: newQuestion.id
+                });
+            }
+        }
+
+        res.status(201).send({ message: 'Quiz created successfully!' });
     } catch (error) {
-        console.error('Error creating QuizAnswer:', error);
-        res.status(500).json({ error: 'Failed to create QuizAnswer' });
+        console.error(error);
+        res.status(500).send({ message: 'Error creating quiz', error });
     }
 });
 
