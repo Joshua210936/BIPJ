@@ -1,16 +1,15 @@
-const { DataTypes } = require('sequelize');
 const sequelize = require('sequelize');
-
 const db = require('../config/DBConfig');
+const { min } = require('moment');
 
 const Test = db.define('Test', {
     testID: {
-        type: DataTypes.INTEGER,
+        type: sequelize.INTEGER,
         primaryKey: true,
-        allowNull: false
+        allowNull: true
     },
     module: {
-        type: DataTypes.INTEGER,
+        type: sequelize.INTEGER,
         allowNull: false
     }
 }, {
@@ -18,42 +17,53 @@ const Test = db.define('Test', {
 });
 
 const Question = db.define('Question', {
+    testID: {
+        type: sequelize.INTEGER,
+        references: {
+            model: Test,
+            key: 'testID'
+        },
+    },
     questionText: {
-        type: DataTypes.STRING,
+        type: sequelize.STRING,
         allowNull: false
     },
     points: {
-        type: DataTypes.INTEGER,
+        type: sequelize.INTEGER,
         allowNull: false
     },
     option1: {
-        type: DataTypes.STRING,
+        type: sequelize.STRING,
         allowNull: false,
     },
     option2: {
-        type: DataTypes.STRING,
+        type: sequelize.STRING,
         allowNull: false,
     },
     option3: {
-        type: DataTypes.STRING,
+        type: sequelize.STRING,
         allowNull: false,
     },
     option4: {
-        type: DataTypes.STRING,
+        type: sequelize.STRING,
         allowNull: false,
     },
     correctOption: {
-        type: DataTypes.INTEGER, // make sure this is only 1-4
-        allowNull: false
+        type: sequelize.INTEGER, // make sure this is only 1-4
+        allowNull: false,
+        validator: {
+            min: 1,
+            max: 4
+        }
     }
 }, {
     tableName: 'questions'
 });
 
 // Define relationships
-Test.hasMany(Question, { foreignKey: 'testId', as: 'questions' });
+Test.hasMany(Question, { foreignKey: 'testID', as: 'questions' });
 Question.belongsTo(Test, {
-    foreignKey: 'testId',
+    foreignKey: 'testID',
     as: 'test'
 });
 
