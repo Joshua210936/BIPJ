@@ -15,6 +15,7 @@ const Test = require('./models/test');
 const Customer = require('./models/custUser');
 const SavingsEntry = require('./models/SavingsEntry');
 
+
 let port = 3001;
 
 //Sets handlebars confirgurations
@@ -113,22 +114,52 @@ app.post('/addgoal', function(req, res){
     });
 });
 
-app.post('/goalsPage', function(req, res) {
+
+
+
+
+app.post('/goalsPage', async function(req, res) {
     let { saving_id, saving_date, saving_amount } = req.body;
 
-    SavingsEntry.create({
-        Saving_id: saving_id,
-        Entry_date: saving_date,
-        Amount_saved: saving_amount
-    })
-    .then(() => {
+    try {
+        // Fetch the total Saving_amount from the savings table
+        const savingsRecord = await Saving.findByPk(saving_id);
+        if (!savingsRecord) {
+            throw new Error('Savings record not found');
+        }
+
+        const Saving_amount = savingsRecord.Saving_amount;
+
+        // Calculate the sum of Amount_saved in saving_entries for the given saving_id
+        const entries = await SavingsEntry.findAll({
+            where: { Saving_id: saving_id }
+        });
+
+        let sumAmountSaved = 0;
+        entries.forEach(entry => {
+            sumAmountSaved += entry.Amount_saved;
+        });
+
+        // Calculate Amount_left including the new entry
+        const Amount_left = Saving_amount - (sumAmountSaved + parseInt(saving_amount));
+
+        // Create new entry in saving_entries
+        await SavingsEntry.create({
+            Saving_id: saving_id,
+            Entry_date: saving_date,
+            Amount_saved: saving_amount,
+            Amount_left: Amount_left
+        });
+
         res.redirect('/goalsPage');
-    })
-    .catch(err => {
+    } catch (err) {
         console.error('Error adding saving entry:', err);
         res.status(400).send({ message: 'Error adding saving entry', error: err });
-    });
+    }
 });
+
+
+
 
 app.post('/editGoal', function(req, res) {
     let { saving_id, goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
