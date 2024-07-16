@@ -213,7 +213,20 @@ app.get('/aboutUs',function(req,res){
 
 //admin
 app.get('/adminWorkshops', function(req, res){
-    res.render('adminWorkshops', {layout:'adminMain'});
+    addWorkshops.findAll()
+        .then(workshops => {
+            res.render('adminWorkshops', { 
+                layout: 'adminMain',
+                workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
+                json: JSON.stringify // Pass JSON.stringify to the template
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching workshops:', err);
+            if (!res.headersSent) {
+                res.status(500).send('Internal Server Error');
+            }
+        });
 });
 
 app.post('/adminWorkshops', function(req,res){

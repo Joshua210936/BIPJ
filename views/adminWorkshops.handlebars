@@ -2,8 +2,52 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="css/adminWorkshops.css">
     <script src="js/adminWorkshops.js" defer></script>
+
+{{!-- workshop stuff --}}
+    <link rel="stylesheet" href="css/workshopsUser.css">
+    <script src="js/workshopMap.js"></script>
+    <script>
+        // Embed workshops data into a JavaScript variable
+        const workshops = {{{json workshops}}};
+    </script>
 </head>
-<button class="filter-icon" >Add Workshop</button>
+<h1 style="text-align:center;">Upcoming Workshops</h1>
+<div class="container">
+    {{#if workshops.length}}
+        <div class="flex-container">
+        {{#each workshops}}
+            <table class="workshopTables">
+                <tr class="workshopImage">
+                    <td colspan="2">
+                        <img src="/images/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}" class="workshopTableImage"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2" style="padding-left:10px;">{{this.Workshop_Name}}</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th><button class="remove-button">Remove</button></th>
+                    <td onclick="openWorkshopModal({{json this}})" class="readMoreButton"><a href="#">Read More &rarr;</a></td>
+                </tr>
+            </table>
+        {{/each}}
+        <button class="filter-icon" >Add Workshop</button>
+        </div>
+    {{else}}
+        No Current Workshops
+    {{/if}}
+</div>
+
+{{!-- Modal --}}
+
+<div id="workshopModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modalWorkshopContent"></div>
+    </div>
+</div>
+
 <button class="mapModalButton" id="mapModalButton">Add Event</button>
 
 {{!-- add workshop popup --}}
