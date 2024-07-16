@@ -1,3 +1,6 @@
+p {
+  line-height: 200%;
+}
 
 #hero {
     background: url('hero-image.jpg') no-repeat center center/cover;
