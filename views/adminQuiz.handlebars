@@ -1,144 +1,122 @@
-<head>Create Quizzes for Users</head>
-<form action="/createQuiz" method="POST">
-    <label for="quizID" >Quiz ID</label>
-    <input type="text" id="quizID" name="quizID" placeholder="Enter Quiz ID"><br>
-    <label for="quizModule">Module</label>
-    <select id="quizModule" name="quizModule">
-        <option value="1">Module 1</option>
-        <option value="2">Module 2</option>
-        <option value="3">Module 3</option>
-        <option value="4">Module 4</option>
-        <option value="5">Module 5</option>
-    </select>
-    {{!-- Question 1 --}}
-    <h3>Question 1</h3>
-    <div>
-        <div class="input-group">
-            <label for="quizName">Quiz Name</label>
-            <input type="text" id="quizName" name="quizName" placeholder="Enter Quiz Name">
-        </div>
-        <div>
-            <label for="quizOption1">First Option</label>
-            <input type="radio" id="q1O1" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption2">Second Option</label>
-            <input type="radio" id="q1O2" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption3">Third Option</label>
-            <input type="radio" id="q1O3" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption4">Fourth Option</label>
-            <input type="radio" id="q1O4" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-        </div>
-    </div>
+<head>
+    {{!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"> --}}
+    <title>Create Quizzes for Users</title>
+    <style>
+        .question {
+            margin-bottom: 1em;
+            color: burlywood;
+        }
 
-    {{!-- Question 2 --}}
-    <h3>Question 2</h3>
-    <div>
-        <div class="input-group">
-            <label for="quizName">Quiz Name</label>
-            <input type="text" id="quizName" name="quizName" placeholder="Enter Quiz Name">
-        </div>
-        <div>
-            <label for="quizOption1">First Option</label>
-            <input type="radio" id="q2O1" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption2">Second Option</label>
-            <input type="radio" id="q2O2" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption3">Third Option</label>
-            <input type="radio" id="q2O3" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption4">Fourth Option</label>
-            <input type="radio" id="q2O4" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-        </div>
-    </div>
-    
-    {{!-- Question 3 --}}
-    <h3>Question 3</h3>
-    <div>
-        <div class="input-group"></div>
-            <label for="quizName">Quiz Name</label>
-            <input type="text" id="quizName" name="quizName" placeholder="Enter Quiz Name">
-        </div>
-        <div>
-            <label for="quizOption1">First Option</label>
-            <input type="radio" id="q3O1" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption2">Second Option</label>
-            <input type="radio" id="q3O2" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption3">Third Option</label>
-            <input type="radio" id="q3O3" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption4">Fourth Option</label>
-            <input type="radio" id="q3O4" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-        </div>
-    </div>
+        .add-question-button {
+            display: block;
+            margin: 1em 0;
+        }
 
-    {{!-- Question 4 --}}
-    <h3>Question 4</h3>
-    <div>
-        <div class="input-group"></div>
-            <label for="quizName">Quiz Name</label>
-            <input type="text" id="quizName" name="quizName" placeholder="Enter Quiz Name">
-        </div>
-        <div>
-            <label for="quizOption1">First Option</label>
-            <input type="radio" id="q4O1" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption2">Second Option</label>
-            <input type="radio" id="q4O2" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption3">Third Option</label>
-            <input type="radio" id="q4O3" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption4">Fourth Option</label>
-            <input type="radio" id="q4O4" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-        </div>
-    </div>
+        #quizModule, .question input, .question input::placeholder {
+            background-color: white;
+            color: gray;
+        }
 
-    {{!-- Question 5 --}}
-    <h3>Question 5</h3>
-    <div>
-        <div class="input-group"></div>
-            <label for="quizName">Quiz Name</label>
-            <input type="text" id="quizName" name="quizName" placeholder="Enter Quiz Name">
-        </div>
-        <div>
-            <label for="quizOption1">First Option</label>
-            <input type="radio" id="q5O1" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption2">Second Option</label>
-            <input type="radio" id="q5O2" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption3">Third Option</label>
-            <input type="radio" id="q5O3" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-            
-            <label for="quizOption4">Fourth Option</label>
-            <input type="radio" id="q5O4" name="quizOption">
-            <input type="text" placeholder="Enter your first name">
-        </div>
-    </div>
+        #quizForm label {
+            color: black;
+        }
 
-    <button type="submit">Submit Quiz</button>
-</form> 
+        .header {
+            color: black;
+        }
+
+        label {
+            display: inline-block !important;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <form action="/createQuiz" method="POST" id="quizForm">
+            <label for="quizID">Test ID</label>
+            <input type="text" id="quizID" name="quizID" placeholder="Enter Quiz ID"><br>
+            
+            <label for="quizModule">Module</label>
+            <select id="quizModule" name="quizModule">
+                <option value="1">Module 1</option>
+                <option value="2">Module 2</option>
+                <option value="3">Module 3</option>
+                <option value="4">Module 4</option>
+                <option value="5">Module 5</option>
+            </select><br>
+            
+            <div id="questions">
+                <div class="question" id="question1">
+                    <h3 class="header">Question 1</h3>
+                    <div class="input-group">
+                        <label for="quizName1">Quiz Name</label>
+                        <input type="text" id="quizName1" name="quizName1" placeholder="Enter Quiz Name">
+                    </div>
+                    <div>
+                        <label for="quizPoints1">Points</label>
+                        <input type="number" id="quizPoints1" name="quizPoints1" placeholder="Enter Points"><br>
+                        
+                        <label for="quizOption1_1">First Option</label>
+                        <input type="radio" id="quizOption1_1" name="quizOption1" value="1">
+                        <input type="text" id="quizOption1_1Text" name="quizOption1_1Text" placeholder="Enter Option 1"><br>
+                        
+                        <label for="quizOption1_2">Second Option</label>
+                        <input type="radio" id="quizOption1_2" name="quizOption1" value="2">
+                        <input type="text" id="quizOption1_2Text" name="quizOption1_2Text" placeholder="Enter Option 2"><br>
+                        
+                        <label for="quizOption1_3">Third Option</label>
+                        <input type="radio" id="quizOption1_3" name="quizOption1" value="3">
+                        <input type="text" id="quizOption1_3Text" name="quizOption1_3Text" placeholder="Enter Option 3"><br>
+                        
+                        <label for="quizOption1_4">Fourth Option</label>
+                        <input type="radio" id="quizOption1_4" name="quizOption1" value="4">
+                        <input type="text" id="quizOption1_4Text" name="quizOption1_4Text" placeholder="Enter Option 4"><br>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="add-question-button" id="addQuestionButton">Add Question</button>
+            <button type="submit">Submit Quiz</button>
+        </form>
+    </main>
+
+    <script>
+        let questionCount = 1;
+
+        document.getElementById('addQuestionButton').addEventListener('click', () => {
+            questionCount++;
+            const newQuestion = document.createElement('div');
+            newQuestion.classList.add('question');
+            newQuestion.id = `question${questionCount}`;
+            newQuestion.innerHTML = `
+                <h3 class="header">Question ${questionCount}</h3>
+                <div class="input-group">
+                    <label for="quizName${questionCount}">Quiz Name</label>
+                    <input type="text" id="quizName${questionCount}" name="quizName${questionCount}" placeholder="Enter Quiz Name">
+                </div>
+                <div>
+                    <label for="quizPoints${questionCount}">Points</label>
+                    <input type="number" id="quizPoints${questionCount}" name="quizPoints${questionCount}" placeholder="Enter Points"><br>
+                    
+                    <label for="quizOption${questionCount}_1">First Option</label>
+                    <input type="radio" id="quizOption${questionCount}_1" name="quizOption${questionCount}" value="1">
+                    <input type="text" id="quizOption${questionCount}_1Text" name="quizOption${questionCount}_1Text" placeholder="Enter Option 1"><br>
+                    
+                    <label for="quizOption${questionCount}_2">Second Option</label>
+                    <input type="radio" id="quizOption${questionCount}_2" name="quizOption${questionCount}" value="2">
+                    <input type="text" id="quizOption${questionCount}_2Text" name="quizOption${questionCount}_2Text" placeholder="Enter Option 2"><br>
+                    
+                    <label for="quizOption${questionCount}_3">Third Option</label>
+                    <input type="radio" id="quizOption${questionCount}_3" name="quizOption${questionCount}" value="3">
+                    <input type="text" id="quizOption${questionCount}_3Text" name="quizOption${questionCount}_3Text" placeholder="Enter Option 3"><br>
+                    
+                    <label for="quizOption${questionCount}_4">Fourth Option</label>
+                    <input type="radio" id="quizOption${questionCount}_4" name="quizOption${questionCount}" value="4">
+                    <input type="text" id="quizOption${questionCount}_4Text" name="quizOption${questionCount}_4Text" placeholder="Enter Option 4"><br>
+                </div>
+            `;
+            document.getElementById('questions').appendChild(newQuestion);
+        });
+    </script>
+</body>

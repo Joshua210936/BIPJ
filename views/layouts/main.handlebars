@@ -18,7 +18,11 @@
 </head>
     <body>
         <div class="gradient">
-            {{>_guestNavbar}}
+            {{#if session}}
+                {{>_userNavbar}}
+            {{else}}
+                {{>_guestNavbar}}
+            {{/if}}
             <div>
                 {{> _msg}}
                 {{> _errors}}
