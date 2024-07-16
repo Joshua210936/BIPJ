@@ -36,12 +36,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>{{this.Workshop_Name}}</th>
+                    <th colspan="2" style="padding-left:10px;">{{this.Workshop_Name}}</th>
                     <td></td>
                 </tr>
                 <tr>
                     <th></th>
-                    <td onclick="openWorkshopModal({{json this}})" class="readMoreButton">Read More</td>
+                    <td onclick="openWorkshopModal({{json this}})" class="readMoreButton"><a href="#">Read More &rarr;</a></td>
                 </tr>
             </table>
         {{/each}}

@@ -1,0 +1,25 @@
+<body>
+    <div class="container">
+    <h1>Tests Overview</h1>
+    <div class="test-container">
+        {{#each tests}}
+            <div class="test-item">
+                <div class="test-header">
+                    <h2>Test ID: {{this.testID}}</h2>
+                    <div>
+                        <button onclick="editTest('{{this.testID}}')">Edit</button>
+                        <button onclick="deleteTest('{{this.testID}}')">Delete</button>
+                    </div>
+                </div>
+                <div class="test-details">
+                    <p>Module: {{this.module}}</p>
+                    <!-- Fetch number of questions and total points via server-side rendering or AJAX -->
+                    <p>Number of Questions: {{this.questions.length}}</p>
+                    <p>Total Points: {{this.totalPoints}}</p>
+                </div>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+
+</body>
