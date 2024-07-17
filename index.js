@@ -277,6 +277,32 @@ app.get('/adminWorkshops', function(req, res){
         });
 });
 
+app.get('/adminWorkshops/delete/:id', (req,res) => {
+    const workshopId = req.params.id;
+
+    addWorkshops.findOne({
+        where: {
+            Workshop_ID: workshopId
+        }
+    }).then(workshop => {
+        if (workshop) {
+            return addWorkshops.destroy({
+                where: {
+                    Workshop_ID: workshopId
+                }
+            });
+        } else {
+            res.status(404).send('Workshop not found');
+        }
+    }).then(() => {
+        console.log("Workshop Deleted!");
+        res.redirect("/adminWorkshops");
+    }).catch(err => {
+        console.error("Error deleting workshop:", err);
+        res.status(500).send("Internal Server Error");
+    });
+});
+
 app.post('/adminWorkshops', function(req,res){
     let{workshopName, workshopStartDate, workshopEndDate,startTime, endTime, workshopAddress, workshopLatitude, workshopLongitude, description, workshopImage } = req.body;
     
