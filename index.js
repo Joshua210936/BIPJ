@@ -1,6 +1,6 @@
 // Required libraries
 const express = require('express');
-const bodyParser = require("body-parser"); 
+const bodyParser = require("body-parser");
 const app = express();
 const exphbs = require('express-handlebars')
 const path = require('path');
@@ -14,40 +14,42 @@ const addWorkshops = require('./models/addWorkshops');
 const { Test, Question } = require('./models/test');
 const Customer = require('./models/custUser');
 const SavingsEntry = require('./models/SavingsEntry');
-
+const SubscriptionPlans = require('./models/subscription')
 
 let port = 3001;
 
 //Sets handlebars confirgurations
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
-    layoutsDir:__dirname+'/views/layouts',
-    partialsDir:__dirname+'/views/partials'
+    layoutsDir: __dirname + '/views/layouts',
+    partialsDir: __dirname + '/views/partials'
 }));
 
 //JSON for handlebars (idk i need it for my modal)
-Handlebars.registerHelper('json', function(context) {
+Handlebars.registerHelper('json', function (context) {
     return JSON.stringify(context);
 });
-
+Handlebars.registerHelper('parseJson', function (context) {
+    return JSON.parse(context);
+});
 
 //sets apps to use handlebars engine
-app.set('view engine','handlebars');
+app.set('view engine', 'handlebars');
 
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(bodyParser.urlencoded({extended:true})); 
-app.use(express.static(path.join(__dirname, '/public'))); 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '/public')));
 
 //guest
-app.get('/',function(req,res){ //home page
-    res.render('home',{layout:'main'})
+app.get('/', function (req, res) { //home page
+    res.render('home', { layout: 'main' })
 });
-app.get('/register',function(req,res){ //home page
-    res.render('register',{layout:'main'})
+app.get('/register', function (req, res) { //home page
+    res.render('register', { layout: 'main' })
 });
 
-app.post('/register',function(req,res){
-    let {fName, lName, email, phone,password, cPassword} = req.body;
+app.post('/register', function (req, res) {
+    let { fName, lName, email, phone, password, cPassword } = req.body;
 
     Customer.create({
         Customer_fName: fName,
@@ -57,28 +59,28 @@ app.post('/register',function(req,res){
         Customer_Password: password,
         Customer_cPassword: cPassword
     })
-    .then(() => {
-        res.redirect('/'); 
-    })
-    .catch(err => {
-        console.error('Error creating account:', err);
-        res.status(400).send({ message: 'Error registering account', error: err });
-    });
+        .then(() => {
+            res.redirect('/');
+        })
+        .catch(err => {
+            console.error('Error creating account:', err);
+            res.status(400).send({ message: 'Error registering account', error: err });
+        });
 });
 
-app.get('/savingplanner',function(req,res){
-    res.render('savingplanner',{layout:'main'})
+app.get('/savingplanner', function (req, res) {
+    res.render('savingplanner', { layout: 'main' })
 });
 
 
-app.get('/goalsPage', function(req, res) {
+app.get('/goalsPage', function (req, res) {
     Saving.findAll()
         .then(savings => {
-            res.render('goalsPage', { 
+            res.render('goalsPage', {
                 layout: 'main',
                 savings: savings.map(saving => {
                     saving = saving.get({ plain: true });
-                    
+
                     return saving;
                 })
             });
@@ -89,13 +91,13 @@ app.get('/goalsPage', function(req, res) {
         });
 });
 
-app.get('/addgoal',function(req,res){
-    res.render('addgoal',{layout:'main'})
+app.get('/addgoal', function (req, res) {
+    res.render('addgoal', { layout: 'main' })
 });
 
-app.post('/addgoal', function(req, res){
+app.post('/addgoal', function (req, res) {
     let { goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
-    
+
     Saving.create({
         Saving_goalName: goal_name,
         Saving_amount: target_amount,
@@ -103,15 +105,15 @@ app.post('/addgoal', function(req, res){
         Saving_endDate: end_date,
         Saving_frequency: savings_frequency,
         Saving_calculate: calculated_savings,
-        Saving_picture: add_picture,     
+        Saving_picture: add_picture,
     })
-    .then(() => {
-        res.redirect('/goalsPage'); 
-    })
-    .catch(err => {
-        console.error('Error creating saving:', err);
-        res.status(400).send({ message: 'Error registering saving', error: err });
-    });
+        .then(() => {
+            res.redirect('/goalsPage');
+        })
+        .catch(err => {
+            console.error('Error creating saving:', err);
+            res.status(400).send({ message: 'Error registering saving', error: err });
+        });
 });
 
 // In your Express route handler
@@ -135,7 +137,7 @@ app.get('/goalsPage/data', async (req, res) => {
 
 
 
-app.post('/goalsPage', async function(req, res) {
+app.post('/goalsPage', async function (req, res) {
     let { saving_id, saving_date, saving_amount } = req.body;
 
     try {
@@ -178,7 +180,7 @@ app.post('/goalsPage', async function(req, res) {
 
 
 
-app.post('/editGoal', function(req, res) {
+app.post('/editGoal', function (req, res) {
     let { saving_id, goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
 
     Saving.update(
@@ -195,17 +197,17 @@ app.post('/editGoal', function(req, res) {
             where: { Saving_id: saving_id }
         }
     )
-    .then(() => {
-        res.redirect('/goalsPage');
-    })
-    .catch(err => {
-        console.error('Error updating saving goal:', err);
-        res.status(400).send({ message: 'Error updating saving goal', error: err });
-    });
+        .then(() => {
+            res.redirect('/goalsPage');
+        })
+        .catch(err => {
+            console.error('Error updating saving goal:', err);
+            res.status(400).send({ message: 'Error updating saving goal', error: err });
+        });
 });
 
 
-app.post('/goalsPage/delete', async function(req, res) {
+app.post('/goalsPage/delete', async function (req, res) {
     const savingId = req.body.saving_id;
 
     try {
@@ -234,10 +236,10 @@ app.post('/goalsPage/delete', async function(req, res) {
 
 
 
-app.get('/workshops', function(req, res) {
+app.get('/workshops', function (req, res) {
     addWorkshops.findAll()
         .then(workshops => {
-            res.render('workshops', { 
+            res.render('workshops', {
                 layout: 'main',
                 workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
                 json: JSON.stringify // Pass JSON.stringify to the template
@@ -250,24 +252,62 @@ app.get('/workshops', function(req, res) {
             }
         });
 });
+
+function isValidJSON(str) {
+    if (typeof str !== 'string') {
+        return false; // Not a string
+    }
+    try {
+        JSON.parse(str);
+        return true; // Valid JSON
+    } catch (e) {
+        return false; // Invalid JSON
+    }
+}
+
 // Subscriptions //
-app.get('/subscription',function(req,res){
-    res.render('subscription',{layout:'main'})
+app.get('/subscription', async (req, res) => {
+    try {
+        const plans = await SubscriptionPlans.findAll();
+
+        const plansWithParsedDescription = plans.map(plan => {
+
+            const description = JSON.stringify(plan.description).replace(/'/g, '"') || '{}'; // Default to empty JSON if missing
+            console.log(plan.description, JSON.stringify(plan.description));
+
+            const parsedDescription = JSON.parse(JSON.stringify(description));
+            console.log(`Plan ID ${plan.plan_ID} Description:`, parsedDescription); // Print the parsed description
+            return {
+                ...plan.toJSON(),
+                description: parsedDescription,
+            };
+
+        });
+
+
+        res.render('subscription', { layout: 'main', plans: plansWithParsedDescription });
+    } catch (error) {
+        console.error('Error fetching subscription plans:', error);
+        res.status(500).send('Server error');
+    }
 });
 
-app.get('/adminSubscription',function(req,res){
-    res.render('adminSubscription',{layout:'adminMain'})
+
+
+
+app.get('/adminSubscription', function (req, res) {
+    res.render('adminSubscription', { layout: 'adminMain' })
 });
 
-app.get('/aboutUs',function(req,res){
-    res.render('aboutUs',{layout:'main'})
+app.get('/aboutUs', function (req, res) {
+    res.render('aboutUs', { layout: 'main' })
 });
 
 //admin
-app.get('/adminWorkshops', function(req, res){
+app.get('/adminWorkshops', function (req, res) {
     addWorkshops.findAll()
         .then(workshops => {
-            res.render('adminWorkshops', { 
+            res.render('adminWorkshops', {
                 layout: 'adminMain',
                 workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
                 json: JSON.stringify // Pass JSON.stringify to the template
@@ -281,7 +321,7 @@ app.get('/adminWorkshops', function(req, res){
         });
 });
 
-app.get('/adminWorkshops/delete/:id', (req,res) => {
+app.get('/adminWorkshops/delete/:id', (req, res) => {
     const workshopId = req.params.id;
 
     addWorkshops.findOne({
@@ -307,9 +347,9 @@ app.get('/adminWorkshops/delete/:id', (req,res) => {
     });
 });
 
-app.post('/adminWorkshops', function(req,res){
-    let{workshopName, workshopStartDate, workshopEndDate,startTime, endTime, workshopAddress, workshopLatitude, workshopLongitude, description, workshopImage } = req.body;
-    
+app.post('/adminWorkshops', function (req, res) {
+    let { workshopName, workshopStartDate, workshopEndDate, startTime, endTime, workshopAddress, workshopLatitude, workshopLongitude, description, workshopImage } = req.body;
+
     addWorkshops.create({
         Workshop_Name: workshopName,
         Workshop_StartDate: workshopStartDate,
@@ -321,20 +361,20 @@ app.post('/adminWorkshops', function(req,res){
         Workshop_Longitude: workshopLongitude,
         Workshop_Description: description,
         Workshop_Image: workshopImage
-    }) .then((workshops) =>{
+    }).then((workshops) => {
         res.redirect('/workshops');
     })
-    .catch(err=> console.log(err))
+        .catch(err => console.log(err))
 });
 
 
 
-app.get('/userCourse',function(req,res){
-    res.render('userCourse2',{layout:'main'})
+app.get('/userCourse', function (req, res) {
+    res.render('userCourse2', { layout: 'main' })
 });
 
-app.get('/adminQuiz',function(req,res){
-    res.render('adminQuiz',{layout:'adminMain'})
+app.get('/adminQuiz', function (req, res) {
+    res.render('adminQuiz', { layout: 'adminMain' })
 });
 
 app.post('/adminQuiz', async (req, res) => {
@@ -372,7 +412,7 @@ app.post('/adminQuiz', async (req, res) => {
     }
 });
 
-app.get('/adminViewQuiz', function(req, res) {
+app.get('/adminViewQuiz', function (req, res) {
     Test.findAll()
         .then(tests => {
             res.render('adminViewQuiz', {
@@ -454,6 +494,6 @@ app.get('/adminViewQuiz', function(req, res) {
 const adminRoute = require('./routes/admin_routes');
 app.use(adminRoute);
 
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log(`Server running on  http://localhost:${port}`)
 });

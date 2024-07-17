@@ -13,7 +13,7 @@ const SubscriptionPlans = db.define('subscriptionPlans', {
         allowNull: false
     },
     description: {
-        type: sequelize.TEXT,
+        type: sequelize.JSON,
         allowNull: false
     },
     price: {
@@ -21,6 +21,10 @@ const SubscriptionPlans = db.define('subscriptionPlans', {
         allowNull: false
     },
     duration: {
+        type: sequelize.INTEGER,
+        allowNull: false
+    },
+    duration_unit: {
         type: sequelize.STRING,
         allowNull: false
     },
