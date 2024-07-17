@@ -114,7 +114,7 @@ app.post('/addgoal', function(req, res){
     });
 });
 
-// In your Express route handler
+
 app.get('/goalsPage/data', async (req, res) => {
     try {
         const savings = await Saving.findAll({
@@ -209,14 +209,14 @@ app.post('/goalsPage/delete', async function(req, res) {
     const savingId = req.body.saving_id;
 
     try {
-        // Delete from SavingsEntry first
+       
         await SavingsEntry.destroy({
             where: {
                 Saving_id: savingId
             }
         });
 
-        // Then delete from Saving
+       
         await Saving.destroy({
             where: {
                 Saving_id: savingId
