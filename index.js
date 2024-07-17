@@ -231,9 +231,6 @@ app.post('/goalsPage/delete', async function(req, res) {
 });;
 
 
-
-
-
 app.get('/workshops', function(req, res) {
     addWorkshops.findAll()
         .then(workshops => {
@@ -281,6 +278,7 @@ app.get('/adminWorkshops', function(req, res){
         });
 });
 
+//admin workshop delete
 app.get('/adminWorkshops/delete/:id', (req,res) => {
     const workshopId = req.params.id;
 
@@ -306,6 +304,50 @@ app.get('/adminWorkshops/delete/:id', (req,res) => {
         res.status(500).send("Internal Server Error");
     });
 });
+
+//admin workshop edit
+app.put('/adminWorkshops/edit/:id', async (req, res) => {
+    const workshopId = req.params.id;
+    const {
+      workshopName,
+      workshopStartDate,
+      workshopEndDate,
+      startTime,
+      endTime,
+      workshopAddress,
+      workshopLatitude,
+      workshopLongitude,
+      description,
+      workshopImage
+    } = req.body;
+  
+    try {
+      // Find the workshop by ID
+      const workshop = await addWorkshops.findByPk(workshopId);
+  
+      if (!workshop) {
+        return res.status(404).json({ error: 'Workshop not found' });
+      }
+  
+      // Update the workshop
+      await workshop.update({
+        Workshop_Name: workshopName,
+        Workshop_StartDate: workshopStartDate,
+        Workshop_EndDate: workshopEndDate,
+        Workshop_StartTime: startTime,
+        Workshop_EndTime: endTime,
+        Workshop_Address: workshopAddress,
+        Workshop_Latitude: workshopLatitude,
+        Workshop_Longitude: workshopLongitude,
+        Workshop_Description: description,
+        Workshop_Image: workshopImage
+      });
+  
+      res.status(200).json({ message: 'Workshop updated successfully' });
+    } catch (error) {
+      console.error('Error updating workshop:', error);
+    }
+  });
 
 app.post('/adminWorkshops', function(req,res){
     let{workshopName, workshopStartDate, workshopEndDate,startTime, endTime, workshopAddress, workshopLatitude, workshopLongitude, description, workshopImage } = req.body;
