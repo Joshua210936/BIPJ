@@ -56,15 +56,41 @@ document.addEventListener('DOMContentLoaded', (event) => {
     window.openWorkshopModal = function(workshop) {
         const modalContent = document.getElementById("modalWorkshopContent");
         modalContent.innerHTML = `
-            <h2>${workshop.Workshop_Name}</h2>
-            <p><strong>Start Date:</strong> ${workshop.Workshop_StartDate}</p>
-            <p><strong>End Date:</strong> ${workshop.Workshop_EndDate}</p>
-            <p><strong>Time:</strong> ${workshop.Workshop_StartTime} to ${workshop.Workshop_EndTime}</p>
-            <p><strong>Address:</strong> ${workshop.Workshop_Address}</p>
-            <p><strong>Description:</strong> ${workshop.Workshop_Description}</p>
-            <img src="/images/${workshop.Workshop_Image}" alt="${workshop.Workshop_Image}" class="workshopTableImage"/>
+            <h2 style="text-align:center;padding-bottom:30px;">${workshop.Workshop_Name}</h2>
+            <div class="row">
+                <div class="col">
+                    <div class="formContainer">
+                        <h2>Registration</h2>
+                        <form action="/workshops" method="post">
+                            <label for="registerName">Full Name</label>
+                            <input type="text" id="registerName" name="registerName" required>
+                            <br>
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" name="registerEmail" required>
+                            <br>
+                            <label for="registerDate">Date</label>
+                            <input type="date" id="registerDate" name="registerDate" required>
+                            <br>
+                            <br>
+                            <div>By registering, I agree to FinancialFlare's Terms of Service</div>
+                            <button class="" type="submit">Register</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="infoContainer">
+                        <h2>Details</h2>
+                        <strong>Start Date:</strong> <p>${workshop.Workshop_StartDate}</p>
+                        <strong>End Date:</strong> <p>${workshop.Workshop_EndDate}</p>
+                        <strong>Time:</strong> <p>${workshop.Workshop_StartTime} to ${workshop.Workshop_EndTime}</p>
+                        <strong>Address:</strong> <p>${workshop.Workshop_Address}</p>
+                        <strong>Description:</strong> <p>${workshop.Workshop_Description}</p>
+                    </div>
+                </div>
+            </div>
         `;
         modal.style.display = "block";
     }
 });
     
+

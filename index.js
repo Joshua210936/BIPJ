@@ -5,6 +5,7 @@ const app = express();
 const exphbs = require('express-handlebars')
 const path = require('path');
 const Handlebars = require('handlebars');
+const methodOverride = require('method-override');
 
 // Database
 const bipjDB = require('./config/DBConnection');
@@ -15,6 +16,7 @@ const { Test, Question } = require('./models/test');
 const Customer = require('./models/custUser');
 const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
+const register = require('./models/workshopRegister')
 
 let port = 3001;
 
@@ -32,6 +34,15 @@ Handlebars.registerHelper('parseJson', function (context) {
     return JSON.parse(context);
 });
 
+// For comparison in handlebars [Quiz Module]
+Handlebars.registerHelper('eq', function(a, b) {
+    return a == b;
+});
+
+Handlebars.registerHelper('add', function(a, b) {
+    return a + b;
+});
+
 //sets apps to use handlebars engine
 app.set('view engine', 'handlebars');
 
@@ -39,6 +50,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(methodOverride('_method'));
 
 //guest
 app.get('/', function (req, res) { //home page
@@ -230,10 +242,7 @@ app.post('/goalsPage/delete', async function (req, res) {
         console.error('Error deleting goal:', error);
         res.status(500).send({ message: 'Error deleting goal', error });
     }
-});;
-
-
-
+});
 
 
 app.get('/workshops', function (req, res) {
@@ -251,6 +260,19 @@ app.get('/workshops', function (req, res) {
                 res.status(500).send('Internal Server Error');
             }
         });
+});
+
+app.post('/workshops', function (req, res) {
+    let {registerName, registerEmail, registerDate} = req.body;
+
+    register.create({
+        Register_Name: registerName,
+        Register_Email: registerEmail,
+        Register_Date: registerDate
+    }).then((registers) => {
+        res.redirect('/workshops');
+    })
+        .catch(err => console.log(err))
 });
 
 function isValidJSON(str) {
@@ -339,7 +361,9 @@ app.get('/adminWorkshops', function (req, res) {
         });
 });
 
-app.get('/adminWorkshops/delete/:id', (req, res) => {
+
+//admin workshop delete
+app.get('/adminWorkshops/delete/:id', (req,res) => {
     const workshopId = req.params.id;
 
     addWorkshops.findOne({
@@ -364,6 +388,50 @@ app.get('/adminWorkshops/delete/:id', (req, res) => {
         res.status(500).send("Internal Server Error");
     });
 });
+
+//admin workshop edit
+app.put('/adminWorkshops/edit/:id', async (req, res) => {
+    const workshopId = req.params.id;
+    const {
+      workshopName,
+      workshopStartDate,
+      workshopEndDate,
+      startTime,
+      endTime,
+      workshopAddress,
+      workshopLatitude,
+      workshopLongitude,
+      description,
+      workshopImage
+    } = req.body;
+  
+    try {
+      // Find the workshop by ID
+      const workshop = await addWorkshops.findByPk(workshopId);
+  
+      if (!workshop) {
+        return res.status(404).json({ error: 'Workshop not found' });
+      }
+  
+      // Update the workshop
+      await workshop.update({
+        Workshop_Name: workshopName,
+        Workshop_StartDate: workshopStartDate,
+        Workshop_EndDate: workshopEndDate,
+        Workshop_StartTime: startTime,
+        Workshop_EndTime: endTime,
+        Workshop_Address: workshopAddress,
+        Workshop_Latitude: workshopLatitude,
+        Workshop_Longitude: workshopLongitude,
+        Workshop_Description: description,
+        Workshop_Image: workshopImage
+      });
+  
+      res.status(200).json({ message: 'Workshop updated successfully' });
+    } catch (error) {
+      console.error('Error updating workshop:', error);
+    }
+  });
 
 app.post('/adminWorkshops', function (req, res) {
     let { workshopName, workshopStartDate, workshopEndDate, startTime, endTime, workshopAddress, workshopLatitude, workshopLongitude, description, workshopImage } = req.body;
@@ -395,7 +463,7 @@ app.get('/adminQuiz', function (req, res) {
     res.render('adminQuiz', { layout: 'adminMain' })
 });
 
-app.post('/adminQuiz', async (req, res) => {
+app.post('/adminQuiz', function(req, res) {
     const {
         testID,
         quizModule,
@@ -404,26 +472,36 @@ app.post('/adminQuiz', async (req, res) => {
 
     try {
         // Create a new test
-        const newTest = await Test.create({ testID: testID, module: quizModule });
+        Test.create({ testID: testID, module: quizModule })
+            .then(newTest => {
+                // Iterate over each question and create them along with their options
+                const questionPromises = questions.map(question => {
+                    const { questionText, points, option1, option2, option3, option4, correctOption } = question;
 
-        // Iterate over each question and create them along with their options
-        for (let i = 0; i < questions.length; i++) {
-            const { questionText, points, option1, option2, option3, option4, correctOption } = questions[i];
+                    // Create the question
+                    return Question.create({
+                        questionText,
+                        points,
+                        testID: newTest.testID,
+                        option1,
+                        option2,
+                        option3,
+                        option4,
+                        correctOption
+                    });
+                });
 
-            // Create the question
-            const newQuestion = await Question.create({
-                questionText,
-                points,
-                testID: newTest.testID,
-                option1,
-                option2,
-                option3,
-                option4,
-                correctOption
+                // Wait for all question creation promises to resolve
+                return Promise.all(questionPromises);
+            })
+            .then(() => {
+                redirect('/adminViewQuiz');
+                res.status(201).send({ message: 'Quiz created successfully!' });
+            })
+            .catch(error => {
+                console.error(error);
+                res.status(500).send({ message: 'Error creating quiz', error });
             });
-        }
-
-        res.status(201).send({ message: 'Quiz created successfully!' });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: 'Error creating quiz', error });
@@ -448,66 +526,133 @@ app.get('/adminViewQuiz', function (req, res) {
 });
 
 
-
-// app.get('/adminQuiz2',function(req,res){
-//     const context = {
-//         question: Array(5).fill({})
-//     };
-//     res.render('adminQuiz2',{layout:'adminMain'})
-// });
-
-// app.post('/adminQuiz2', async function(req, res){
-//     let { testID, quizModule, quizName1, quizPoints1, quizOption1, quizOption2, quizOption3, quizOption4, quizCorrectOption1,
-//         quizName2, quizPoints2, quizOption2_1, quizOption2_2, quizOption2_3, quizOption2_4, quizCorrectOption2,
-//         quizName3, quizPoints3, quizOption3_1, quizOption3_2, quizOption3_3, quizOption3_4, quizCorrectOption3,
-//         quizName4, quizPoints4, quizOption4_1, quizOption4_2, quizOption4_3, quizOption4_4, quizCorrectOption4,
-//         quizName5, quizPoints5, quizOption5_1, quizOption5_2, quizOption5_3, quizOption5_4, quizCorrectOption5 } = req.body;
+// Copilot suggestion
+// app.get('/adminEditQuiz/:testID', async (req, res) => {
+//     const testID = req.params.testID;
 
 //     try {
-//         // Create a new test
-//         const newTest = await Test.create({ testName: testID, module: quizModule });
+//         const test = await Test.findByPk(testID, {
+//             include: Question
+//         });
 
-//         // Array to store question data
-//         const questions = [
-//             { quizName: quizName1, quizPoints: quizPoints1, options: [quizOption1, quizOption2, quizOption3, quizOption4], correctOption: quizCorrectOption1 },
-//             { quizName: quizName2, quizPoints: quizPoints2, options: [quizOption2_1, quizOption2_2, quizOption2_3, quizOption2_4], correctOption: quizCorrectOption2 },
-//             { quizName: quizName3, quizPoints: quizPoints3, options: [quizOption3_1, quizOption3_2, quizOption3_3, quizOption3_4], correctOption: quizCorrectOption3 },
-//             { quizName: quizName4, quizPoints: quizPoints4, options: [quizOption4_1, quizOption4_2, quizOption4_3, quizOption4_4], correctOption: quizCorrectOption4 },
-//             { quizName: quizName5, quizPoints: quizPoints5, options: [quizOption5_1, quizOption5_2, quizOption5_3, quizOption5_4], correctOption: quizCorrectOption5 }
-//         ];
-
-//         // Iterate over each question and create them along with their options
-
-//         for (const questionData of questions) {
-//             const { quizName, quizPoints, options, correctOption } = questionData;
-
-//             // Create the question
-//             const newQuestion = await Question.create({
-//                 questionText: quizName,
-//                 points: quizPoints,
-//                 testId: newTest.id
-//             });
-
-//             // Create the options for the question
-//             for (let i = 0; i < options.length; i++) {
-//                 const optionText = options[i];
-//                 const isCorrect = correctOption == i + 1;
-
-//                 await Option.create({
-//                     optionText,
-//                     isCorrect,
-//                     questionId: newQuestion.id
-//                 });
-//             }
+//         if (!test) {
+//             return res.status(404).send({ message: 'Test not found' });
 //         }
 
-//         res.status(201).send({ message: 'Quiz created successfully!' });
+//         res.render('adminEditQuiz', {
+//             layout: 'adminMain',
+//             test: test.get({ plain: true })
+//         });
 //     } catch (error) {
-//         console.error(error);
-//         res.status(500).send({ message: 'Error creating quiz', error });
+//         console.error('Error fetching test:', error);
+//         res.status(500).send({ message: 'Internal Server Error' });
 //     }
 // });
 
+// GPT suggestion
+// app.get('/adminEditQuiz/:testID', async (req, res) => {
+//     const { testID } = req.params;
+
+//     try {
+//         const quiz = await Test.findOne({ where: { testID: testID } });
+//         const questions = await Question.findAll({ where: { testID: testID } });
+
+//         res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
+//     } catch (err) {
+//         console.error('Error fetching quiz:', err);
+//         res.status(500).send({ message: 'Error fetching quiz', error: err });
+//     }
+// });
+
+app.get('/adminEditQuiz/:testID', async (req, res) => {
+    const { testID } = req.params;
+
+    try {
+        const quiz = await Test.findOne({ where: { testID: testID } });
+        const questions = await Question.findAll({ where: { testID: testID } });
+
+        res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
+    } catch (err) {
+        console.error('Error fetching quiz:', err);
+        res.status(500).send({ message: 'Error fetching quiz', error: err });
+    }
+});
+
+app.put('/adminEditQuiz/:testID', async (req, res) => {
+    const { testID } = req.params;
+    const { quizModule, questions } = req.body;
+
+    try {
+        // Update the quiz details
+        await Test.update({ module: quizModule }, { where: { testID: testID } });
+
+        // Update existing questions and add new ones if necessary
+        for (const question of questions) {
+            if (question.id) {
+                // Update existing question
+                await Question.update({
+                    questionText: question.questionText,
+                    points: question.points,
+                    option1: question.option1,
+                    option2: question.option2,
+                    option3: question.option3,
+                    option4: question.option4,
+                    correctOption: question.correctOption
+                }, {
+                    where: { id: question.id }
+                });
+            } else {
+                // Add new question
+                await Question.create({
+                    testID: testID,
+                    questionText: question.questionText,
+                    points: question.points,
+                    option1: question.option1,
+                    option2: question.option2,
+                    option3: question.option3,
+                    option4: question.option4,
+                    correctOption: question.correctOption
+                });
+            }
+        }
+
+        res.status(200).send({ message: 'Quiz updated successfully' });
+        console.log('Quiz updated successfully');
+    } catch (err) {
+        console.error('Error updating quiz:', err);
+        res.status(500).send({ message: 'Error updating quiz', error: err });
+    }
+});
+
+
+
+// GPT suggestion for delete quiz
+app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
+    const testID = req.params.testID;
+
+    try {
+        // Delete all questions associated with the test
+        await Question.destroy({
+            where: {
+                testID: testID
+            }
+        });
+
+        // Delete the test itself
+        await Test.destroy({
+            where: {
+                testID: testID
+            }
+        });
+
+        res.status(200).json({ success: true, message: 'Test deleted successfully' });
+        console.log('Test deleted successfully');
+        res.redirect('/adminViewQuiz');
+    } catch (error) {
+        console.error('Error deleting test:', error);
+        res.status(500).json({ success: false, message: 'Error deleting test', error: error });
+    }
+});
 
 const adminRoute = require('./routes/admin_routes');
 app.use(adminRoute);

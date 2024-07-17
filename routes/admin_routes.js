@@ -54,3 +54,123 @@ router.post('/createQuiz', async (req, res) => {
 });
 
 module.exports = router;
+
+// Path: routes/index.js
+
+// app.get('/adminEditQuiz/:testID', function(req, res) {
+//     const { testID } = req.params;
+
+//     try {
+//         Test.findOne({ where: { testID: testID } })
+//             .then(quiz => {
+//                 Question.findAll({ where: { testID: testID } })
+//                     .then(questions => {
+//                         res.render('adminEditQuiz', { quiz, questions });
+//                     })
+//                     .catch(err => {
+//                         console.error('Error fetching questions:', err);
+//                         res.status(500).send({ message: 'Error fetching questions', error: err });
+//                     });
+//             })
+//             .catch(err => {
+//                 console.error('Error fetching quiz:', err);
+//                 res.status(500).send({ message: 'Error fetching quiz', error: err });
+//             });
+//     } catch (err) {
+//         console.error('Error fetching quiz:', err);
+//         res.status(500).send({ message: 'Error fetching quiz', error: err });
+//     }
+// });
+
+// app.post('/adminEditQuiz', async (req, res) => {
+//     const { testID, quizModule, questions } = req.body;
+
+//     try {
+//         // Update quiz details
+//         await Test.update(
+//             {
+//                 module: quizModule
+//             },
+//             {
+//                 where: { testID: testID }
+//             }
+//         );
+
+//         // Update existing questions or create new ones
+//         for (let question of questions) {
+//             const { id, questionText, points, option1, option2, option3, option4, correctOption } = question;
+
+//             if (id) {
+//                 // Update existing question
+//                 await Question.update(
+//                     {
+//                         questionText: questionText,
+//                         points: points,
+//                         option1: option1,
+//                         option2: option2,
+//                         option3: option3,
+//                         option4: option4,
+//                         correctOption: correctOption
+//                     },
+//                     {
+//                         where: { id: id }
+//                     }
+//                 );
+//             } else {
+//                 // Create new question
+//                 await Question.create({
+//                     testID: testID,
+//                     questionText: questionText,
+//                     points: points,
+//                     option1: option1,
+//                     option2: option2,
+//                     option3: option3,
+//                     option4: option4,
+//                     correctOption: correctOption
+//                 });
+//             }
+//         }
+
+//         res.redirect('/adminEditQuiz');
+//     } catch (err) {
+//         console.error('Error updating quiz:', err);
+//         res.status(400).send({ message: 'Error updating quiz', error: err });
+//     }
+// });
+
+
+// // Delete quiz
+// app.post('/adminViewQuiz/delete', function(req, res) {
+//     const testID = req.body.test_id;
+
+//     try {
+//         // Delete questions first
+//         Question.destroy({
+//             where: {
+//                 testID: testID
+//             }
+//         })
+//         .then(() => {
+//             // Then delete test
+//             Test.destroy({
+//                 where: {
+//                     testID: testID
+//                 }
+//             })
+//             .then(() => {
+//                 res.status(200).send({ message: 'Quiz deleted successfully' });
+//             })
+//             .catch(error => {
+//                 console.error('Error deleting test:', error);
+//                 res.status(500).send({ message: 'Error deleting test', error });
+//             });
+//         })
+//         .catch(error => {
+//             console.error('Error deleting questions:', error);
+//             res.status(500).send({ message: 'Error deleting questions', error });
+//         });
+//     } catch (error) {
+//         console.error('Error deleting quiz:', error);
+//         res.status(500).send({ message: 'Error deleting quiz', error });
+//     }
+// });

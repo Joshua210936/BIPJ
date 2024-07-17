@@ -11,7 +11,7 @@
         const workshops = {{{json workshops}}};
     </script>
 </head>
-<h1 style="text-align:center;">Upcoming Workshops</h1>
+<h1 style="text-align:center;">Listed Workshops</h1>
 <div class="container">
     {{#if workshops.length}}
         <div class="flex-container">
@@ -23,12 +23,16 @@
                     </td>
                 </tr>
                 <tr>
-                    <th colspan="2" style="padding-left:10px;">{{this.Workshop_Name}}</th>
+                    <th colspan="2" style="padding-left:10px;">{{this.Workshop_Name}} (ID={{this.Workshop_ID}})</th>
                     <td></td>
                 </tr>
                 <tr>
                     <th><button class="remove-button" data-workshop-name="{{this.Workshop_Name}}" data-workshop-id="{{this.Workshop_ID}}">Remove</button></th>
-                    <td onclick="openWorkshopModal({{json this}})" class="readMoreButton"><a href="#">Read More &rarr;</a></td>
+                    <td><button class="updateButton" data-workshop-id="{{this.Workshop_ID}}" data-workshop-name="{{this.Workshop_Name}}" 
+                    data-workshop-start-date="{{this.Workshop_StartDate}}" data-workshop-end-date="{{this.Workshop_EndDate}}" 
+                    data-workshop-time-start="{{this.Workshop_StartTime}}" data-workshop-time-end="{{this.Workshop_EndTime}}" 
+                    data-workshop-address="{{this.Workshop_Address}}" data-workshop-latitude="{{this.Workshop_Latitude}}" 
+                    data-workshop-longitude="{{this.Workshop_Longitude}}" data-workshop-description="{{this.Workshop_Description}}">Update Workshop</button></td>
                 </tr>
             </table>
         {{/each}}
@@ -110,6 +114,60 @@
     </div>
 </div>
 
+{{!-- update button modal --}}
+<div id="updateModal" class="modal">
+    <div class="modal-content">
+        <span class="close-confirmation">&times;</span>
+        <form id="updateWorkshopForm" class="addWorkshopForm">
+        <h1>Update Workshop ID = <span id="workshopID"></span></h1>
+            <div class="input-group">
+                        <label for="updateWorkshopName">Workshop Name</label>
+                        <input type="text" id="updateWorkshopName" name="workshopName" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="updateWorkshopStartDate">Workshop Start Date</label>
+                        <input type="date" id="updateWorkshopStartDate" name="workshopStartDate" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="updateWorkshopEndDate">Workshop End Date</label>
+                        <input type="date" id="updateWorkshopEndDate" name="workshopEndDate" required>
+                    </div>
+                    <div class="input-group">
+                        <div style="margin-right:200px;margin-bottom:10px;">
+                            Workshop Time
+                        </div>
+                        <div>
+                            <input style="width:40%;margin-right:2.5rem" type="text" id="updateStartTime" name="startTime" required>
+                            -
+                            <input style="width:40%;margin-left:2.5rem;" type="text" id="updateEndTime" name="endTime" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="updateWorkshopAddress">Workshop Address</label>
+                        <input type="text" id="updateWorkshopAddress" name="workshopAddress" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="updateWorkshopLatitude">Workshop Latitude</label>
+                        <input type="text" id="updateWorkshopLatitude" name="workshopLatitude" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="updateWorkshopLongitude">Workshop Longitude</label>
+                        <input type="text" id="updateWorkshopLongitude" name="workshopLongitude" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="updateDescription">Description</label>
+                        <textarea id="updateDescription" name="description"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="updateWorkshopImage">Workshop Image</label>
+                        <input type="file" id="updateWorkshopImage" name="workshopImage" multiple accept="image/*" onchange="previewImages()" required>
+                    </div>
+                    <div id="image-preview"></div>
+                    <button class="formbutton" type="submit">Update</button>
+        </form>
+    </div>
+</div>
+
 {{!-- remove button modal --}}
 <div id="confirmationModal" class="modal">
     <div class="modal-content">
@@ -117,24 +175,6 @@
         <p></p> 
         <a id="confirmRemoveButton"><button id="confirmRemoveButton" class="confirm-button">Yes, Remove</button></a>
         <button id="cancelRemoveButton" class="cancel-button">Cancel</button>
-    </div>
-</div>
-
-<div class="modal" id="mapModal">
-    <div class="map-modal-content">
-        <span class="map-close-button">&times;</span>
-        <div class="property-listing-page">
-            <div class="listing-box">
-                <div class="form-header">
-                    <h1>Add Map Info</h1>
-                </div>
-                <form action="/mapLocation" method="post" class="addMapForm">
-                    <!-- Event form fields -->
-                    
-                    <button class="formbutton" type="submit">Submit</button>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
  
