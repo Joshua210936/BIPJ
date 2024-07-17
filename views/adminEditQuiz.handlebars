@@ -1,0 +1,157 @@
+<head>
+    <title>Create Quizzes for Users</title>
+    <style>
+        .question {
+            margin-bottom: 1em;
+            color: burlywood;
+        }
+
+        .add-question-button, .remove-question-button {
+            display: block;
+            margin: 1em 0;
+        }
+
+        #quizModule, .question input, .question input::placeholder {
+            background-color: white;
+            color: gray;
+        }
+
+        #quizForm label {
+            color: black;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: black;
+        }
+
+        label {
+            display: inline-block !important;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <form action="/adminEditQuiz" method="POST" id="quizForm">
+            <label for="testID">Test ID</label>
+            <input type="text" id="testID" name="testID" value="{{test.testID}}" placeholder="Enter Test ID" readonly><br>
+            
+            <label for="quizModule">Module</label>
+            <select id="quizModule" name="quizModule">
+                <option value="1" {{#if (eq quiz.module 1)}}selected{{/if}}>Module 1</option>
+                <option value="2" {{#if (eq quiz.module 2)}}selected{{/if}}>Module 2</option>
+                <option value="3" {{#if (eq quiz.module 3)}}selected{{/if}}>Module 3</option>
+                <option value="4" {{#if (eq quiz.module 4)}}selected{{/if}}>Module 4</option>
+                <option value="5" {{#if (eq quiz.module 5)}}selected{{/if}}>Module 5</option>
+            </select><br>
+            
+            <div id="questions">
+                {{#each questions}}
+                <div class="question" id="question{{@index}}">
+                    <input type="hidden" name="questions[{{@index}}][id]" value="{{this.id}}">
+                    <div class="header">
+                        <h3>Question {{inc @index}}</h3>
+                        <button type="button" class="remove-question-button" onclick="removeQuestion({{inc @index}})">Remove Question</button>
+                    </div>
+                    <div class="input-group">
+                        <label for="questionText{{inc @index}}">Question Text</label>
+                        <input type="text" id="questionText{{inc @index}}" name="questions[{{@index}}][questionText]" value="{{this.questionText}}" placeholder="Enter Question Text">
+                    </div>
+                    <div>
+                        <label for="points{{inc @index}}">Points</label>
+                        <input type="number" id="points{{inc @index}}" name="questions[{{@index}}][points]" value="{{this.points}}" placeholder="Enter Points"><br>
+                        
+                        <!-- Repeat for each option, using the ifCond helper for the checked attribute -->
+                        <label for="option{{inc @index}}_1">First Option</label>
+                        <input type="radio" id="option{{inc @index}}_1" name="questions[{{@index}}][correctOption]" value="1" {{#ifCond this.correctOption 1}}checked{{/ifCond}}>
+                        <input type="text" id="option{{inc @index}}_1Text" name="questions[{{@index}}][option1]" value="{{this.option1}}" placeholder="Enter Option 1"><br>
+                        
+                        <label for="option{{inc @index}}_2">Second Option</label>
+                        <input type="radio" id="option{{inc @index}}_2" name="questions[{{@index}}][correctOption]" value="2" {{#ifCond this.correctOption 2}}checked{{/ifCond}}>
+                        <input type="text" id="option{{inc @index}}_2Text" name="questions[{{@index}}][option2]" value="{{this.option2}}" placeholder="Enter Option 2"><br>
+                        
+                        <label for="option{{inc @index}}_3">Third Option</label>
+                        <input type="radio" id="option{{inc @index}}_3" name="questions[{{@index}}][correctOption]" value="3" {{#ifCond this.correctOption 3}}checked{{/ifCond}}>
+                        <input type="text" id="option{{inc @index}}_3Text" name="questions[{{@index}}][option3]" value="{{this.option3}}" placeholder="Enter Option 3"><br>
+                        
+                        <label for="option{{inc @index}}_4">Fourth Option</label>
+                        <input type="radio" id="option{{inc @index}}_4" name="questions[{{@index}}][correctOption]" value="4" {{#ifCond this.correctOption 4}}checked{{/ifCond}}>
+                        <input type="text" id="option{{inc @index}}_4Text" name="questions[{{@index}}][option4]" value="{{this.option4}}" placeholder="Enter Option 4"><br>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <button type="button" class="add-question-button" id="addQuestionButton">Add Question</button>
+            <button type="submit">Submit Quiz</button>
+        </form>
+    </main>
+
+    <script>
+        let questionCount = {{questions.length}};
+
+        document.getElementById('addQuestionButton').addEventListener('click', () => {
+            questionCount++;
+            const newQuestion = document.createElement('div');
+            newQuestion.classList.add('question');
+            newQuestion.id = `question${questionCount}`;
+            newQuestion.innerHTML = `
+                <div class="header">
+                    <h3>Question ${questionCount}</h3>
+                    <button type="button" class="remove-question-button" onclick="removeQuestion(${questionCount})">Remove Question</button>
+                </div>
+                <div class="input-group">
+                    <label for="questionText${questionCount}">Question Text</label>
+                    <input type="text" id="questionText${questionCount}" name="questions[${questionCount - 1}][questionText]" placeholder="Enter Question Text">
+                </div>
+                <div>
+                    <label for="points${questionCount}">Points</label>
+                    <input type="number" id="points${questionCount}" name="questions[${questionCount - 1}][points]" placeholder="Enter Points"><br>
+                    
+                    <label for="option${questionCount}_1">First Option</label>
+                    <input type="radio" id="option${questionCount}_1" name="questions[${questionCount - 1}][correctOption]" value="1">
+                    <input type="text" id="option${questionCount}_1Text" name="questions[${questionCount - 1}][option1]" placeholder="Enter Option 1"><br>
+                    
+                    <label for="option${questionCount}_2">Second Option</label>
+                    <input type="radio" id="option${questionCount}_2" name="questions[${questionCount - 1}][correctOption]" value="2">
+                    <input type="text" id="option${questionCount}_2Text" name="questions[${questionCount - 1}][option2]" placeholder="Enter Option 2"><br>
+                    
+                    <label for="option${questionCount}_3">Third Option</label>
+                    <input type="radio" id="option${questionCount}_3" name="questions[${questionCount - 1}][correctOption]" value="3">
+                    <input type="text" id="option${questionCount}_3Text" name="questions[${questionCount - 1}][option3]" placeholder="Enter Option 3"><br>
+                    
+                    <label for="option${questionCount}_4">Fourth Option</label>
+                    <input type="radio" id="option${questionCount}_4" name="questions[${questionCount - 1}][correctOption]" value="4">
+                    <input type="text" id="option${questionCount}_4Text" name="questions[${questionCount - 1}][option4]" placeholder="Enter Option 4"><br>
+                </div>
+            `;
+            document.getElementById('questions').appendChild(newQuestion);
+        });
+
+        function removeQuestion(questionNumber) {
+            const questionToRemove = document.getElementById(`question${questionNumber}`);
+            questionToRemove.remove();
+            questionCount--;
+            updateQuestionHeaders();
+        }
+
+        function updateQuestionHeaders() {
+            const questions = document.querySelectorAll('.question');
+            questions.forEach((question, index) => {
+                question.id = `question${index + 1}`;
+                question.querySelector('.header h3').innerText = `Question ${index + 1}`;
+                question.querySelector('.remove-question-button').setAttribute('onclick', `removeQuestion(${index + 1})`);
+                const inputs = question.querySelectorAll('input');
+                inputs.forEach(input => {
+                    const nameParts = input.name.split('[');
+                    nameParts[1] = `${index}][` + nameParts[1].split(']')[1];
+                    input.name = nameParts.join('[');
+                    input.id = input.id.replace(/\d+/, index + 1);
+                });
+            });
+        }
+    </script>
+</body>
