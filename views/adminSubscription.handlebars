@@ -1,6 +1,37 @@
 <div class="adminSubContainer">
-    <h1>Subscription Plans</h1>
+    <h1 class="text-center">Admin: Subscription Plans</h1>
     <div class="subscriptionContainer">
-        
+        <table class="subscription-table">
+            <thead>
+                <tr>
+                    <th>Plan ID</th>
+                    <th>Plan Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Duration</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each plans}}
+                <tr>
+                    <td>{{this.plan_ID}}</td>
+                    <td>{{this.plan_name}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.duration}} {{this.duration_unit}}</td>
+                    <td>{{#if this.isActive}}Yes{{else}}No{{/if}}</td>
+                    <td>
+                        <a href="/admin/subscription/edit/{{this.plan_ID}}" class="btn btn-warning">Edit</a>
+                        <form action="/admin/subscription/delete/{{this.plan_ID}}" method="POST"
+                            style="display:inline;">
+                            <input type="submit" class="btn btn-danger" value="Delete">
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
 </div>

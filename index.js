@@ -211,14 +211,14 @@ app.post('/goalsPage/delete', async function (req, res) {
     const savingId = req.body.saving_id;
 
     try {
-       
+
         await SavingsEntry.destroy({
             where: {
                 Saving_id: savingId
             }
         });
 
-       
+
         await Saving.destroy({
             where: {
                 Saving_id: savingId
@@ -273,10 +273,8 @@ app.get('/subscription', async (req, res) => {
         const plansWithParsedDescription = plans.map(plan => {
 
             const description = JSON.stringify(plan.description).replace(/'/g, '"') || '{}'; // Default to empty JSON if missing
-            console.log(plan.description, JSON.stringify(plan.description));
 
             const parsedDescription = JSON.parse(JSON.stringify(description));
-            console.log(`Plan ID ${plan.plan_ID} Description:`, parsedDescription); // Print the parsed description
             return {
                 ...plan.toJSON(),
                 description: parsedDescription,
@@ -295,8 +293,28 @@ app.get('/subscription', async (req, res) => {
 
 
 
-app.get('/adminSubscription', function (req, res) {
-    res.render('adminSubscription', { layout: 'adminMain' })
+app.get('/adminSubscription', async (req, res) => {
+    try {
+        const plans = await SubscriptionPlans.findAll();
+
+        const plansWithParsedDescription = plans.map(plan => {
+
+            const description = JSON.stringify(plan.description).replace(/'/g, '"') || '{}'; // Default to empty JSON if missing
+
+            const parsedDescription = JSON.parse(JSON.stringify(description));
+            return {
+                ...plan.toJSON(),
+                description: parsedDescription,
+            };
+
+        });
+
+
+        res.render('adminSubscription', { layout: 'adminMain', plans: plansWithParsedDescription });
+    } catch (error) {
+        console.error('Error fetching subscription plans:', error);
+        res.status(500).send('Server error');
+    }
 });
 
 app.get('/aboutUs', function (req, res) {
