@@ -1,89 +1,90 @@
 <head>
-    <title>Create Quizzes for Users</title>
+    <title>Edit Quiz</title>
 </head>
 
 <body>
     <main class="container">
         <form action="/adminEditQuiz" method="POST" id="quizForm">
-            <label for="testID">Test ID</label>
-            <input type="text" id="testID" name="testID" placeholder="Enter Test ID" readonly><br>
-            
+            <input type="hidden" id="testID" name="testID" value="{{quiz.testID}}">
+
             <label for="quizModule">Module</label>
             <select id="quizModule" name="quizModule">
-                <option value="1">Module 1</option>
-                <option value="2">Module 2</option>
-                <option value="3">Module 3</option>
-                <option value="4">Module 4</option>
-                <option value="5">Module 5</option>
+                <option value="1" {{#if (eq quiz.module 1)}}selected{{/if}}>Module 1</option>
+                <option value="2" {{#if (eq quiz.module 2)}}selected{{/if}}>Module 2</option>
+                <option value="3" {{#if (eq quiz.module 3)}}selected{{/if}}>Module 3</option>
+                <option value="4" {{#if (eq quiz.module 4)}}selected{{/if}}>Module 4</option>
+                <option value="5" {{#if (eq quiz.module 5)}}selected{{/if}}>Module 5</option>
             </select><br>
-            
+
             <div id="questions">
-                <div class="question" id="question1">
-                    <h3 class="header">Question 1</h3>
+                {{#each questions}}
+                <div class="question" id="question{{@index}}">
+                    <h3 class="header">Question {{add @index 1}}</h3>
                     <div class="input-group">
-                        <label for="questionText1">Question Text</label>
-                        <input type="text" id="questionText1" name="questions[0][questionText]" placeholder="Enter Question Text">
+                        <label for="questionText{{@index}}">Question Text</label>
+                        <input type="text" id="questionText{{@index}}" name="questions[{{@index}}][questionText]" placeholder="Enter Question Text" value="{{this.questionText}}">
                     </div>
                     <div>
-                        <label for="points1">Points</label>
-                        <input type="number" id="points1" name="questions[0][points]" placeholder="Enter Points"><br>
-                        
-                        <label for="option1_1">First Option</label>
-                        <input type="radio" id="option1_1" name="questions[0][correctOption]" value="1">
-                        <input type="text" id="option1_1Text" name="questions[0][option1]" placeholder="Enter Option 1"><br>
-                        
-                        <label for="option1_2">Second Option</label>
-                        <input type="radio" id="option1_2" name="questions[0][correctOption]" value="2">
-                        <input type="text" id="option1_2Text" name="questions[0][option2]" placeholder="Enter Option 2"><br>
-                        
-                        <label for="option1_3">Third Option</label>
-                        <input type="radio" id="option1_3" name="questions[0][correctOption]" value="3">
-                        <input type="text" id="option1_3Text" name="questions[0][option3]" placeholder="Enter Option 3"><br>
-                        
-                        <label for="option1_4">Fourth Option</label>
-                        <input type="radio" id="option1_4" name="questions[0][correctOption]" value="4">
-                        <input type="text" id="option1_4Text" name="questions[0][option4]" placeholder="Enter Option 4"><br>
+                        <label for="points{{@index}}">Points</label>
+                        <input type="number" id="points{{@index}}" name="questions[{{@index}}][points]" placeholder="Enter Points" value="{{this.points}}"><br>
+
+                        <label for="option{{@index}}_1">First Option</label>
+                        <input type="radio" id="option{{@index}}_1" name="questions[{{@index}}][correctOption]" value="1" {{#if (eq this.correctOption 1)}}checked{{/if}}>
+                        <input type="text" id="option{{@index}}_1Text" name="questions[{{@index}}][option1]" placeholder="Enter Option 1" value="{{this.option1}}"><br>
+
+                        <label for="option{{@index}}_2">Second Option</label>
+                        <input type="radio" id="option{{@index}}_2" name="questions[{{@index}}][correctOption]" value="2" {{#if (eq this.correctOption 2)}}checked{{/if}}>
+                        <input type="text" id="option{{@index}}_2Text" name="questions[{{@index}}][option2]" placeholder="Enter Option 2" value="{{this.option2}}"><br>
+
+                        <label for="option{{@index}}_3">Third Option</label>
+                        <input type="radio" id="option{{@index}}_3" name="questions[{{@index}}][correctOption]" value="3" {{#if (eq this.correctOption 3)}}checked{{/if}}>
+                        <input type="text" id="option{{@index}}_3Text" name="questions[{{@index}}][option3]" placeholder="Enter Option 3" value="{{this.option3}}"><br>
+
+                        <label for="option{{@index}}_4">Fourth Option</label>
+                        <input type="radio" id="option{{@index}}_4" name="questions[{{@index}}][correctOption]" value="4" {{#if (eq this.correctOption 4)}}checked{{/if}}>
+                        <input type="text" id="option{{@index}}_4Text" name="questions[{{@index}}][option4]" placeholder="Enter Option 4" value="{{this.option4}}"><br>
                     </div>
                 </div>
+                {{/each}}
             </div>
 
             <button type="button" class="add-question-button" id="addQuestionButton">Add Question</button>
-            <button type="submit">Submit Quiz</button>
+            <button type="submit">Update Quiz</button>
         </form>
     </main>
 
     <script>
-        let questionCount = 1;
+        let questionCount = {{questions.length}};
 
         document.getElementById('addQuestionButton').addEventListener('click', () => {
             const newQuestion = document.createElement('div');
             newQuestion.classList.add('question');
-            newQuestion.id = `question${questionCount + 1}`;
+            newQuestion.id = `question${questionCount}`;
             newQuestion.innerHTML = `
                 <h3 class="header">Question ${questionCount + 1}</h3>
                 <div class="input-group">
-                    <label for="questionText${questionCount + 1}">Question Text</label>
-                    <input type="text" id="questionText${questionCount + 1}" name="questions[${questionCount}][questionText]" placeholder="Enter Question Text">
+                    <label for="questionText${questionCount}">Question Text</label>
+                    <input type="text" id="questionText${questionCount}" name="questions[${questionCount}][questionText]" placeholder="Enter Question Text">
                 </div>
                 <div>
-                    <label for="points${questionCount + 1}">Points</label>
-                    <input type="number" id="points${questionCount + 1}" name="questions[${questionCount}][points]" placeholder="Enter Points"><br>
-                    
-                    <label for="option${questionCount + 1}_1">First Option</label>
-                    <input type="radio" id="option${questionCount + 1}_1" name="questions[${questionCount}][correctOption]" value="1">
-                    <input type="text" id="option${questionCount + 1}_1Text" name="questions[${questionCount}][option1]" placeholder="Enter Option 1"><br>
-                    
-                    <label for="option${questionCount + 1}_2">Second Option</label>
-                    <input type="radio" id="option${questionCount + 1}_2" name="questions[${questionCount}][correctOption]" value="2">
-                    <input type="text" id="option${questionCount + 1}_2Text" name="questions[${questionCount}][option2]" placeholder="Enter Option 2"><br>
-                    
-                    <label for="option${questionCount + 1}_3">Third Option</label>
-                    <input type="radio" id="option${questionCount + 1}_3" name="questions[${questionCount}][correctOption]" value="3">
-                    <input type="text" id="option${questionCount + 1}_3Text" name="questions[${questionCount}][option3]" placeholder="Enter Option 3"><br>
-                    
-                    <label for="option${questionCount + 1}_4">Fourth Option</label>
-                    <input type="radio" id="option${questionCount + 1}_4" name="questions[${questionCount}][correctOption]" value="4">
-                    <input type="text" id="option${questionCount + 1}_4Text" name="questions[${questionCount}][option4]" placeholder="Enter Option 4"><br>
+                    <label for="points${questionCount}">Points</label>
+                    <input type="number" id="points${questionCount}" name="questions[${questionCount}][points]" placeholder="Enter Points"><br>
+
+                    <label for="option${questionCount}_1">First Option</label>
+                    <input type="radio" id="option${questionCount}_1" name="questions[${questionCount}][correctOption]" value="1">
+                    <input type="text" id="option${questionCount}_1Text" name="questions[${questionCount}][option1]" placeholder="Enter Option 1"><br>
+
+                    <label for="option${questionCount}_2">Second Option</label>
+                    <input type="radio" id="option${questionCount}_2" name="questions[${questionCount}][correctOption]" value="2">
+                    <input type="text" id="option${questionCount}_2Text" name="questions[${questionCount}][option2]" placeholder="Enter Option 2"><br>
+
+                    <label for="option${questionCount}_3">Third Option</label>
+                    <input type="radio" id="option${questionCount}_3" name="questions[${questionCount}][correctOption]" value="3">
+                    <input type="text" id="option${questionCount}_3Text" name="questions[${questionCount}][option3]" placeholder="Enter Option 3"><br>
+
+                    <label for="option${questionCount}_4">Fourth Option</label>
+                    <input type="radio" id="option${questionCount}_4" name="questions[${questionCount}][correctOption]" value="4">
+                    <input type="text" id="option${questionCount}_4Text" name="questions[${questionCount}][option4]" placeholder="Enter Option 4"><br>
                 </div>
             `;
             document.getElementById('questions').appendChild(newQuestion);
@@ -93,30 +94,30 @@
 </body>
 
 <style>
-        .question {
-            margin-bottom: 1em;
-            color: burlywood;
-        }
+    .question {
+        margin-bottom: 1em;
+        color: burlywood;
+    }
 
-        .add-question-button {
-            display: block;
-            margin: 1em 0;
-        }
+    .add-question-button {
+        display: block;
+        margin: 1em 0;
+    }
 
-        #quizModule, .question input, .question input::placeholder {
-            background-color: white;
-            color: gray;
-        }
+    #quizModule, .question input, .question input::placeholder {
+        background-color: white;
+        color: gray;
+    }
 
-        #quizForm label {
-            color: black;
-        }
+    #quizForm label {
+        color: black;
+    }
 
-        .header {
-            color: black;
-        }
+    .header {
+        color: black;
+    }
 
-        label {
-            display: inline-block !important;
-        }
-    </style>
+    label {
+        display: inline-block !important;
+    }
+</style>

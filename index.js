@@ -5,6 +5,7 @@ const app = express();
 const exphbs = require('express-handlebars')
 const path = require('path');
 const Handlebars = require('handlebars');
+const methodOverride = require('method-override');
 
 // Database
 const bipjDB = require('./config/DBConnection');
@@ -32,6 +33,15 @@ Handlebars.registerHelper('parseJson', function (context) {
     return JSON.parse(context);
 });
 
+// For comparison in handlebars [Quiz Module]
+Handlebars.registerHelper('eq', function(a, b) {
+    return a == b;
+});
+
+Handlebars.registerHelper('add', function(a, b) {
+    return a + b;
+});
+
 //sets apps to use handlebars engine
 app.set('view engine', 'handlebars');
 
@@ -39,6 +49,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(methodOverride('_method'));
 
 //guest
 app.get('/', function (req, res) { //home page
@@ -482,28 +493,89 @@ app.get('/adminViewQuiz', function (req, res) {
         });
 });
 
-app.get('/adminViewQuiz/:testID', async (req, res) => {
-    const testID = req.params.testID;
+
+// Copilot suggestion
+// app.get('/adminEditQuiz/:testID', async (req, res) => {
+//     const testID = req.params.testID;
+
+//     try {
+//         const test = await Test.findByPk(testID, {
+//             include: Question
+//         });
+
+//         if (!test) {
+//             return res.status(404).send({ message: 'Test not found' });
+//         }
+
+//         res.render('adminEditQuiz', {
+//             layout: 'adminMain',
+//             test: test.get({ plain: true })
+//         });
+//     } catch (error) {
+//         console.error('Error fetching test:', error);
+//         res.status(500).send({ message: 'Internal Server Error' });
+//     }
+// });
+
+// GPT suggestion
+app.get('/adminEditQuiz/:testID', async (req, res) => {
+    const { testID } = req.params;
 
     try {
-        const test = await Test.findByPk(testID, {
-            include: Question
-        });
+        const quiz = await Test.findOne({ where: { testID: testID } });
+        const questions = await Question.findAll({ where: { testID: testID } });
 
-        if (!test) {
-            return res.status(404).send({ message: 'Test not found' });
-        }
-
-        res.render('adminViewQuiz', {
-            layout: 'adminMain',
-            test: test.get({ plain: true })
-        });
-    } catch (error) {
-        console.error('Error fetching test:', error);
-        res.status(500).send({ message: 'Internal Server Error' });
+        res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
+    } catch (err) {
+        console.error('Error fetching quiz:', err);
+        res.status(500).send({ message: 'Error fetching quiz', error: err });
     }
 });
 
+app.put('/adminEditQuiz/:testID', async (req, res) => {
+    const { testID } = req.params;
+    const { quizModule, questions } = req.body;
+
+    try {
+        // Update the quiz details
+        await Test.update({ module: quizModule }, { where: { testID: testID } });
+
+        // Update existing questions and add new ones if necessary
+        for (const [index, question] of questions.entries()) {
+            if (question.id) {
+                // Update existing question
+                await Question.update({
+                    questionText: question.questionText,
+                    points: question.points,
+                    option1: question.option1,
+                    option2: question.option2,
+                    option3: question.option3,
+                    option4: question.option4,
+                    correctOption: question.correctOption
+                }, {
+                    where: { id: question.id }
+                });
+            } else {
+                // Add new question
+                await Question.create({
+                    testID: testID,
+                    questionText: question.questionText,
+                    points: question.points,
+                    option1: question.option1,
+                    option2: question.option2,
+                    option3: question.option3,
+                    option4: question.option4,
+                    correctOption: question.correctOption
+                });
+            }
+        }
+
+        res.status(200).send({ message: 'Quiz updated successfully' });
+    } catch (err) {
+        console.error('Error updating quiz:', err);
+        res.status(500).send({ message: 'Error updating quiz', error: err });
+    }
+});
 
 
 const adminRoute = require('./routes/admin_routes');

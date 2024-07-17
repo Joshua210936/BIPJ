@@ -15,7 +15,7 @@ const Test = db.define('Test', {
 }, {
     tableName: 'tests'
 });
-
+// Think of making testID into string
 const Question = db.define('Question', {
     testID: {
         type: sequelize.INTEGER,
