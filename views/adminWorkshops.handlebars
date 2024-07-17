@@ -27,15 +27,16 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <th><button class="remove-button">Remove</button></th>
+                    <th><button class="remove-button" data-workshop-name="{{this.Workshop_Name}}" data-workshop-id="{{this.Workshop_ID}}">Remove</button></th>
                     <td onclick="openWorkshopModal({{json this}})" class="readMoreButton"><a href="#">Read More &rarr;</a></td>
                 </tr>
             </table>
         {{/each}}
-        <button class="filter-icon" >Add Workshop</button>
+        <button class="filter-icon" ></button>
         </div>
     {{else}}
         No Current Workshops
+        <button class="filter-icon" ></button>
     {{/if}}
 </div>
 
@@ -47,8 +48,6 @@
         <div id="modalWorkshopContent"></div>
     </div>
 </div>
-
-<button class="mapModalButton" id="mapModalButton">Add Event</button>
 
 {{!-- add workshop popup --}}
 <div class="modal" id="filterModal">
@@ -108,6 +107,16 @@
                 </form>
             </div>
         </div>
+    </div>
+</div>
+
+{{!-- remove button modal --}}
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <span class="close-confirmation">&times;</span>
+        <p></p> 
+        <a id="confirmRemoveButton"><button id="confirmRemoveButton" class="confirm-button">Yes, Remove</button></a>
+        <button id="cancelRemoveButton" class="cancel-button">Cancel</button>
     </div>
 </div>
 
