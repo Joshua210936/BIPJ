@@ -67,3 +67,40 @@ document.addEventListener('DOMContentLoaded', (event) => {
         event.stopPropagation();
     });
 });
+
+//remove button modal
+document.addEventListener('DOMContentLoaded', function() {
+    const removeButtons = document.querySelectorAll('.remove-button');
+    const confirmationModal = document.getElementById('confirmationModal');
+    const closeConfirmation = document.querySelector('.close-confirmation');
+    const confirmRemoveButton = document.getElementById('confirmRemoveButton');
+    const cancelRemoveButton = document.getElementById('cancelRemoveButton');
+    const modalContent = confirmationModal.querySelector('.modal-content p');
+    let workshopToRemove = null;
+
+    removeButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            workshopToRemove = this.closest('table'); // Get the workshop table to be removed
+            const workshopName = this.getAttribute('data-workshop-name'); // Get the workshop name
+            const workshopID = this.getAttribute('data-workshop-id');
+            modalContent.textContent = `Are you sure you want to remove the workshop "${workshopName}", ID = "${workshopID}"?`;
+            confirmRemoveButton.setAttribute('href', `/adminWorkshops/delete/${workshopID}`);
+            confirmationModal.style.display = 'block';
+        });
+    });
+
+    closeConfirmation.addEventListener('click', function() {
+        confirmationModal.style.display = 'none';
+    });
+
+    cancelRemoveButton.addEventListener('click', function() {
+        confirmationModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target == confirmationModal) {
+            confirmationModal.style.display = 'none';
+        }
+    });
+});

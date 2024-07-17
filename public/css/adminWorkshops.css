@@ -12,6 +12,31 @@
     margin-left: auto;
 }
 
+.filter-icon {
+    display: inline-flex; /* Align content in the center */
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+    margin-bottom:auto; 
+    width: 80px; /* Adjust the size as needed */
+    height: 80px; /* Adjust the size as needed */
+    border-radius: 50%; /* Makes the button a circle */
+    background-color: rgba(128, 128, 128, 0.5); /* Transparent grey background */
+    border: none; /* No border */
+    color: black; /* Color of the plus sign */
+    font-size: 24px; /* Size of the plus sign */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.filter-icon::before {
+    content: '+'; /* Plus sign in the middle */
+}
+
+.filter-icon:hover {
+    background-color: #FFD43B; /* Changes background color to blue on hover */
+}
+
 .listing-box {
     width: 100%;
     max-width: 800px;
@@ -100,6 +125,8 @@
 .workshopTime{
     width:50%;
 }
+
+
 
 /* modal css */
 

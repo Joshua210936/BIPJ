@@ -1,6 +1,9 @@
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
 
+const Savings = require('./savings');
+
+
 const SavingsEntry = db.define('saving_entry', {
     Entry_id: {
         type: sequelize.INTEGER,
@@ -22,7 +25,15 @@ const SavingsEntry = db.define('saving_entry', {
     Amount_saved: {
         type: sequelize.INTEGER,
         allowNull: false
+    },
+    Amount_left: {
+        type: sequelize.INTEGER,
+        allowNull: false
     }
 });
+
+
+
+
 
 module.exports = SavingsEntry;
