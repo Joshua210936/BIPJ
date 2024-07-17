@@ -5,7 +5,7 @@
 <body>
     <main class="container">
         <form action="/adminEditQuiz" method="POST" id="quizForm">
-            <input type="hidden" id="testID" name="testID" value="{{quiz.testID}}">
+            <input type="text" id="testID" name="testID" value="{{quiz.testID}}" readonly><br>
 
             <label for="quizModule">Module</label>
             <select id="quizModule" name="quizModule">
