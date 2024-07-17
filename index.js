@@ -32,29 +32,6 @@ Handlebars.registerHelper('parseJson', function (context) {
     return JSON.parse(context);
 });
 
-//Handlebars helper to compare values
-Handlebars.registerHelper('eq', function(arg1, arg2, options) {
-    return arg1 == arg2 ? options.fn(this) : options.inverse(this);
-});
-
-//Handlebars helper to increment values
-Handlebars.registerHelper('inc', function(value, options) {
-    let increment = 1;
-    if (options.hash.increment) {
-        increment = options.hash.increment;
-    }
-    return parseInt(value) + increment;
-});
-
-//Handlebars helper to conditionally render content
-Handlebars.registerHelper('ifCond', function(v1, v2, options) {
-    if (v1 === v2) {
-        return options.fn(this);
-    } else {
-        return typeof options.inverse === "function" ? options.inverse(this) : '';
-    }
-});
-
 //sets apps to use handlebars engine
 app.set('view engine', 'handlebars');
 
@@ -460,172 +437,27 @@ app.get('/adminViewQuiz', function (req, res) {
             console.error('Error fetching tests:', err);
             res.status(500).send('Internal Server Error');
         });
-app.get('/adminViewQuiz', function(req, res) {
-    Test.findAll({
-        include: [{
-            model: Question,
-            as: 'questions'
-        }]
-    })
-    .then(tests => {
-        // Process each test to calculate number of questions and total points
-        const testsWithDetails = tests.map(test => {
-            const numberOfQuestions = test.questions.length;
-            const totalPoints = test.questions.reduce((acc, question) => acc + question.points, 0);
+});
 
-            return {
-                testID: test.testID,
-                module: test.module,
-                numberOfQuestions,
-                totalPoints
-            };
+app.get('/adminViewQuiz/:testID', async (req, res) => {
+    const testID = req.params.testID;
+
+    try {
+        const test = await Test.findByPk(testID, {
+            include: Question
         });
-        res.render('adminViewQuiz', { layout: 'adminMain', tests: testsWithDetails });
-    })
-    .catch(error => {
-        console.error(error);
-        res.status(500).send({ message: 'Error fetching tests' });
-    });
-});
 
-// Edit quiz
-// app.get('/adminEditQuiz', async function(req, res) {
-//     const testID = req.query.test_id;
-
-//     try {
-//         const test = await Test.findByPk(testID, {
-//             include: [{
-//                 model: Question,
-//                 as: 'questions'
-//             }]
-//         });
-
-//         if (!test) {
-//             return res.status(404).send({ message: 'Test not found' });
-//         }
-
-//         res.render('adminEditQuiz', { layout: 'adminMain', test });
-//     } catch (error) {
-//         console.error('Error fetching test:', error);
-//         res.status(500).send({ message: 'Error fetching test', error });
-//     }
-// });
-
-app.get('/adminEditQuiz/:testID', function(req, res) {
-    const { testID } = req.params;
-
-    try {
-        Test.findOne({ where: { testID: testID } })
-            .then(quiz => {
-                Question.findAll({ where: { testID: testID } })
-                    .then(questions => {
-                        res.render('adminEditQuiz', { quiz, questions });
-                    })
-                    .catch(err => {
-                        console.error('Error fetching questions:', err);
-                        res.status(500).send({ message: 'Error fetching questions', error: err });
-                    });
-            })
-            .catch(err => {
-                console.error('Error fetching quiz:', err);
-                res.status(500).send({ message: 'Error fetching quiz', error: err });
-            });
-    } catch (err) {
-        console.error('Error fetching quiz:', err);
-        res.status(500).send({ message: 'Error fetching quiz', error: err });
-    }
-});
-
-app.post('/adminEditQuiz', async (req, res) => {
-    const { testID, quizModule, questions } = req.body;
-
-    try {
-        // Update quiz details
-        await Test.update(
-            {
-                module: quizModule
-            },
-            {
-                where: { testID: testID }
-            }
-        );
-
-        // Update existing questions or create new ones
-        for (let question of questions) {
-            const { id, questionText, points, option1, option2, option3, option4, correctOption } = question;
-
-            if (id) {
-                // Update existing question
-                await Question.update(
-                    {
-                        questionText: questionText,
-                        points: points,
-                        option1: option1,
-                        option2: option2,
-                        option3: option3,
-                        option4: option4,
-                        correctOption: correctOption
-                    },
-                    {
-                        where: { id: id }
-                    }
-                );
-            } else {
-                // Create new question
-                await Question.create({
-                    testID: testID,
-                    questionText: questionText,
-                    points: points,
-                    option1: option1,
-                    option2: option2,
-                    option3: option3,
-                    option4: option4,
-                    correctOption: correctOption
-                });
-            }
+        if (!test) {
+            return res.status(404).send({ message: 'Test not found' });
         }
 
-        res.redirect('/adminEditQuiz');
-    } catch (err) {
-        console.error('Error updating quiz:', err);
-        res.status(400).send({ message: 'Error updating quiz', error: err });
-    }
-});
-
-
-// Delete quiz
-app.post('/adminViewQuiz/delete', function(req, res) {
-    const testID = req.body.test_id;
-
-    try {
-        // Delete questions first
-        Question.destroy({
-            where: {
-                testID: testID
-            }
-        })
-        .then(() => {
-            // Then delete test
-            Test.destroy({
-                where: {
-                    testID: testID
-                }
-            })
-            .then(() => {
-                res.status(200).send({ message: 'Quiz deleted successfully' });
-            })
-            .catch(error => {
-                console.error('Error deleting test:', error);
-                res.status(500).send({ message: 'Error deleting test', error });
-            });
-        })
-        .catch(error => {
-            console.error('Error deleting questions:', error);
-            res.status(500).send({ message: 'Error deleting questions', error });
+        res.render('adminViewQuiz', {
+            layout: 'adminMain',
+            test: test.get({ plain: true })
         });
     } catch (error) {
-        console.error('Error deleting quiz:', error);
-        res.status(500).send({ message: 'Error deleting quiz', error });
+        console.error('Error fetching test:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
     }
 });
 
