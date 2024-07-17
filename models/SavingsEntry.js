@@ -1,7 +1,7 @@
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
 
-const Savings = require('./savings');
+
 
 
 const SavingsEntry = db.define('saving_entry', {

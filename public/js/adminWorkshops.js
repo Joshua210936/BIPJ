@@ -104,3 +104,88 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+//update button modal placeholder
+document.addEventListener('DOMContentLoaded', () => {
+    const updateButtons = document.querySelectorAll('.updateButton');
+    
+    updateButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const workshopID = button.getAttribute('data-workshop-id');
+            const workshopName = button.getAttribute('data-workshop-name');
+            const workshopStartDate = button.getAttribute('data-workshop-start-date');
+            const workshopEndDate = button.getAttribute('data-workshop-end-date');
+            const workshopTimeStart = button.getAttribute('data-workshop-time-start');
+            const workshopTimeEnd = button.getAttribute('data-workshop-time-end');
+            const workshopAddress = button.getAttribute('data-workshop-address');
+            const workshopLatitude = button.getAttribute('data-workshop-latitude');
+            const workshopLongitude = button.getAttribute('data-workshop-longitude');
+            const workshopDescription = button.getAttribute('data-workshop-description');
+
+            document.getElementById('updateModal').style.display = 'block';
+            
+            // Set placeholders
+            document.getElementById('updateWorkshopName').value = workshopName;
+            document.getElementById('updateWorkshopStartDate').value = workshopStartDate;
+            document.getElementById('updateWorkshopEndDate').value = workshopEndDate;
+            document.getElementById('updateStartTime').value = workshopTimeStart;
+            document.getElementById('updateEndTime').value = workshopTimeEnd;
+            document.getElementById('updateWorkshopAddress').value = workshopAddress;
+            document.getElementById('updateWorkshopLatitude').value = workshopLatitude;
+            document.getElementById('updateWorkshopLongitude').value = workshopLongitude;
+            document.getElementById('updateDescription').value = workshopDescription;
+
+            document.getElementById('workshopID').innerHTML = workshopID;
+        });
+    });
+
+    const closeButtons = document.querySelectorAll('.close-confirmation');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            document.getElementById('updateModal').style.display = 'none';
+        });
+    });
+    window.addEventListener('click', (event) => {
+        if (event.target == document.getElementById('updateModal')) {
+            document.getElementById('updateModal').style.display = 'none';
+        }
+    });
+    document.getElementById('updateModal').querySelector('.modal-content').addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+    // Prevent form submission
+    const form = document.getElementById('updateModal').querySelector('form');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        form.submit(); // Now submit the form
+        document.getElementById('updateModal').style.display = 'none'; // Close modal after handling the form data
+        alert("Workshop updated successfully!"); // Show confirmation popup
+    });
+});
+
+//change update form to PUT method
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('updateWorkshopForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const workshopId = document.getElementById('workshopID').textContent;
+        const formData = new FormData(this);
+
+        fetch(`/adminWorkshops/edit/${workshopId}`, {
+        method: 'PUT',
+        body: new URLSearchParams(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert(data.message);
+        }
+        })
+        .catch(error => {
+        console.error('Error updating workshop:', error);
+        alert('An error occurred while updating the workshop.');
+        });
+    })
+});
