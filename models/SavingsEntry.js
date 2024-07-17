@@ -1,6 +1,8 @@
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
 
+const Savings = require('./savings');
+
 
 const SavingsEntry = db.define('saving_entry', {
     Entry_id: {
@@ -29,6 +31,8 @@ const SavingsEntry = db.define('saving_entry', {
         allowNull: false
     }
 });
+
+
 
 
 

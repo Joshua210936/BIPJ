@@ -114,6 +114,23 @@ app.post('/addgoal', function(req, res){
     });
 });
 
+// In your Express route handler
+app.get('/goalsPage/data', async (req, res) => {
+    try {
+        const savings = await Saving.findAll({
+            include: {
+                model: SavingsEntry,
+                attributes: ['Amount_saved', 'Amount_left', 'Entry_date'],
+                order: [['Entry_date', 'ASC']]
+            }
+        });
+
+        res.json(savings);
+    } catch (err) {
+        console.error('Error fetching savings data:', err);
+        res.status(400).send('Internal Server Error');
+    }
+});
 
 
 
