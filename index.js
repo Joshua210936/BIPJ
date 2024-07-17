@@ -202,9 +202,13 @@ app.get('/workshops', function(req, res) {
             }
         });
 });
-
+// Subscriptions //
 app.get('/subscription',function(req,res){
     res.render('subscription',{layout:'main'})
+});
+
+app.get('/adminSubscription',function(req,res){
+    res.render('adminSubscription',{layout:'adminMain'})
 });
 
 app.get('/aboutUs',function(req,res){
