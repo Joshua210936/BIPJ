@@ -16,6 +16,7 @@ const { Test, Question } = require('./models/test');
 const Customer = require('./models/custUser');
 const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
+const register = require('./models/workshopRegister')
 
 let port = 3001;
 
@@ -259,6 +260,19 @@ app.get('/workshops', function (req, res) {
                 res.status(500).send('Internal Server Error');
             }
         });
+});
+
+app.post('/workshops', function (req, res) {
+    let {registerName, registerEmail, registerDate} = req.body;
+
+    register.create({
+        Register_Name: registerName,
+        Register_Email: registerEmail,
+        Register_Date: registerDate
+    }).then((registers) => {
+        res.redirect('/workshops');
+    })
+        .catch(err => console.log(err))
 });
 
 function isValidJSON(str) {
