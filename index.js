@@ -546,6 +546,20 @@ app.get('/adminViewQuiz', function (req, res) {
 //     }
 // });
 
+app.get('/adminEditQuiz/:testID', async (req, res) => {
+    const { testID } = req.params;
+
+    try {
+        const quiz = await Test.findOne({ where: { testID: testID } });
+        const questions = await Question.findAll({ where: { testID: testID } });
+
+        res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
+    } catch (err) {
+        console.error('Error fetching quiz:', err);
+        res.status(500).send({ message: 'Error fetching quiz', error: err });
+    }
+});
+
 app.put('/adminEditQuiz/:testID', async (req, res) => {
     const { testID } = req.params;
     const { quizModule, questions } = req.body;
@@ -555,7 +569,7 @@ app.put('/adminEditQuiz/:testID', async (req, res) => {
         await Test.update({ module: quizModule }, { where: { testID: testID } });
 
         // Update existing questions and add new ones if necessary
-        for (const [index, question] of questions.entries()) {
+        for (const question of questions) {
             if (question.id) {
                 // Update existing question
                 await Question.update({

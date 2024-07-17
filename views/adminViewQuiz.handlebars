@@ -23,18 +23,14 @@
 </body>
 
 <script>
-    async function editTest(testID) {
-        try {
-            window.location.href = `/adminEditQuiz/${testID}`;
-        } catch (error) {
-            console.error('Error navigating to edit quiz:', error);
-        }
+    function editTest(testID) {
+        window.location.href = `/adminEditQuiz/${testID}`;
     }
 
     async function deleteTest(testID) {
         if (confirm("Are you sure you want to delete this test?")) {
             try {
-                const response = await fetch(`/adminViewQuiz/delete`, {
+                const response = await fetch(`/adminEditQuiz/delete`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
