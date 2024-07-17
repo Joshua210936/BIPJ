@@ -35,7 +35,7 @@
                             </div>
                            
                             <div class="goal-graph">
-     <canvas id="graph-{{this.Saving_id}}" width="400" height="400"></canvas>
+      <canvas id="graph-{{this.Saving_id}}"></canvas>
 </div>
                         </div>
                     {{/each}}
@@ -121,8 +121,8 @@
 
   <script>
 
-   $(document).ready(function() {
- 
+ $(document).ready(function() {
+    // Fetch data from the server
     $.ajax({
         url: '/goalsPage/data',
         method: 'GET',
@@ -141,45 +141,15 @@
         const totalAmount = goal.Saving_amount;
         const savedAmount = goal.saving_entries.reduce((total, entry) => total + entry.Amount_saved, 0);
         const remainingAmount = totalAmount - savedAmount;
-        const savedPercentage = Math.round((savedAmount / totalAmount) * 100);
 
         const data = {
             labels: ['Saved', 'Remaining'],
             datasets: [{
                 data: [savedAmount, remainingAmount],
-                backgroundColor: ['#ffcc00', '#808080'],
+                backgroundColor: ['#20c997', '#ff6f61'],
             }]
         };
 
-    
-        const percentagePlugin = {
-            id: 'percentagePlugin',
-            afterDraw: function(chart) {
-                if (chart.config.type === 'doughnut') {
-                    const ctx = chart.ctx;
-                    const width = chart.width;
-                    const height = chart.height;
-                    const fontSize = (height / 8).toFixed(2);
-
-                    ctx.restore();
-                    ctx.font = `bold ${fontSize}px sans-serif`;
-                    ctx.textBaseline = "middle";
-                    ctx.fillStyle = '#ffcc00'; 
-
-                    const text = savedPercentage + "%";
-                    const textX = Math.round((width - ctx.measureText(text).width) / 2);
-                    const textY = height / 2;
-
-                    ctx.fillText(text, textX, textY);
-                    ctx.save();
-                }
-            }
-        };
-
-        
-        Chart.register(percentagePlugin);
-
-        
         new Chart(ctx, {
             type: 'doughnut',
             data: data,
@@ -191,7 +161,7 @@
                         callbacks: {
                             label: function(tooltipItem) {
                                 const value = tooltipItem.raw;
-                                const percentage = Math.round((value / totalAmount) * 100);
+                                const percentage = ((value / totalAmount) * 100).toFixed(2);
                                 return `${tooltipItem.label}: ${percentage}% (${value})`;
                             }
                         }
@@ -205,6 +175,7 @@
         });
     }
 });
+
 
 
 
@@ -285,9 +256,9 @@
             }
         }
 
-        function addNewSavingEntry(savingId, date, amountSaved, amountLeft) { 
+       function addNewSavingEntry(savingId, date, amountSaved, amountLeft) {
     $.ajax({
-        url: '/goalsPage/addEntry',  
+        url: '/goalsPage/addEntry',  // Your endpoint for adding a new saving entry
         method: 'POST',
         data: {
             saving_id: savingId,
@@ -298,12 +269,12 @@
         success: function(response) {
             console.log('New saving entry added successfully');
 
-         
+            // Fetch the updated data for the specific saving goal
             $.ajax({
-                url: `/goalsPage/data/${savingId}`,  
+                url: `/goalsPage/data/${savingId}`,  // Your endpoint for fetching data for a specific goal
                 method: 'GET',
                 success: function(goal) {
-                 
+                    // Re-render the graph for this goal
                     renderGoalGraph(goal);
                 },
                 error: function(err) {
