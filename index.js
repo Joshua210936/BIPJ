@@ -241,7 +241,7 @@ app.post('/goalsPage/delete', async function (req, res) {
         console.error('Error deleting goal:', error);
         res.status(500).send({ message: 'Error deleting goal', error });
     }
-});;
+});
 
 
 app.get('/workshops', function (req, res) {
@@ -518,19 +518,19 @@ app.get('/adminViewQuiz', function (req, res) {
 // });
 
 // GPT suggestion
-app.get('/adminEditQuiz/:testID', async (req, res) => {
-    const { testID } = req.params;
+// app.get('/adminEditQuiz/:testID', async (req, res) => {
+//     const { testID } = req.params;
 
-    try {
-        const quiz = await Test.findOne({ where: { testID: testID } });
-        const questions = await Question.findAll({ where: { testID: testID } });
+//     try {
+//         const quiz = await Test.findOne({ where: { testID: testID } });
+//         const questions = await Question.findAll({ where: { testID: testID } });
 
-        res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
-    } catch (err) {
-        console.error('Error fetching quiz:', err);
-        res.status(500).send({ message: 'Error fetching quiz', error: err });
-    }
-});
+//         res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
+//     } catch (err) {
+//         console.error('Error fetching quiz:', err);
+//         res.status(500).send({ message: 'Error fetching quiz', error: err });
+//     }
+// });
 
 app.put('/adminEditQuiz/:testID', async (req, res) => {
     const { testID } = req.params;
@@ -571,12 +571,42 @@ app.put('/adminEditQuiz/:testID', async (req, res) => {
         }
 
         res.status(200).send({ message: 'Quiz updated successfully' });
+        console.log('Quiz updated successfully');
     } catch (err) {
         console.error('Error updating quiz:', err);
         res.status(500).send({ message: 'Error updating quiz', error: err });
     }
 });
 
+
+
+// GPT suggestion for delete quiz
+app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
+    const testID = req.params.testID;
+
+    try {
+        // Delete all questions associated with the test
+        await Question.destroy({
+            where: {
+                testID: testID
+            }
+        });
+
+        // Delete the test itself
+        await Test.destroy({
+            where: {
+                testID: testID
+            }
+        });
+
+        res.status(200).json({ success: true, message: 'Test deleted successfully' });
+        console.log('Test deleted successfully');
+        res.redirect('/adminViewQuiz');
+    } catch (error) {
+        console.error('Error deleting test:', error);
+        res.status(500).json({ success: false, message: 'Error deleting test', error: error });
+    }
+});
 
 const adminRoute = require('./routes/admin_routes');
 app.use(adminRoute);

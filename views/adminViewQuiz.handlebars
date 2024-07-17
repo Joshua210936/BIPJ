@@ -20,95 +20,21 @@
             {{/each}}
         </div>
     </div>
-
-    <!-- Modal for editing test -->
-    <div id="editTestModal" style="display: none;">
-        <form action="/adminEditQuiz" method="POST" id="editTestForm">
-            <!-- Add hidden input to use PUT method -->
-            <input type="hidden" name="_method" value="PUT">
-            <input type="hidden" id="editTestID" name="testID" value="">
-
-            <label for="editQuizModule">Module</label>
-            <select id="editQuizModule" name="quizModule">
-                <option value="1">Module 1</option>
-                <option value="2">Module 2</option>
-                <option value="3">Module 3</option>
-                <option value="4">Module 4</option>
-                <option value="5">Module 5</option>
-            </select><br>
-
-            <div id="editQuestions"></div>
-
-            <button type="button" class="add-question-button" id="editAddQuestionButton">Add Question</button>
-            <button type="submit">Update Quiz</button>
-        </form>
-    </div>
 </body>
 
 <script>
     async function editTest(testID) {
         try {
-            const response = await fetch(`/adminEditQuiz/${testID}`);
-            const data = await response.json();
-            if (data) {
-                // Show the modal
-                document.getElementById('editTestModal').style.display = 'block';
-                
-                // Fill in the form fields with the fetched data
-                document.getElementById('editTestID').value = data.quiz.testID;
-                document.getElementById('editQuizModule').value = data.quiz.module;
-                
-                // Clear existing questions
-                const editQuestionsContainer = document.getElementById('editQuestions');
-                editQuestionsContainer.innerHTML = '';
-
-                data.questions.forEach((question, index) => {
-                    const questionElement = document.createElement('div');
-                    questionElement.classList.add('question');
-                    questionElement.id = `editQuestion${index}`;
-                    questionElement.innerHTML = `
-                        <h3 class="header">Question ${index + 1}</h3>
-                        <input type="hidden" name="questions[${index}][id]" value="${question.id}">
-                        <div class="input-group">
-                            <label for="questionText${index}">Question Text</label>
-                            <input type="text" id="questionText${index}" name="questions[${index}][questionText]" placeholder="Enter Question Text" value="${question.questionText}">
-                        </div>
-                        <div>
-                            <label for="points${index}">Points</label>
-                            <input type="number" id="points${index}" name="questions[${index}][points]" placeholder="Enter Points" value="${question.points}"><br>
-        
-                            <label for="option${index}_1">First Option</label>
-                            <input type="radio" id="option${index}_1" name="questions[${index}][correctOption]" value="1" ${question.correctOption === 1 ? 'checked' : ''}>
-                            <input type="text" id="option${index}_1Text" name="questions[${index}][option1]}" placeholder="Enter Option 1" value="${question.option1}"><br>
-        
-                            <label for="option${index}_2">Second Option</label>
-                            <input type="radio" id="option${index}_2" name="questions[${index}][correctOption]" value="2" ${question.correctOption === 2 ? 'checked' : ''}>
-                            <input type="text" id="option${index}_2Text" name="questions[${index}][option2]}" placeholder="Enter Option 2" value="${question.option2}"><br>
-        
-                            <label for="option${index}_3">Third Option</label>
-                            <input type="radio" id="option${index}_3" name="questions[${index}][correctOption]" value="3" ${question.correctOption === 3 ? 'checked' : ''}>
-                            <input type="text" id="option${index}_3Text" name="questions[${index}][option3]}" placeholder="Enter Option 3" value="${question.option3}"><br>
-        
-                            <label for="option${index}_4">Fourth Option</label>
-                            <input type="radio" id="option${index}_4" name="questions[${index}][correctOption]" value="4" ${question.correctOption === 4 ? 'checked' : ''}>
-                            <input type="text" id="option${index}_4Text" name="questions[${index}][option4]}" placeholder="Enter Option 4" value="${question.option4}"><br>
-                        </div>
-                    `;
-                    editQuestionsContainer.appendChild(questionElement);
-                });
-                
-                // Update question count for adding new questions
-                questionCount = data.questions.length;
-            }
+            window.location.href = `/adminEditQuiz/${testID}`;
         } catch (error) {
-            console.error('Error fetching quiz:', error);
+            console.error('Error navigating to edit quiz:', error);
         }
     }
 
     async function deleteTest(testID) {
         if (confirm("Are you sure you want to delete this test?")) {
             try {
-                const response = await fetch(`/adminEditQuiz/delete`, {
+                const response = await fetch(`/adminViewQuiz/delete`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -124,41 +50,4 @@
             }
         }
     }
-
-    let questionCount = 0;
-
-    document.getElementById('editAddQuestionButton').addEventListener('click', () => {
-        const newQuestion = document.createElement('div');
-        newQuestion.classList.add('question');
-        newQuestion.id = `editQuestion${questionCount}`;
-        newQuestion.innerHTML = `
-            <h3 class="header">Question ${questionCount + 1}</h3>
-            <div class="input-group">
-                <label for="questionText${questionCount}">Question Text</label>
-                <input type="text" id="questionText${questionCount}" name="questions[${questionCount}][questionText]" placeholder="Enter Question Text">
-            </div>
-            <div>
-                <label for="points${questionCount}">Points</label>
-                <input type="number" id="points${questionCount}" name="questions[${questionCount}][points]" placeholder="Enter Points"><br>
-
-                <label for="option${questionCount}_1">First Option</label>
-                <input type="radio" id="option${questionCount}_1" name="questions[${questionCount}][correctOption]" value="1">
-                <input type="text" id="option${questionCount}_1Text" name="questions[${questionCount}][option1]}" placeholder="Enter Option 1"><br>
-
-                <label for="option${questionCount}_2">Second Option</label>
-                <input type="radio" id="option${questionCount}_2" name="questions[${questionCount}][correctOption]" value="2">
-                <input type="text" id="option${questionCount}_2Text" name="questions[${questionCount}][option2]}" placeholder="Enter Option 2"><br>
-
-                <label for="option${questionCount}_3">Third Option</label>
-                <input type="radio" id="option${questionCount}_3" name="questions[${questionCount}][correctOption]" value="3">
-                <input type="text" id="option${questionCount}_3Text" name="questions[${questionCount}][option3]}" placeholder="Enter Option 3"><br>
-
-                <label for="option${questionCount}_4">Fourth Option</label>
-                <input type="radio" id="option${questionCount}_4" name="questions[${questionCount}][correctOption]" value="4">
-                <input type="text" id="option${questionCount}_4Text" name="questions[${questionCount}][option4]}" placeholder="Enter Option 4"><br>
-            </div>
-        `;
-        document.getElementById('editQuestions').appendChild(newQuestion);
-        questionCount++;
-    });
 </script>
