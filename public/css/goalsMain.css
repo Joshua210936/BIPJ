@@ -1,0 +1,145 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+.container {
+    background-color: #fff;
+    padding: 50px;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.goal-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.goal-slider {
+    display: flex;
+    overflow-x: hidden;  /* Prevent horizontal scroll bar */
+    scroll-behavior: smooth;
+    width: 100%;  /* Ensure slider takes full width of the container */
+    position: relative;
+}
+.goal-item {
+    flex: 0 0 100%;  /* Each goal takes the full width of the slider */
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.goal-header h2 {
+    font-size: 20px;
+    margin: 0;
+}
+.goal-header button {
+    background-color: #ffcc00;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #000;
+}
+.goal-details {
+    margin-bottom: 20px;
+}
+.goal-details p {
+    margin: 5px 0;
+}
+.arrow-button {
+    background-color: #ffcc00;
+    border: none;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #000;
+}
+.popup, .popup-edit {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-width: 70%;
+    max-height: 70%;
+    width: 400px;
+    overflow-y: auto;
+}
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.popup-header h2 {
+    font-size: 20px;
+    margin: 0;
+}
+.popup-header button {
+    background-color: #ffcc00;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #000;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.484);
+    display: none;
+    z-index: 999;
+    backdrop-filter: blur(2px);
+    transition: all 0.3s ease-in-out;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}

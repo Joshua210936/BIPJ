@@ -48,59 +48,107 @@
     color:white;
 }
 .subscriptionplanscontainer {
-    flex-wrap: wrap; 
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
     gap: 20px; 
-    
 }
 
+
 .subscriptionplan {
-    display: flex;
-    flex-direction: column;
     box-shadow: 7px 7px 8px grey;
     border-radius: 25px;
     background: white;
-    flex: 1; 
-    min-width: 200px; 
-    border: 1px solid #ccc; 
-    height:300px;
-}   
+    border: 1px solid #ccc;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; /* Prevent overflow */
+}
 
 .planheader {
-    
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
-    background-color:lightgreen;
+    background-color: lightgreen;
 }
 
-.planheader h1{
+.planheader h1 {
     text-align: center;
     text-shadow: 2px 1px 5px grey;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
 }
 
-.plan2 .planheader{
-    background-color:lightskyblue;
+.plan1 .planheader {
+    background-color: #8BC34A; 
 }
-.plan3 .planheader{
-    background-color:lightpink;
+
+.plan2 .planheader {
+    background-color: #03A9F4;
 }
-.plan4 .planheader{
-    background-color:plum;
+
+.plan3 .planheader {
+    background-color: #FF9800; 
 }
-.planheader h1{
-    color:white;
-    font-weight: bold;
-    padding:5px;
+
+.plan4 .planheader {
+    background-color: #E91E63; 
+}
+
+.plan5 .planheader {
+    background-color: #9C27B0;
+}
+
+.plan6 .planheader {
+    background-color: #FFC107; 
+}
+
+.plan7 .planheader {
+    background-color: #FF5722; 
+}
+
+.plan8 .planheader {
+    background-color: #673AB7; 
+}
+
+.plan9 .planheader {
+    background-color: #4CAF50; 
+}
+
+.plan10 .planheader {
+    background-color: #2196F3; 
 }
 
 
 .planbody {
-    margin:20px;
-    padding:10px;
-}
-.planfooter {
-    margin:5px;
-    display: grid;
-    place-items: center;
-    margin-top:auto;
+    margin: 20px;
+    padding: 10px;
+    flex-grow: 1; /* Allow body to take available space */
 }
 
+.planfooter {
+    margin: 5px;
+    display: grid;
+    place-items: center;
+    margin-top: auto; /* Push footer to the bottom */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+    .subscriptionplanscontainer {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    }
+}
+
+@media (max-width: 900px) {
+    .subscriptionplanscontainer {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    }
+}
+
+@media (max-width: 600px) {
+    .subscriptionplanscontainer {
+        grid-template-columns: 1fr; /* 1 column */
+    }
+}

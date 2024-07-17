@@ -3,89 +3,29 @@
         <h1 class="text-center">Subscription Plans</h1>
         <p class="text-center">Join our membership to enjoy all these benefits below!</p>
     </div>
-    <div class="subscriptionplanscontainer d-flex">
-        
-        <div class="subscriptionplan plan1">
+    <div class="subscriptionplanscontainer">
+
+        {{#each plans}}
+        <div class="subscriptionplan plan{{this.plan_ID}}">
             <div class="planheader">
-                <h1>Free Trial</h1>
+                <h1>{{this.plan_name}}</h1>
             </div>
             <div class="planbody">
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to attend 2 workshops per month</p>
+                {{#each (parseJson this.description)}}
+                <div class="d-flex">
+                    <i class="fa fa-check fa-2x"></i>
+                    <p class="mt-1 mb-1">{{this}}</p>
                 </div>
-
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to unlock 1 advance courses of your choice</p>
-                </div>
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to participate in the quiz</p>
-                </div>
+                {{/each}}
             </div>
             <div class="planfooter">
-                <input type="submit" class="btn btn-info" value="Select" name="pay" id="pay">
+                <form action="/subscriptions/select/{{this.plan_ID}}" method="POST">
+                    <input type="submit" class="btn btn-info" value="Select" name="pay" id="pay">
+                </form>
             </div>
         </div>
-        <div class="subscriptionplan plan2">
-            <div class="planheader">
-                <h1>Standard</h1>
-            </div>
-            <div class="planbody">
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to attend 2 workshops per month</p>
-                </div>
+        {{/each}}
 
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to unlock 1 advance courses of your choice</p>
-                </div>
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to participate in the quiz</p>
-                </div>
-            </div>
-            <div class="planfooter">
-                <input type="submit" class="btn btn-info" value="Select" name="pay" id="pay">
-            </div>
-        </div>
-        <div class="subscriptionplan plan3">
-            <div class="planheader">
-                <h1>Advance</h1>
-            </div>
-            <div class="planbody">
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to attend 2 workshops per month</p>
-                </div>
-
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to unlock 1 advance courses of your choice</p>
-                </div>
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to participate in the quiz</p>
-                </div>
-            </div>
-            <div class="planfooter">
-                <input type="submit" class="btn btn-info" value="Select" name="pay" id="pay">
-            </div>
-        </div>
-        <div class="subscriptionplan plan4">
-            <div class="planheader">
-                <h1>Premium</h1>
-            </div>
-            <div class="planbody">
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to attend 2 workshops per month</p>
-                </div>
-
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to unlock 1 advance courses of your choice</p>
-                </div>
-                <div class="d-flex"><i class="fa fa-check fa-2x"></i>
-                    <p class="mt-1 mb-1">Able to participate in the quiz</p>
-                </div>
-            </div>
-            <div class="planfooter">
-                <input type="submit" class="btn btn-info" value="Select" name="pay" id="pay">
-            </div>
-        </div>
 
     </div>
-
 </div>
