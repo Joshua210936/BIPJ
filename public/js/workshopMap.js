@@ -70,10 +70,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             <br>
                             <label for="registerDate">Date</label>
                             <input type="date" id="registerDate" name="registerDate" required>
+                            <input type="hidden" id="workshopID" name="workshopID">
                             <br>
                             <br>
                             <div>By registering, I agree to FinancialFlare's Terms of Service</div>
-                            <button class="" type="submit">Register</button>
+                            <button class="registerButton" type="submit" data-workshop-id="{{this.Workshop_ID}}">Register</button>
                         </form>
                     </div>
                 </div>
@@ -92,5 +93,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
         modal.style.display = "block";
     }
 });
-    
 
+document.addEventListener('DOMContentLoaded', () => {
+    const registerButton = document.querySelectorAll('.registerButton');
+    
+    registerButton.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const workshopID = button.getAttribute('data-workshop-id');
+        });
+    });
+    document.getElementById('workshopID').value = workshopID;
+});
