@@ -154,6 +154,7 @@
 
 .subscription-table th,
 .subscription-table td {
+    background-color:white;
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -231,6 +232,53 @@
     color:black;
     border:3px solid black;
 }
+
+/* editSubscription form */
+.editplancontainer {
+    border: 3px solid orange;
+    width: 40%;
+    margin: 0 auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.editplancontainer h1 {
+    color: orange;
+    text-align: center;
+}
+
+.editinputscontainer {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.editplanbtn {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.editplanbtn button {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.editplanbtn button:hover {
+    background-color: darkorange;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
 
 /* Media Queries for Responsiveness */
 @media (max-width: 1250px) {

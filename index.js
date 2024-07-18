@@ -345,35 +345,43 @@ app.get('/adminSubscription', async (req, res) => {
 
 
 app.get('/adminSubscription/edit/:id', async (req, res) => {
+    const planId = req.params.id;
+    
     try {
-        const plan = await SubscriptionPlans.findByPk(req.params.id);
-        if (plan) {
-            res.render('editSubscription', { layout: 'adminMain', plan });
-        } else {
-            res.status(404).send('Subscription plan not found');
+        const plan = await SubscriptionPlans.findByPk(planId);
+        
+        if (!plan) {
+            return res.status(404).send('Subscription plan not found');
         }
+
+        const description = JSON.stringify(plan.description).replace(/'/g, '"') || '{}'; 
+        const parsedDescription = JSON.parse(description);
+
+        res.render('editSubscription', { layout: 'adminMain', plan: { ...plan.toJSON(), description: parsedDescription } });
     } catch (error) {
+        console.error('Error retrieving subscription plan:', error);
         res.status(500).send('Error retrieving subscription plan');
     }
 });
 
 app.post('/adminSubscription/edit/:id', async (req, res) => {
     try {
-        const plan = await SubscriptionPlans.findByPk(req.params.id);
+        const planId = req.params.id;
+        const plan = await SubscriptionPlans.findByPk(planId);
         if (plan) {
             await plan.update({
                 plan_name: req.body.plan_name,
-                description: JSON.parse(req.body.description),
+                description: JSON.parse(JSON.stringify(req.body.description).replace(/'/g, '"') || '{}'),
                 price: req.body.price,
                 duration: req.body.duration,
-                duration_unit: req.body.duration_unit,
-                isActive: req.body.isActive === 'on'
+                duration_unit: req.body.duration_unit
             });
             res.redirect('/adminSubscription');
         } else {
             res.status(404).send('Subscription plan not found');
         }
     } catch (error) {
+        console.error(error);
         res.status(500).send('Error updating subscription plan');
     }
 });

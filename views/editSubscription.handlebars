@@ -1,0 +1,82 @@
+<form action="/adminSubscription/edit/{{plan.plan_ID}}" method="POST">
+    <div class="editplancontainer">
+        <h1 class="text-center">Edit Plan {{plan.plan_ID}}: {{plan.plan_name}}</h1>
+        <div class="inputscontainer">
+            <div class="form-group">
+                <label for="plan_name">Plan Name:</label>
+                <input type="text" id="plan_name" name="plan_name" class="form-control" value="{{plan.plan_name}}" required minlength="2" maxlength="50">
+                <div class="invalid-feedback">Please enter a valid plan name (2-50 characters).</div>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" class="form-control" rows="3" required minlength="10" maxlength="200">{{plan.description}}</textarea>
+                <div class="invalid-feedback">Please enter a valid description (10-200 characters).</div>
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" class="form-control" value="{{plan.price}}" required step="0.01" min="0.01">
+                <div class="invalid-feedback">Please enter a valid price (greater than $0.00).</div>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration:</label>
+                <input type="number" id="duration" name="duration" class="form-control" value="{{plan.duration}}" required min="1">
+                <div class="invalid-feedback">Please enter a valid duration (minimum 1).</div>
+            </div>
+            <div class="form-group">
+                <label for="duration_unit">Duration Unit:</label>
+                <select id="duration_unit" name="duration_unit" class="form-control" required>
+                    <option value="">Select duration unit</option>
+                    <option value="days" {{#if (eq plan.duration_unit "days")}}selected{{/if}}>Days</option>
+                    <option value="months" {{#if (eq plan.duration_unit "months")}}selected{{/if}}>Months</option>
+                </select>
+                <div class="invalid-feedback">Please select a duration unit.</div>
+            </div>
+            <div class="editplanbtn d-flex">
+                <button type="submit" class="btn btn-primary">Update Plan</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Fetch form inputs
+            const planName = document.getElementById('plan_name').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const price = document.getElementById('price').value.trim();
+            const duration = document.getElementById('duration').value.trim();
+            const durationUnit = document.getElementById('duration_unit').value;
+
+            // Basic validation for empty fields
+            if (planName === '' || description === '' || price === '' || duration === '' || durationUnit === '') {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            // Validate duration based on duration unit
+            if (durationUnit === 'months' && (duration < 1 || duration > 12)) {
+                alert('Months can only be within 1-12.');
+                return;
+            }
+
+            if (durationUnit === 'days' && (duration < 1 || duration > 31)) {
+                alert('Days can only be within 1-31.');
+                return;
+            }
+
+            // Validate price format (two decimal places)
+            if (!/^\d+(\.\d{1,2})?$/.test(price)) {
+                alert('Price must have up to two decimal places.');
+                return;
+            }
+
+            // If all validations pass, submit the form
+            form.submit();
+        });
+    });
+</script>
