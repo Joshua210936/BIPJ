@@ -1,37 +1,115 @@
 <div class="adminSubContainer">
     <h1 class="text-center">Admin: Subscription Plans</h1>
     <div class="subscriptionContainer">
-        <table class="subscription-table">
-            <thead>
-                <tr>
-                    <th>Plan ID</th>
-                    <th>Plan Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Duration</th>
-                    <th>Active</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each plans}}
-                <tr>
-                    <td>{{this.plan_ID}}</td>
-                    <td>{{this.plan_name}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.price}}</td>
-                    <td>{{this.duration}} {{this.duration_unit}}</td>
-                    <td>{{#if this.isActive}}Yes{{else}}No{{/if}}</td>
-                    <td>
-                        <a href="/admin/subscription/edit/{{this.plan_ID}}" class="btn btn-warning">Edit</a>
-                        <form action="/admin/subscription/delete/{{this.plan_ID}}" method="POST"
-                            style="display:inline;">
-                            <input type="submit" class="btn btn-danger" value="Delete">
-                        </form>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
+        <ul class="subscription-tabs" id="subscriptionTabs" role="tablist">
+            <li class="subscription-tab-item">
+                <a class="subscription-tab active" id="active-plans-tab" data-toggle="tab" href="#active-plans" role="tab" aria-controls="active-plans" aria-selected="true">Active Subscription Plans</a>
+            </li>
+            <li class="subscription-tab-item">
+                <a class="subscription-tab" id="inactive-plans-tab" data-toggle="tab" href="#inactive-plans" role="tab" aria-controls="inactive-plans" aria-selected="false">Inactive Subscription Plans</a>
+            </li>
+            <div class="addPlan"><a href="/addSubscription" class="text-right">Add Plan</a></div>
+        </ul>
+        <div class="tab-content" id="subscriptionTabsContent">
+            <div class="tab-pane fade show active subscription-tab-content" id="active-plans" role="tabpanel" aria-labelledby="active-plans-tab">
+                
+                <table class="subscription-table">
+                    <thead>
+                        <tr>
+                            <th>Plan ID</th>
+                            <th>Plan Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each activePlans}}
+                        <tr>
+                            <td>{{this.plan_ID}}</td>
+                            <td>{{this.plan_name}}</td>
+                            <td>{{this.description}}</td>
+                            <td>{{this.price}}</td>
+                            <td>{{this.duration}} {{this.duration_unit}}</td>
+                            <td>{{#if this.isActive}}Active{{else}}Inactive{{/if}}</td>
+
+                            <td>
+                                <a href="/adminSubscription/edit/{{this.plan_ID}}" class="btn btn-warning">Edit</a>
+                                <form action="/adminSubscription/delete/{{this.plan_ID}}" method="POST" style="display:inline;" onsubmit="return confirmDelete();" >
+                                    <input type="submit" class="btn btn-danger" value="Delete">
+                                </form>
+                                <form action="/adminSubscription/toggleActive/{{this.plan_ID}}" method="POST" style="display:inline;">
+                                    <input type="submit" class="btn btn-secondary" value="Deactivate">
+                                </form>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade subscription-tab-content" id="inactive-plans" role="tabpanel" aria-labelledby="inactive-plans-tab">
+                <table class="subscription-table">
+                    <thead>
+                        <tr>
+                            <th>Plan ID</th>
+                            <th>Plan Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Duration</th>
+                            <th>Actions</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each inactivePlans}}
+                        <tr>
+                            <td>{{this.plan_ID}}</td>
+                            <td>{{this.plan_name}}</td>
+                            <td>{{this.description}}</td>
+                            <td>{{this.price}}</td>
+                            <td>{{this.duration}} {{this.duration_unit}}</td>
+                            <td>{{#if this.isActive}}Active{{else}}Inactive{{/if}}</td>
+                            <td>
+                                <a href="/adminSubscription/edit/{{this.plan_ID}}" class="btn btn-warning">Edit</a>
+                                <form action="/adminSubscription/delete/{{this.plan_ID}}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                                    <input type="submit" class="btn btn-danger" value="Delete">
+                                </form>
+                                <form action="/adminSubscription/toggleActive/{{this.plan_ID}}" method="POST" style="display:inline;">
+                                    <input type="submit" class="btn btn-secondary" value="Activate">
+                                </form>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+     function confirmDelete() {
+        return confirm('Are you sure you want to delete this subscription plan?');
+    }
+
+    $(document).ready(function() {
+        
+    $('.subscription-tab').on('click', function(e) {
+        e.preventDefault();
+
+        // Remove active class from all tabs and tab content
+        $('.subscription-tab').removeClass('active');
+        $('.tab-pane').removeClass('show active');
+
+        // Add active class to the clicked tab
+        $(this).addClass('active');
+
+        // Show the corresponding tab content
+        const target = $(this).attr('href');
+        $(target).addClass('show active');
+    });
+});
+
+</script>

@@ -290,7 +290,11 @@ function isValidJSON(str) {
 // Subscriptions //
 app.get('/subscription', async (req, res) => {
     try {
-        const plans = await SubscriptionPlans.findAll();
+        const plans = await SubscriptionPlans.findAll({
+            where: {
+                isActive: true // Filter for active plans only
+            }
+        });
 
         const plansWithParsedDescription = plans.map(plan => {
 
@@ -320,24 +324,124 @@ app.get('/adminSubscription', async (req, res) => {
         const plans = await SubscriptionPlans.findAll();
 
         const plansWithParsedDescription = plans.map(plan => {
-
             const description = JSON.stringify(plan.description).replace(/'/g, '"') || '{}'; // Default to empty JSON if missing
-
-            const parsedDescription = JSON.parse(JSON.stringify(description));
+            const parsedDescription = JSON.parse(description);
             return {
                 ...plan.toJSON(),
                 description: parsedDescription,
             };
-
         });
 
+        const activePlans = plansWithParsedDescription.filter(plan => plan.isActive);
+        const inactivePlans = plansWithParsedDescription.filter(plan => !plan.isActive);
 
-        res.render('adminSubscription', { layout: 'adminMain', plans: plansWithParsedDescription });
+        res.render('adminSubscription', { layout: 'adminMain', activePlans, inactivePlans });
     } catch (error) {
         console.error('Error fetching subscription plans:', error);
         res.status(500).send('Server error');
     }
 });
+
+
+
+app.get('/adminSubscription/edit/:id', async (req, res) => {
+    try {
+        const plan = await SubscriptionPlans.findByPk(req.params.id);
+        if (plan) {
+            res.render('editSubscription', { layout: 'adminMain', plan });
+        } else {
+            res.status(404).send('Subscription plan not found');
+        }
+    } catch (error) {
+        res.status(500).send('Error retrieving subscription plan');
+    }
+});
+
+app.post('/adminSubscription/edit/:id', async (req, res) => {
+    try {
+        const plan = await SubscriptionPlans.findByPk(req.params.id);
+        if (plan) {
+            await plan.update({
+                plan_name: req.body.plan_name,
+                description: JSON.parse(req.body.description),
+                price: req.body.price,
+                duration: req.body.duration,
+                duration_unit: req.body.duration_unit,
+                isActive: req.body.isActive === 'on'
+            });
+            res.redirect('/adminSubscription');
+        } else {
+            res.status(404).send('Subscription plan not found');
+        }
+    } catch (error) {
+        res.status(500).send('Error updating subscription plan');
+    }
+});
+
+app.post('/adminSubscription/delete/:id', async (req, res) => {
+    try {
+        const plan = await SubscriptionPlans.findByPk(req.params.id);
+        if (plan) {
+            await plan.destroy();
+            res.redirect('/adminSubscription');
+        } else {
+            res.status(404).send('Subscription plan not found');
+        }
+    } catch (error) {
+        res.status(500).send('Error deleting subscription plan');
+    }
+});
+
+app.post('/adminSubscription/toggleActive/:id', async (req, res) => {
+    try {
+        const planId = req.params.id;
+        const plan = await SubscriptionPlans.findByPk(planId);
+
+        if (!plan) {
+            return res.status(404).send('Subscription plan not found');
+        }
+
+
+        const previousStatus = plan.isActive;
+
+
+        plan.isActive = !previousStatus; 
+        await plan.save();
+
+ 
+        const activeTab = previousStatus ? 'active-plans' : 'inactive-plans';
+
+ 
+        res.redirect(`/adminSubscription?tab=${activeTab}`);
+    } catch (error) {
+        console.error('Error toggling subscription plan:', error);
+        res.status(500).send('Server error');
+    }
+});
+app.get('/addSubscription', async (req, res) => {
+    res.render('addSubscription', { layout: 'adminMain'});
+});
+app.post('/addSubscription', async (req, res) => {
+    try {
+        const { plan_name, description, price, duration, duration_unit } = req.body;
+
+        const newPlan = await SubscriptionPlans.create({
+            plan_name,
+            description,
+            price,
+            duration,
+            duration_unit,
+            isActive: true
+        });
+
+
+        res.redirect('/adminSubscription');
+    } catch (error) {
+        console.error('Error adding subscription plan:', error);
+        res.status(500).send('Server error');
+    }
+});
+
 
 app.get('/aboutUs', function (req, res) {
     res.render('aboutUs', { layout: 'main' })

@@ -144,6 +144,94 @@
     margin-top: auto; /* Push footer to the bottom */
 }
 
+/*  Admin subscription*/
+.subscription-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    
+}
+
+.subscription-table th,
+.subscription-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.subscription-table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.subscription-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.subscription-tabs {
+    width: 80%; 
+    margin: 0 auto; 
+    display: flex; 
+    margin-bottom:10px;
+}
+
+.subscription-tab {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    background-color: #f8f8f8;
+    transition: background-color 0.3s;
+    text-align: center; /* Center text */
+}
+
+.subscription-tab.active {
+    background-color: grey;
+    color: white;
+}
+
+.addPlan {
+    
+    width:70%;
+    text-align: right;
+}
+.addPlan a {
+    border-radius: 5px;
+    padding:10px;
+    color:white;
+    background-color: orange;
+}
+
+.addplancontainer {
+    border:3px solid orange;
+    width:40%;
+    margin:0 auto;
+    padding-top:30px;
+    padding-bottom:30px;
+    border-radius: 5px;
+    background-color: white;
+}
+.addplancontainer h1 {
+    color:orange;
+}
+.inputscontainer {
+    width:90%;
+    margin:0 auto;
+}
+.addplanbtn {
+    width:100%;
+
+}
+.addplanbtn button{
+    margin:0 auto;  
+    background-color: orange;
+    padding:10px;
+    border-radius: 5px;
+    color:black;
+    border:3px solid black;
+}
+
 /* Media Queries for Responsiveness */
 @media (max-width: 1250px) {
     .subscriptionplanscontainer {
