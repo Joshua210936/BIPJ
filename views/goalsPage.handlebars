@@ -25,6 +25,7 @@
                                     <button onclick="showPopup('{{this.Saving_goalName}}', '{{this.Saving_id}}')">Add savings</button>
                                     <button onclick="showEditPopup('{{this.Saving_id}}', '{{this.Saving_goalName}}', '{{this.Saving_amount}}', '{{this.Saving_startDate}}', '{{this.Saving_endDate}}', '{{this.Saving_frequency}}', '{{this.Saving_calculate}}', '{{this.Saving_picture}}')">Edit goal</button>
                                     <button onclick="deleteGoal('{{this.Saving_id}}')">Delete goal</button>
+                                    <a href="/addgoal"><button >Add new goal</button></a>
                                 </div>
                             </div>
                             <div class="goal-details">
@@ -146,7 +147,7 @@
             labels: ['Saved', 'Remaining'],
             datasets: [{
                 data: [savedAmount, remainingAmount],
-                backgroundColor: ['#20c997', '#ff6f61'],
+                backgroundColor: ['#ffcc00', '#808080'],
             }]
         };
 
