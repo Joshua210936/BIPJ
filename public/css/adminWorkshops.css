@@ -12,6 +12,11 @@
     margin-left: auto;
 }
 
+.container{
+    padding-bottom:40px;
+    padding-top:40px;
+}
+
 .filter-icon {
     display: inline-flex; /* Align content in the center */
     justify-content: center;

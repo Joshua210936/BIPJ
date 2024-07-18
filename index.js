@@ -560,7 +560,7 @@ app.post('/adminWorkshops', function (req, res) {
         Workshop_Description: description,
         Workshop_Image: workshopImage
     }).then((workshops) => {
-        res.redirect('/workshops');
+        res.redirect('/adminWorkshops');
     })
         .catch(err => console.log(err))
 });
