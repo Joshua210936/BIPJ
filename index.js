@@ -576,7 +576,7 @@ app.get('/adminQuiz', function (req, res) {
 });
 
 app.post('/adminQuiz', function(req, res) {
-    const {
+    let {
         testID,
         quizModule,
         questions // Assuming the form data has been updated to send questions as an array
@@ -607,8 +607,8 @@ app.post('/adminQuiz', function(req, res) {
                 return Promise.all(questionPromises);
             })
             .then(() => {
-                redirect('/adminViewQuiz');
-                res.status(201).send({ message: 'Quiz created successfully!' });
+                res.redirect('/adminViewQuiz');
+           
             })
             .catch(error => {
                 console.error(error);
@@ -680,17 +680,26 @@ app.get('/adminEditQuiz/:testID', async (req, res) => {
     const { testID } = req.params;
 
     try {
-        const quiz = await Test.findOne({ where: { testID: testID } });
-        const questions = await Question.findAll({ where: { testID: testID } });
+        const quiz = await Test.findOne({ where: { testID } });
 
-        res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
+        if (!quiz) {
+            return res.status(404).send('Quiz not found');
+        }
+
+        const questions = await Question.findAll({ where: { testID } });
+
+        res.render('adminEditQuiz', {
+            layout: 'adminMain',
+            quiz: quiz.get({ plain: true }),
+            questions: questions.map(question => question.get({ plain: true }))
+        });
     } catch (err) {
         console.error('Error fetching quiz:', err);
-        res.status(500).send({ message: 'Error fetching quiz', error: err });
+        res.status(500).send('Internal Server Error');
     }
 });
 
-app.put('/adminEditQuiz/:testID', async (req, res) => {
+app.post('/adminEditQuiz/:testID', async (req, res) => {
     const { testID } = req.params;
     const { quizModule, questions } = req.body;
 
@@ -728,7 +737,7 @@ app.put('/adminEditQuiz/:testID', async (req, res) => {
             }
         }
 
-        res.status(200).send({ message: 'Quiz updated successfully' });
+        res.redirect('/adminViewQuiz');
         console.log('Quiz updated successfully');
     } catch (err) {
         console.error('Error updating quiz:', err);
@@ -738,7 +747,7 @@ app.put('/adminEditQuiz/:testID', async (req, res) => {
 
 
 
-// GPT suggestion for delete quiz
+
 app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
     const testID = req.params.testID;
 
@@ -757,12 +766,12 @@ app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
             }
         });
 
-        res.status(200).json({ success: true, message: 'Test deleted successfully' });
-        console.log('Test deleted successfully');
+        console.log('Quiz deleted successfully');
         res.redirect('/adminViewQuiz');
+     
     } catch (error) {
-        console.error('Error deleting test:', error);
-        res.status(500).json({ success: false, message: 'Error deleting test', error: error });
+        console.error('Error deleting quiz:', error);
+        res.status(500).json({ success: false, message: 'Error deleting quiz', error: error });
     }
 });
 

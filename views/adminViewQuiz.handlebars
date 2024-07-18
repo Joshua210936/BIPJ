@@ -8,7 +8,10 @@
                         <h2>Test ID: {{this.testID}}</h2>
                         <div>
                             <button onclick="editTest('{{this.testID}}')">Edit</button>
-                            <button onclick="deleteTest('{{this.testID}}')">Delete Quiz</button>
+                            <form action="/adminViewQuiz/delete/{{this.testID}}" method="POST">
+                                <input type="submit" class="btn btn-danger" value="Delete Quiz">
+                            </form>
+                            {{!-- <button onclick="deleteTest('{{this.testID}}')">Delete Quiz</button> --}}
                         </div>
                     </div>
                     <div class="test-details">
@@ -30,7 +33,7 @@
     async function deleteTest(testID) {
         if (confirm("Are you sure you want to delete this test?")) {
             try {
-                const response = await fetch(`/adminEditQuiz/delete`, {
+                const response = await fetch(`/adminViewQuiz/delete`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
