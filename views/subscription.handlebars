@@ -17,6 +17,11 @@
                     <p class="mt-1 mb-1">{{this}}</p>
                 </div>
                 {{/each}}
+
+                <div class="price">
+                    ${{this.price}}
+                </div>
+                
             </div>
             <div class="planfooter">
                 <form action="/subscriptions/select/{{this.plan_ID}}" method="POST">

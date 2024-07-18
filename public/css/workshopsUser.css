@@ -4,6 +4,27 @@
     border-radius:20px;
 }
 
+.formContainer{
+    background-color: rgb(187, 187, 187);
+    height:400px;
+    border-radius:10px;
+    width: 85%; /* Adjust the width as needed */
+    margin: auto; /* Center the info section */
+    padding: 20px; /* Add some padding */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.infoContainer{
+    background-color: #FFD43B;
+    height:400px;
+    border-radius:10px;
+    width: 85%; /* Adjust the width as needed */
+    margin: auto; /* Center the info section */
+    padding: 20px; /* Add some padding */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+    overflow-y: scroll;
+}
+
 .title-div{
     margin-left:20px;
 }

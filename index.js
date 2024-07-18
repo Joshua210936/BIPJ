@@ -5,6 +5,7 @@ const app = express();
 const exphbs = require('express-handlebars')
 const path = require('path');
 const Handlebars = require('handlebars');
+const methodOverride = require('method-override');
 
 // Database
 const bipjDB = require('./config/DBConnection');
@@ -15,6 +16,7 @@ const { Test, Question } = require('./models/test');
 const Customer = require('./models/custUser');
 const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
+const register = require('./models/workshopRegister')
 
 let port = 3001;
 
@@ -32,6 +34,15 @@ Handlebars.registerHelper('parseJson', function (context) {
     return JSON.parse(context);
 });
 
+// For comparison in handlebars [Quiz Module]
+Handlebars.registerHelper('eq', function(a, b) {
+    return a == b;
+});
+
+Handlebars.registerHelper('add', function(a, b) {
+    return a + b;
+});
+
 //sets apps to use handlebars engine
 app.set('view engine', 'handlebars');
 
@@ -39,6 +50,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(methodOverride('_method'));
 
 //guest
 app.get('/', function (req, res) { //home page
@@ -211,14 +223,14 @@ app.post('/goalsPage/delete', async function (req, res) {
     const savingId = req.body.saving_id;
 
     try {
-       
+
         await SavingsEntry.destroy({
             where: {
                 Saving_id: savingId
             }
         });
 
-       
+
         await Saving.destroy({
             where: {
                 Saving_id: savingId
@@ -230,7 +242,7 @@ app.post('/goalsPage/delete', async function (req, res) {
         console.error('Error deleting goal:', error);
         res.status(500).send({ message: 'Error deleting goal', error });
     }
-});;
+});
 
 
 app.get('/workshops', function (req, res) {
@@ -250,6 +262,19 @@ app.get('/workshops', function (req, res) {
         });
 });
 
+app.post('/workshops', function (req, res) {
+    let {registerName, registerEmail, registerDate} = req.body;
+
+    register.create({
+        Register_Name: registerName,
+        Register_Email: registerEmail,
+        Register_Date: registerDate
+    }).then((registers) => {
+        res.redirect('/workshops');
+    })
+        .catch(err => console.log(err))
+});
+
 function isValidJSON(str) {
     if (typeof str !== 'string') {
         return false; // Not a string
@@ -265,15 +290,17 @@ function isValidJSON(str) {
 // Subscriptions //
 app.get('/subscription', async (req, res) => {
     try {
-        const plans = await SubscriptionPlans.findAll();
+        const plans = await SubscriptionPlans.findAll({
+            where: {
+                isActive: true // Filter for active plans only
+            }
+        });
 
         const plansWithParsedDescription = plans.map(plan => {
 
             const description = JSON.stringify(plan.description).replace(/'/g, '"') || '{}'; // Default to empty JSON if missing
-            console.log(plan.description, JSON.stringify(plan.description));
 
             const parsedDescription = JSON.parse(JSON.stringify(description));
-            console.log(`Plan ID ${plan.plan_ID} Description:`, parsedDescription); // Print the parsed description
             return {
                 ...plan.toJSON(),
                 description: parsedDescription,
@@ -292,9 +319,129 @@ app.get('/subscription', async (req, res) => {
 
 
 
-app.get('/adminSubscription', function (req, res) {
-    res.render('adminSubscription', { layout: 'adminMain' })
+app.get('/adminSubscription', async (req, res) => {
+    try {
+        const plans = await SubscriptionPlans.findAll();
+
+        const plansWithParsedDescription = plans.map(plan => {
+            const description = JSON.stringify(plan.description).replace(/'/g, '"') || '{}'; // Default to empty JSON if missing
+            const parsedDescription = JSON.parse(description);
+            return {
+                ...plan.toJSON(),
+                description: parsedDescription,
+            };
+        });
+
+        const activePlans = plansWithParsedDescription.filter(plan => plan.isActive);
+        const inactivePlans = plansWithParsedDescription.filter(plan => !plan.isActive);
+
+        res.render('adminSubscription', { layout: 'adminMain', activePlans, inactivePlans });
+    } catch (error) {
+        console.error('Error fetching subscription plans:', error);
+        res.status(500).send('Server error');
+    }
 });
+
+
+
+app.get('/adminSubscription/edit/:id', async (req, res) => {
+    try {
+        const plan = await SubscriptionPlans.findByPk(req.params.id);
+        if (plan) {
+            res.render('editSubscription', { layout: 'adminMain', plan });
+        } else {
+            res.status(404).send('Subscription plan not found');
+        }
+    } catch (error) {
+        res.status(500).send('Error retrieving subscription plan');
+    }
+});
+
+app.post('/adminSubscription/edit/:id', async (req, res) => {
+    try {
+        const plan = await SubscriptionPlans.findByPk(req.params.id);
+        if (plan) {
+            await plan.update({
+                plan_name: req.body.plan_name,
+                description: JSON.parse(req.body.description),
+                price: req.body.price,
+                duration: req.body.duration,
+                duration_unit: req.body.duration_unit,
+                isActive: req.body.isActive === 'on'
+            });
+            res.redirect('/adminSubscription');
+        } else {
+            res.status(404).send('Subscription plan not found');
+        }
+    } catch (error) {
+        res.status(500).send('Error updating subscription plan');
+    }
+});
+
+app.post('/adminSubscription/delete/:id', async (req, res) => {
+    try {
+        const plan = await SubscriptionPlans.findByPk(req.params.id);
+        if (plan) {
+            await plan.destroy();
+            res.redirect('/adminSubscription');
+        } else {
+            res.status(404).send('Subscription plan not found');
+        }
+    } catch (error) {
+        res.status(500).send('Error deleting subscription plan');
+    }
+});
+
+app.post('/adminSubscription/toggleActive/:id', async (req, res) => {
+    try {
+        const planId = req.params.id;
+        const plan = await SubscriptionPlans.findByPk(planId);
+
+        if (!plan) {
+            return res.status(404).send('Subscription plan not found');
+        }
+
+
+        const previousStatus = plan.isActive;
+
+
+        plan.isActive = !previousStatus; 
+        await plan.save();
+
+ 
+        const activeTab = previousStatus ? 'active-plans' : 'inactive-plans';
+
+ 
+        res.redirect(`/adminSubscription?tab=${activeTab}`);
+    } catch (error) {
+        console.error('Error toggling subscription plan:', error);
+        res.status(500).send('Server error');
+    }
+});
+app.get('/addSubscription', async (req, res) => {
+    res.render('addSubscription', { layout: 'adminMain'});
+});
+app.post('/addSubscription', async (req, res) => {
+    try {
+        const { plan_name, description, price, duration, duration_unit } = req.body;
+
+        const newPlan = await SubscriptionPlans.create({
+            plan_name,
+            description,
+            price,
+            duration,
+            duration_unit,
+            isActive: true
+        });
+
+
+        res.redirect('/adminSubscription');
+    } catch (error) {
+        console.error('Error adding subscription plan:', error);
+        res.status(500).send('Server error');
+    }
+});
+
 
 app.get('/aboutUs', function (req, res) {
     res.render('aboutUs', { layout: 'main' })
@@ -482,29 +629,134 @@ app.get('/adminViewQuiz', function (req, res) {
         });
 });
 
-app.get('/adminViewQuiz/:testID', async (req, res) => {
-    const testID = req.params.testID;
+
+// Copilot suggestion
+// app.get('/adminEditQuiz/:testID', async (req, res) => {
+//     const testID = req.params.testID;
+
+//     try {
+//         const test = await Test.findByPk(testID, {
+//             include: Question
+//         });
+
+//         if (!test) {
+//             return res.status(404).send({ message: 'Test not found' });
+//         }
+
+//         res.render('adminEditQuiz', {
+//             layout: 'adminMain',
+//             test: test.get({ plain: true })
+//         });
+//     } catch (error) {
+//         console.error('Error fetching test:', error);
+//         res.status(500).send({ message: 'Internal Server Error' });
+//     }
+// });
+
+// GPT suggestion
+// app.get('/adminEditQuiz/:testID', async (req, res) => {
+//     const { testID } = req.params;
+
+//     try {
+//         const quiz = await Test.findOne({ where: { testID: testID } });
+//         const questions = await Question.findAll({ where: { testID: testID } });
+
+//         res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
+//     } catch (err) {
+//         console.error('Error fetching quiz:', err);
+//         res.status(500).send({ message: 'Error fetching quiz', error: err });
+//     }
+// });
+
+app.get('/adminEditQuiz/:testID', async (req, res) => {
+    const { testID } = req.params;
 
     try {
-        const test = await Test.findByPk(testID, {
-            include: Question
-        });
+        const quiz = await Test.findOne({ where: { testID: testID } });
+        const questions = await Question.findAll({ where: { testID: testID } });
 
-        if (!test) {
-            return res.status(404).send({ message: 'Test not found' });
+        res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
+    } catch (err) {
+        console.error('Error fetching quiz:', err);
+        res.status(500).send({ message: 'Error fetching quiz', error: err });
+    }
+});
+
+app.put('/adminEditQuiz/:testID', async (req, res) => {
+    const { testID } = req.params;
+    const { quizModule, questions } = req.body;
+
+    try {
+        // Update the quiz details
+        await Test.update({ module: quizModule }, { where: { testID: testID } });
+
+        // Update existing questions and add new ones if necessary
+        for (const question of questions) {
+            if (question.id) {
+                // Update existing question
+                await Question.update({
+                    questionText: question.questionText,
+                    points: question.points,
+                    option1: question.option1,
+                    option2: question.option2,
+                    option3: question.option3,
+                    option4: question.option4,
+                    correctOption: question.correctOption
+                }, {
+                    where: { id: question.id }
+                });
+            } else {
+                // Add new question
+                await Question.create({
+                    testID: testID,
+                    questionText: question.questionText,
+                    points: question.points,
+                    option1: question.option1,
+                    option2: question.option2,
+                    option3: question.option3,
+                    option4: question.option4,
+                    correctOption: question.correctOption
+                });
+            }
         }
 
-        res.render('adminViewQuiz', {
-            layout: 'adminMain',
-            test: test.get({ plain: true })
-        });
-    } catch (error) {
-        console.error('Error fetching test:', error);
-        res.status(500).send({ message: 'Internal Server Error' });
+        res.status(200).send({ message: 'Quiz updated successfully' });
+        console.log('Quiz updated successfully');
+    } catch (err) {
+        console.error('Error updating quiz:', err);
+        res.status(500).send({ message: 'Error updating quiz', error: err });
     }
 });
 
 
+
+// GPT suggestion for delete quiz
+app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
+    const testID = req.params.testID;
+
+    try {
+        // Delete all questions associated with the test
+        await Question.destroy({
+            where: {
+                testID: testID
+            }
+        });
+
+        // Delete the test itself
+        await Test.destroy({
+            where: {
+                testID: testID
+            }
+        });
+
+        res.status(200).json({ success: true, message: 'Test deleted successfully' });
+        console.log('Test deleted successfully');
+        res.redirect('/adminViewQuiz');
+    } catch (error) {
+        console.error('Error deleting test:', error);
+        res.status(500).json({ success: false, message: 'Error deleting test', error: error });
+    }
+});
 
 const adminRoute = require('./routes/admin_routes');
 app.use(adminRoute);
