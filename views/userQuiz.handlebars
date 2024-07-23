@@ -1,0 +1,78 @@
+<head>
+    <title>User Quiz</title>
+</head>
+
+<body>
+    <main class="container">
+        <form action="/userQuiz/{{quiz.testID}}" method="POST" id="quizForm">
+            <!-- Add hidden input to use PUT method -->
+            <input type="hidden" name="_method" value="PUT">
+            <input type="text" id="testID" name="testID" value="{{quiz.testID}}" readonly hidden><br>
+
+            <h2 for="quizModule">Module: {{quiz.module}}</h2>
+
+            <div id="questions">
+                {{#each questions}}
+                <div class="question" id="question{{@index}}">
+                    <h3 class="header">Question {{add @index 1}}</h3>
+                    <input type="hidden" name="questions[{{@index}}][id]" value="{{this.id}}">
+                    <div class="input-group">
+                        <div>{{this.questionText}}</div> {{!-- This line is for user quiz view reference --}}
+                    </div>
+                    <div>
+                        <label for="points{{@index}}">Points:&nbsp;</label>
+                        <label for="">{{this.points}}</label><br>
+
+                        <label for="option{{@index}}_1">First Option</label>
+                        <input type="radio" id="option{{@index}}_1" name="questions[{{@index}}][correctOption]" value="1">
+                        <label for="">{{this.option1}}</label><br>
+
+                        <label for="option{{@index}}_2">Second Option</label>
+                        <input type="radio" id="option{{@index}}_2" name="questions[{{@index}}][correctOption]" value="2">
+                        <label for="">{{this.option2}}</label><br>
+
+                        <label for="option{{@index}}_3">Third Option</label>
+                        <input type="radio" id="option{{@index}}_3" name="questions[{{@index}}][correctOption]" value="3">
+                        <label for="">{{this.option3}}</label><br>
+
+                        <label for="option{{@index}}_4">Fourth Option</label>
+                        <input type="radio" id="option{{@index}}_4" name="questions[{{@index}}][correctOption]" value="4">
+                        <label for="">{{this.option4}}</label><br>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <button type="submit">Submit Quiz</button>
+        </form>
+    </main>
+</body>
+
+<style>
+    .question {
+        margin-bottom: 1em;
+        color: rgb(0, 0, 0);
+    }
+
+    .add-question-button {
+        display: block;
+        margin: 1em 0;
+    }
+
+    #quizModule, .question input, .question input::placeholder {
+        background-color: white;
+        color: gray;
+    }
+
+    #quizForm label {
+        color: black;
+    }
+
+    .header {
+        color: black;
+    }
+
+    label {
+        display: inline-block !important;
+    }
+</style>

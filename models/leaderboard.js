@@ -1,7 +1,7 @@
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
 const Customer = require('./customer');
-const { Test } = require('./Test'); // Adjust the path as necessary
+const { Test } = require('./test'); // Adjust the path as necessary
 
 const Leaderboard = db.define('Leaderboard', {
     leaderboardID: {
