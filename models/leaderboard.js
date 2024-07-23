@@ -25,7 +25,7 @@ const Leaderboard = db.define('Leaderboard', {
         },
         allowNull: false
     },
-    points: {
+    gainedPoints: {
         type: sequelize.INTEGER,
         allowNull: false
     }

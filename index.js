@@ -12,7 +12,7 @@ const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
 const addWorkshops = require('./models/addWorkshops');
-const { Test, Question } = require('./models/test');
+const { Test, Question } = require('./models/Test');
 const Customer = require('./models/customer');
 const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
