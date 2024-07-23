@@ -24,6 +24,7 @@
                     <h3 class="header">Question {{add @index 1}}</h3>
                     <input type="hidden" name="questions[{{@index}}][id]" value="{{this.id}}">
                     <div class="input-group">
+                        <div>{{this.questionText}}</div> {{!-- This line is for user quiz view reference --}}
                         <label for="questionText{{@index}}">Question Text</label>
                         <input type="text" id="questionText{{@index}}" name="questions[{{@index}}][questionText]" placeholder="Enter Question Text" value="{{this.questionText}}">
                     </div>

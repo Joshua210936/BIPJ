@@ -13,7 +13,7 @@ bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
 const addWorkshops = require('./models/addWorkshops');
 const { Test, Question } = require('./models/test');
-const Customer = require('./models/custUser');
+const Customer = require('./models/customer');
 const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
 const register = require('./models/workshopRegister')
@@ -566,11 +566,29 @@ app.post('/adminWorkshops', function (req, res) {
 });
 
 
-
-app.get('/userCourse', function (req, res) {
-    res.render('userCourse2', { layout: 'main' })
+// User Quiz
+app.get('/userQuiz', function (req, res) {
+    res.render('userQuiz', { layout: 'main' })
 });
 
+app.get('/userQuizList', function (req, res) {
+    Test.findAll()
+        .then(tests => {
+            res.render('userQuizList', {
+                layout: 'main',
+                tests: tests.map(test => {
+                    test = test.get({ plain: true });
+                    return test;
+                })
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching tests:', err);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
+// Admin Quiz
 app.get('/adminQuiz', function (req, res) {
     res.render('adminQuiz', { layout: 'adminMain' })
 });

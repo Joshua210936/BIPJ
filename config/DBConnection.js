@@ -1,6 +1,6 @@
 const mySQLDB = require('./DBConfig');
 // This part would be need to change according to the model name
-const user = require('../models/custUser');
+const user = require('../models/customer');
 const saving = require('../models/savings');
 const Test = require('../models/test');
 

@@ -1,6 +1,7 @@
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
 const { min } = require('moment');
+const Customer = require('./customer');
 
 const Test = db.define('Test', {
     testID: {
@@ -9,6 +10,21 @@ const Test = db.define('Test', {
         allowNull: true
     },
     module: {
+        type: sequelize.INTEGER,
+        allowNull: false
+    },
+    Customer_id: {
+        type: sequelize.INTEGER,
+        references: {
+            model: Customer,
+            key: 'Customer_id'
+        },
+    },
+    totalPoints: {
+        type: sequelize.INTEGER,
+        allowNull: false
+    },
+    gainedPoints: {
         type: sequelize.INTEGER,
         allowNull: false
     }
