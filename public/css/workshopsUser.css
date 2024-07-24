@@ -49,7 +49,7 @@
     margin: auto; 
     padding: 20px; 
     box-sizing: border-box; 
-    height:56vh;
+    height:100%;
 }
 
 .infoContainer{
@@ -60,7 +60,7 @@
     padding: 20px; 
     box-sizing: border-box; 
     overflow-y: scroll;
-    height:56vh;
+    height:100%;
 }
 
 .title-div{
