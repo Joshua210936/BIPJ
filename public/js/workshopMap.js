@@ -1,14 +1,62 @@
 const API_KEY = 'AIzaSyDY0zEGiZRJ6kmm79kgqTkxuGnkXgJ0zhg';
+let map, directionsService, directionsRenderer, userLocation;
 
+// Initialize the map
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 1.3801001587360433, lng: 103.84918473018321 },
-        zoom: 12,
+        zoom: 11,
         mapId: '7eb9cb155077df0'
     });
 
-    // Iterate through workshops and geocode each address
-    workshops.forEach(workshop => {
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+        suppressMarkers: true
+    });
+    directionsRenderer.setMap(map);
+
+    // Get user's current location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                // Add marker for user's current location
+                new google.maps.Marker({
+                    position: userLocation,
+                    map,
+                    title: 'Your Location',
+                    icon: {
+                        url: "images/user-location.png",
+                        scaledSize: new google.maps.Size(34, 38)
+                    },
+                    animation: google.maps.Animation.DROP
+                });
+
+                // Center map on user's location
+                map.setCenter(userLocation);
+
+                // Display all workshops initially
+                updateWorkshopsOnMap(workshops);
+            },
+            (error) => {
+                console.error('Error getting user location:', error);
+            }
+        );
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+    }
+}
+
+// Update the workshops displayed on the map
+function updateWorkshopsOnMap(workshopsToDisplay) {
+    // Clear previous directions
+    directionsRenderer.set('directions', null);
+
+    workshopsToDisplay.forEach(workshop => {
         const address = workshop.Workshop_Address;
         const encodedAddress = encodeURIComponent(address);
         const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${API_KEY}`;
@@ -39,6 +87,21 @@ function initMap() {
                     marker.addListener("click", () => {
                         infowindow.open(map, marker);
                     });
+
+                    // Request directions from user location to workshop
+                    const request = {
+                        origin: userLocation,
+                        destination: { lat: latitude, lng: longitude },
+                        travelMode: 'DRIVING'
+                    };
+
+                    directionsService.route(request, (result, status) => {
+                        if (status === 'OK') {
+                            directionsRenderer.setDirections(result);
+                        } else {
+                            console.error('Directions request failed due to ' + status);
+                        }
+                    });
                 } else {
                     console.error('Geocoding error:', data.status);
                 }
@@ -47,6 +110,17 @@ function initMap() {
                 console.error('Error fetching data:', error);
             });
     });
+}
+
+// Filter workshops based on selected workshop name
+function filterWorkshop() {
+    const selectedWorkshopName = document.getElementById('workshopFilter').value;
+    if (selectedWorkshopName) {
+        const filteredWorkshops = workshops.filter(workshop => workshop.Workshop_Name === selectedWorkshopName);
+        updateWorkshopsOnMap(filteredWorkshops);
+    } else {
+        updateWorkshopsOnMap(workshops);
+    }
 }
 
 //modal js
