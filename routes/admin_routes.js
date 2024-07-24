@@ -174,3 +174,93 @@ module.exports = router;
 //         res.status(500).send({ message: 'Error deleting quiz', error });
 //     }
 // });
+
+
+
+
+// Style for userQuiz.handlebars
+
+{/* <style>
+    .quizModule {
+        margin-top: 20px;
+    }
+
+    .question {
+        margin-top: 20px;
+        padding: 10px;
+        width: 50%;
+    }
+
+    .header {
+        margin: 0;
+    }
+
+    .input-group {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .quizPoints {
+        margin: 0;
+    }
+
+    .quizOptions {
+        margin-top: 10px;
+    }
+
+    .option_1 {
+        margin-right: 10px;
+    }
+
+    .option_2 {
+        margin-right: 10px;
+    }
+
+    .option_3 {
+        margin-right: 10px;
+    }
+
+    .option_4 {
+        margin-right: 10px;
+    }
+
+    .btnSubmit {
+        margin-top: 20px;
+        background-color: yellowgreen;
+    }
+</style> */}
+
+// Style for adminView.handlebars
+{/* <style>
+    .test-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .test-item {
+        border: 1px solid black;
+        border-radius: 5px;
+        margin: 1em;
+        padding: 1em;
+        width: 30%;
+    }
+
+    .test-header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn-edit {
+        background-color: #a28210;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 0.5em 1em;
+        cursor: pointer;
+    }
+
+    .btn-edit:hover {
+        background-color: #c4f819;
+    }
+</style> */}

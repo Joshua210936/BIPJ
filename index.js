@@ -12,7 +12,7 @@ const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
 const addWorkshops = require('./models/addWorkshops');
-const { Test, Question } = require('./models/Test');
+const { Test, Question } = require('./models/test');
 const Customer = require('./models/customer');
 const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
@@ -565,10 +565,59 @@ app.post('/adminWorkshops', function (req, res) {
         .catch(err => console.log(err))
 });
 
+// ---------------------------- Quiz Stuff ---------------------------- //
 
-// User Quiz
-app.get('/userQuiz', function (req, res) {
-    res.render('userQuiz', { layout: 'main' })
+// Function to fetch tests with number of questions and total points
+async function fetchTestsAndDetails() {
+    try {
+        const tests = await Test.findAll({
+            include: [{
+                model: Question,
+                as: 'questions'
+            }]
+        });
+
+        // Process each test to calculate number of questions and total points
+        const testsWithDetails = tests.map(test => {
+            const numberOfQuestions = test.questions.length;
+            const totalPoints = test.questions.reduce((acc, question) => acc + question.points, 0);
+
+            return {
+                testID: test.testID,
+                module: test.module,
+                numberOfQuestions,
+                totalPoints
+            };
+        });
+
+        return testsWithDetails;
+    } catch (error) {
+        console.error('Error fetching tests and details:', error);
+        throw error;
+    }
+}
+
+app.get('/userQuiz/:testID', async (req, res) => {
+    const { testID } = req.params;
+
+    try {
+        const quiz = await Test.findOne({ where: { testID } });
+
+        if (!quiz) {
+            return res.status(404).send('Quiz not found');
+        }
+
+        const questions = await Question.findAll({ where: { testID } });
+
+        res.render('userQuiz', {
+            layout: 'main',
+            quiz: quiz.get({ plain: true }),
+            questions: questions.map(question => question.get({ plain: true }))
+        });
+    } catch (err) {
+        console.error('Error fetching quiz:', err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.get('/userQuizList', function (req, res) {
@@ -638,61 +687,21 @@ app.post('/adminQuiz', function(req, res) {
     }
 });
 
-app.get('/adminViewQuiz', function (req, res) {
-    Test.findAll()
-        .then(tests => {
-            res.render('adminViewQuiz', {
-                layout: 'adminMain',
-                tests: tests.map(test => {
-                    test = test.get({ plain: true });
-                    return test;
-                })
-            });
-        })
-        .catch(err => {
-            console.error('Error fetching tests:', err);
-            res.status(500).send('Internal Server Error');
+app.get('/adminViewQuiz', async (req, res) => {
+    try {
+        // Fetch tests with details
+        const testsWithDetails = await fetchTestsAndDetails();
+
+        // Render adminViewQuiz template with tests data
+        res.render('adminViewQuiz', {
+            layout: 'adminMain',
+            tests: testsWithDetails
         });
+    } catch (error) {
+        console.error('Error fetching tests:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
-
-
-// Copilot suggestion
-// app.get('/adminEditQuiz/:testID', async (req, res) => {
-//     const testID = req.params.testID;
-
-//     try {
-//         const test = await Test.findByPk(testID, {
-//             include: Question
-//         });
-
-//         if (!test) {
-//             return res.status(404).send({ message: 'Test not found' });
-//         }
-
-//         res.render('adminEditQuiz', {
-//             layout: 'adminMain',
-//             test: test.get({ plain: true })
-//         });
-//     } catch (error) {
-//         console.error('Error fetching test:', error);
-//         res.status(500).send({ message: 'Internal Server Error' });
-//     }
-// });
-
-// GPT suggestion
-// app.get('/adminEditQuiz/:testID', async (req, res) => {
-//     const { testID } = req.params;
-
-//     try {
-//         const quiz = await Test.findOne({ where: { testID: testID } });
-//         const questions = await Question.findAll({ where: { testID: testID } });
-
-//         res.render('adminEditQuiz', { layout: 'adminMain', quiz, questions });
-//     } catch (err) {
-//         console.error('Error fetching quiz:', err);
-//         res.status(500).send({ message: 'Error fetching quiz', error: err });
-//     }
-// });
 
 app.get('/adminEditQuiz/:testID', async (req, res) => {
     const { testID } = req.params;
@@ -762,9 +771,6 @@ app.post('/adminEditQuiz/:testID', async (req, res) => {
         res.status(500).send({ message: 'Error updating quiz', error: err });
     }
 });
-
-
-
 
 app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
     const testID = req.params.testID;

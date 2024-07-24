@@ -1,0 +1,130 @@
+<head>
+    <title>User Quiz</title>
+</head>
+
+<body>
+    <main class="containerQuiz">
+        <form action="/userQuiz/{{quiz.testID}}" method="POST" id="quizForm">
+            <!-- Add hidden input to use PUT method -->
+            <input type="hidden" name="_method" value="PUT">
+            <input type="text" id="testID" name="testID" value="{{quiz.testID}}" readonly hidden><br>
+
+            <h2 for="quizModule" class="quizModule">Module: {{quiz.module}}</h2>
+
+            <div id="questions">
+                {{#each questions}}
+                <div class="question" id="question{{@index}}">
+                    <h3 class="header">Question {{add @index 1}}</h3>
+                    <input type="hidden" name="questions[{{@index}}][id]" value="{{this.id}}">
+                    <div class="input-group">
+                        <div class="questionText">{{this.questionText}}</div><br> {{!-- This line is for user quiz view reference --}}
+                        <label for="points{{@index}}" class="quizPoints">Points:&nbsp; {{this.points}}</label>
+                    </div>
+                    <div class="quizOptions">
+                        <input type="radio" id="option{{@index}}_1" name="questions[{{@index}}][correctOption]" value="1" class="option_1">
+                        <label for="option{{@index}}_1" class="option_1">{{this.option1}}</label><br>
+
+                        <input type="radio" id="option{{@index}}_2" name="questions[{{@index}}][correctOption]" value="2" class="option_2">
+                        <label for="option{{@index}}_2" class="option_2">{{this.option2}}</label><br>
+
+                        <input type="radio" id="option{{@index}}_3" name="questions[{{@index}}][correctOption]" value="3" class="option_3">
+                        <label for="option{{@index}}_3" class="option_3">{{this.option3}}</label><br>
+
+                        <input type="radio" id="option{{@index}}_4" name="questions[{{@index}}][correctOption]" value="4" class="option_4">
+                        <label for="option{{@index}}_4" class="option_4">{{this.option4}}</label><br>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <button type="submit" class="btnSubmit">Submit Quiz</button>
+        </form>
+    </main>
+</body>
+
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .containerQuiz {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h2.quizModule {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .question {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .header {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #555;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .questionText {
+            font-size: 18px;
+            color: #444;
+        }
+
+        .quizPoints {
+            font-size: 16px;
+            color: #888;
+        }
+
+        .quizOptions {
+            margin-top: 10px;
+        }
+
+        .quizOptions input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quizOptions label {
+            margin-right: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .btnSubmit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btnSubmit:hover {
+            background-color: #45a049;
+        }
+ </style>

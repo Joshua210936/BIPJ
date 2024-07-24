@@ -13,21 +13,21 @@ const Test = db.define('Test', {
         type: sequelize.INTEGER,
         allowNull: false
     },
-    Customer_id: {
-        type: sequelize.INTEGER,
-        references: {
-            model: Customer,
-            key: 'Customer_id'
-        },
-    },
-    totalPoints: {
-        type: sequelize.INTEGER,
-        allowNull: false
-    },
-    gainedPoints: {
-        type: sequelize.INTEGER,
-        allowNull: false
-    }
+    // Customer_id: {
+    //     type: sequelize.INTEGER,
+    //     references: {
+    //         model: Customer,
+    //         key: 'Customer_id'
+    //     },
+    // },
+    // totalPoints: {
+    //     type: sequelize.INTEGER,
+    //     allowNull: true
+    // },
+    // gainedPoints: {
+    //     type: sequelize.INTEGER,
+    //     allowNull: true
+    // }
 }, {
     tableName: 'tests'
 });

@@ -1,5 +1,5 @@
 <body>
-    <div class="container">
+    <div class="containerQuiz">
         <h1>Tests Overview</h1>
         <div class="test-container">
             {{#each tests}}
@@ -7,7 +7,7 @@
                     <div class="test-header">
                         <h2>Test ID: {{this.testID}}</h2>
                         <div>
-                            <button onclick="editTest('{{this.testID}}')">Edit</button>
+                            <button onclick="editTest('{{this.testID}}')" class="btn-edit">Edit</button>
                             <form action="/adminViewQuiz/delete/{{this.testID}}" method="POST">
                                 <input type="submit" class="btn btn-danger" value="Delete Quiz">
                             </form>
@@ -50,3 +50,94 @@
         }
     }
 </script>
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .containerQuiz {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .test-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .test-item {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin: 10px;
+        padding: 15px;
+        width: 30%;
+        background-color: #fafafa;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .test-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .test-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-edit, .btn-delete {
+        padding: 0.5em 1em;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-edit {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background-color: #45a049;
+    }
+
+    .btn-delete {
+        background-color: #f44336;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background-color: #e53935;
+    }
+
+    .test-details {
+        margin-top: 15px;
+        color: #555;
+    }
+
+    .test-details p {
+        margin: 5px 0;
+    }
+</style>
