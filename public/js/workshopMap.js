@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             <input type="email" id="registerEmail" name="registerEmail" required>
                             <br>
                             <label for="registerDate">Date</label>
-                            <input type="date" id="registerDate" name="registerDate" required>
+                            <input type="date" min="${workshop.Workshop_StartDate}" max="${workshop.Workshop_EndDate}"id="registerDate" name="registerDate" required>
                             <input type="hidden" id="workshopID" name="workshopID" value="${workshop.Workshop_ID}">
                             <br>
                             <br>
