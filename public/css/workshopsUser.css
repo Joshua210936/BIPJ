@@ -4,6 +4,22 @@
     border-radius:20px;
 }
 
+.filter-container {
+    width: 20%; /* Adjust the width as needed */
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-right: 1px solid #ddd; /* Optional: add a border to separate the filter from the map */
+}
+
+.flex-container {
+    width:100%; /* Adjust the width as needed */
+}
+
+.filter-box {
+    display: flex;
+    flex-direction: row;
+}
+
 .formContainer{
     background-color: rgb(187, 187, 187);
     border-radius:10px;
@@ -44,7 +60,7 @@
 
 #map{
     height:60vh;
-    width:80%;
+    width:100%;
     margin-left:auto;
     margin-right:auto;
 }

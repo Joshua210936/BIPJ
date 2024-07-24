@@ -16,18 +16,20 @@
 </div>
 
 {{!-- map api here --}}
-<div class="filter-container">
-    <label for="workshopFilter">Select a Workshop:</label>
-    <select id="workshopFilter" onchange="filterWorkshop()">
-        <option value="" disabled selected>Select a workshop</option>
-        {{#each workshops}}
-            <option value="{{this.Workshop_Name}}">{{this.Workshop_Name}}</option>
-        {{/each}}
-    </select>
-</div>
-<div class="container">
+<div class="filter-box container">
+    <div class="filter-container">
+        <h2>Filter</h2>
+        <label for="workshopFilter">Workshop Travel Info:</label>
+        <span></span>
+        <select id="workshopFilter" onchange="filterWorkshop()">
+            <option value="" disabled selected>Select a workshop</option>
+            {{#each workshops}}
+                <option value="{{this.Workshop_Name}}">{{this.Workshop_Name}}</option>
+            {{/each}}
+        </select>
+    </div>
     <div class="flex-container">
-        <div id="map"></div>
+            <div id="map"></div>
     </div>
 </div>
 
