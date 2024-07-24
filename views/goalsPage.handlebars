@@ -262,17 +262,21 @@
 
 
     function deleteGoal(savingId) {
-        if (confirm('Are you sure you want to delete this goal?')) {
-            $.ajax({
-                url: `/deleteGoal/${savingId}`,
-                method: 'DELETE',
-                success: function() {
-                    location.reload();
-                },
-                error: function(err) {
-                    console.error('Error deleting goal:', err);
-                }
-            });
+            if (confirm("Are you sure you want to delete this goal?")) {
+                $.ajax({
+                    url: '/goalsPage/delete', 
+                    method: 'POST',
+                    data: { saving_id: savingId },
+                    success: function(response) {
+                       
+                        console.log('Goal deleted successfully');
+                        
+                    },
+                    error: function(err) {
+                        console.error('Error deleting goal:', err);
+                    }
+                });
+            }
         }
-    }
+
 </script>
