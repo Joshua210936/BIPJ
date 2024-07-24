@@ -127,8 +127,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const workshopTimeStart = button.getAttribute('data-workshop-time-start');
             const workshopTimeEnd = button.getAttribute('data-workshop-time-end');
             const workshopAddress = button.getAttribute('data-workshop-address');
-            const workshopLatitude = button.getAttribute('data-workshop-latitude');
-            const workshopLongitude = button.getAttribute('data-workshop-longitude');
             const workshopDescription = button.getAttribute('data-workshop-description');
 
             document.getElementById('updateModal').style.display = 'block';
@@ -142,8 +140,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             document.getElementById('updateStartTime').value = workshopTimeStart;
             document.getElementById('updateEndTime').value = workshopTimeEnd;
             document.getElementById('updateWorkshopAddress').value = workshopAddress;
-            document.getElementById('updateWorkshopLatitude').value = workshopLatitude;
-            document.getElementById('updateWorkshopLongitude').value = workshopLongitude;
             document.getElementById('updateDescription').value = workshopDescription;
             document.getElementById('updateWorkshopID').value = workshopID; // Hidden input field for ID
             document.getElementById('updateWorkshopForm').action = `/adminWorkshops/edit/${workshopID}`; // Set form action URL
