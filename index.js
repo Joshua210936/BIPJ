@@ -640,6 +640,34 @@ app.get('/userQuiz/:testID', async (req, res) => {
     }
 });
 
+// Handle quiz submission
+app.post('/userQuiz/:testID', async (req, res) => {
+    try {
+        const testID = req.params.testID;
+        const userAnswers = req.body.questions;
+
+        let totalScore = 0;
+
+        // Fetch questions for the test
+        const questions = await Question.findAll({ where: { testID } });
+
+        // Calculate the score
+        questions.forEach(question => {
+            const userAnswer = userAnswers.find(answer => answer.id == question.id);
+            if (userAnswer && parseInt(userAnswer.correctOption) === question.correctOption) {
+                totalScore += question.points;
+            }
+        });
+
+        // Render the result page with the score
+        res.render('quizResult', { totalScore });
+
+    } catch (error) {
+        console.error('Error processing quiz submission:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 app.get('/userQuizList', function (req, res) {
     Test.findAll()
         .then(tests => {
