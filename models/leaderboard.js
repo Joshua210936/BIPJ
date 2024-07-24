@@ -1,7 +1,7 @@
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
 const Customer = require('./customer');
-const { Test } = require('./Test'); // Adjust the path as necessary
+const { Test } = require('./Test'); 
 
 const Leaderboard = db.define('Leaderboard', {
     leaderboardID: {
@@ -27,6 +27,10 @@ const Leaderboard = db.define('Leaderboard', {
     },
     gainedPoints: {
         type: sequelize.INTEGER,
+        references: {
+            model: Test,
+            key: 'testID'
+        },
         allowNull: false
     }
 }, {
