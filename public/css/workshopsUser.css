@@ -119,6 +119,10 @@
     width: 80%;
 }
 
+.modal-height{
+    height:100%;
+}
+
 /* The Close Button */
 .close {
     color: #aaa;
