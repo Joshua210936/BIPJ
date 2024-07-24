@@ -31,8 +31,7 @@
                     <td><button class="updateButton" data-workshop-id="{{this.Workshop_ID}}" data-workshop-name="{{this.Workshop_Name}}" data-workshop-image="{{this.Workshop_Image}}"
                     data-workshop-start-date="{{this.Workshop_StartDate}}" data-workshop-end-date="{{this.Workshop_EndDate}}" 
                     data-workshop-time-start="{{this.Workshop_StartTime}}" data-workshop-time-end="{{this.Workshop_EndTime}}" 
-                    data-workshop-address="{{this.Workshop_Address}}" data-workshop-latitude="{{this.Workshop_Latitude}}" 
-                    data-workshop-longitude="{{this.Workshop_Longitude}}" data-workshop-description="{{this.Workshop_Description}}">Update Workshop</button></td>
+                    data-workshop-address="{{this.Workshop_Address}}" data-workshop-description="{{this.Workshop_Description}}">Update Workshop</button></td>
                 </tr>
             </table>
         {{/each}}
@@ -91,14 +90,6 @@
                         <input type="text" id="workshopAddress" name="workshopAddress" placeholder="Enter Workshop Address">
                     </div>
                     <div class="input-group">
-                        <label for="workshopLatitude">Workshop Latitude</label>
-                        <input type="text" id="workshopLatitude" name="workshopLatitude" placeholder="Enter Workshop Latitude">
-                    </div>
-                    <div class="input-group">
-                        <label for="workshopLongitude">Workshop Longitude</label>
-                        <input type="text" id="workshopLongitude" name="workshopLongitude" placeholder="Enter Workshop Longitude">
-                    </div>
-                    <div class="input-group">
                         <label for="description">Description</label>
                         <textarea id="description" name="description" placeholder="Enter Workshop Description"></textarea>
                     </div>
@@ -145,14 +136,6 @@
                     <div class="input-group">
                         <label for="updateWorkshopAddress">Workshop Address</label>
                         <input type="text" id="updateWorkshopAddress" name="workshopAddress" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="updateWorkshopLatitude">Workshop Latitude</label>
-                        <input type="text" id="updateWorkshopLatitude" name="workshopLatitude" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="updateWorkshopLongitude">Workshop Longitude</label>
-                        <input type="text" id="updateWorkshopLongitude" name="workshopLongitude" required>
                     </div>
                     <div class="input-group">
                         <label for="updateDescription">Description</label>
