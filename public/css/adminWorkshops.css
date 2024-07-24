@@ -282,7 +282,7 @@
 
 /* Confirmation and Cancel Buttons */
 .confirm-button, .cancel-button {
-    background-color: #2196F3; /* Blue background */
+    background-color: #f44336; 
     color: white; /* White text */
     border: none; /* No border */
     border-radius: 6px; /* Rounded corners */
@@ -291,17 +291,25 @@
     font-weight: 500; /* Font weight */
     cursor: pointer; /* Pointer cursor on hover */
     transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and scaling */
+    width:100px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.removeplacement{
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .confirm-button:hover {
-    background-color: #1976D2; /* Darker blue on hover */
+    background-color: #d32f2f; /* Darker blue on hover */
     transform: scale(1.05); /* Slightly larger on hover */
 }
 
 .cancel-button {
-    background-color: #f44336; /* Red background */
+    background-color: #2196F3; 
 }
 
 .cancel-button:hover {
-    background-color: #d32f2f; /* Darker red on hover */
+    background-color:  #1976D2;/* Darker red on hover */
 }

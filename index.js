@@ -479,7 +479,7 @@ app.get('/adminWorkshops', function (req, res) {
 
 
 //admin workshop delete
-app.get('/adminWorkshops/delete/:id', (req,res) => {
+app.get('/adminWorkshops/delete/:id', (req, res) => {
     const workshopId = req.params.id;
 
     addWorkshops.findOne({
@@ -488,19 +488,27 @@ app.get('/adminWorkshops/delete/:id', (req,res) => {
         }
     }).then(workshop => {
         if (workshop) {
-            return addWorkshops.destroy({
+            // delete related rows in workshopRegister
+            return register.destroy({
                 where: {
                     Workshop_ID: workshopId
                 }
+            }).then(() => {
+                // delete the workshop
+                return addWorkshops.destroy({
+                    where: {
+                        Workshop_ID: workshopId
+                    }
+                });
             });
         } else {
             res.status(404).send('Workshop not found');
         }
     }).then(() => {
-        console.log("Workshop Deleted!");
+        console.log("Workshop and related registrations deleted!");
         res.redirect("/adminWorkshops");
     }).catch(err => {
-        console.error("Error deleting workshop:", err);
+        console.error("Error deleting workshop and related registrations:", err);
         res.status(500).send("Internal Server Error");
     });
 });

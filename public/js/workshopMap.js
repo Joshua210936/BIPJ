@@ -77,7 +77,6 @@ function updateWorkshopsOnMap(workshopsToDisplay) {
                             url: "images/map-marker.png",
                             scaledSize: new google.maps.Size(38, 38)
                         },
-                        animation: google.maps.Animation.DROP
                     });
 
                     const infowindow = new google.maps.InfoWindow({
