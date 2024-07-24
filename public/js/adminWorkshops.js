@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         button.addEventListener('click', (event) => {
             const workshopID = button.getAttribute('data-workshop-id');
             const workshopName = button.getAttribute('data-workshop-name');
+            const workshopImage = button.getAttribute('data-workshop-image');
             const workshopStartDate = button.getAttribute('data-workshop-start-date');
             const workshopEndDate = button.getAttribute('data-workshop-end-date');
             const workshopTimeStart = button.getAttribute('data-workshop-time-start');
@@ -133,7 +134,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
             document.getElementById('updateModal').style.display = 'block';
             
             // Set placeholders
+            document.getElementById('workshopID').innerHTML = workshopID;
             document.getElementById('updateWorkshopName').value = workshopName;
+            document.getElementById('previewWorkshopImage').src = `../images/${workshopImage}`;
             document.getElementById('updateWorkshopStartDate').value = workshopStartDate;
             document.getElementById('updateWorkshopEndDate').value = workshopEndDate;
             document.getElementById('updateStartTime').value = workshopTimeStart;

@@ -28,7 +28,7 @@
                 </tr>
                 <tr>
                     <th><button class="remove-button" data-workshop-name="{{this.Workshop_Name}}" data-workshop-id="{{this.Workshop_ID}}">Remove</button></th>
-                    <td><button class="updateButton" data-workshop-id="{{this.Workshop_ID}}" data-workshop-name="{{this.Workshop_Name}}" 
+                    <td><button class="updateButton" data-workshop-id="{{this.Workshop_ID}}" data-workshop-name="{{this.Workshop_Name}}" data-workshop-image="{{this.Workshop_Image}}"
                     data-workshop-start-date="{{this.Workshop_StartDate}}" data-workshop-end-date="{{this.Workshop_EndDate}}" 
                     data-workshop-time-start="{{this.Workshop_StartTime}}" data-workshop-time-end="{{this.Workshop_EndTime}}" 
                     data-workshop-address="{{this.Workshop_Address}}" data-workshop-latitude="{{this.Workshop_Latitude}}" 
@@ -158,6 +158,10 @@
                         <label for="updateDescription">Description</label>
                         <textarea id="updateDescription" name="description"></textarea>
                     </div>
+                    <div>
+                        Current Thumbnail:
+                        <img id="previewWorkshopImage" src="" height="50" width="60"/>
+                </div>
                     <div class="input-group">
                         <label for="updateWorkshopImage">Workshop Image</label>
                         <input type="file" id="updateWorkshopImage" name="workshopImage" multiple accept="image/*" onchange="previewImages()" required>
