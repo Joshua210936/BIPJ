@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
             workshopToRemove = this.closest('table'); // Get the workshop table to be removed
             const workshopName = this.getAttribute('data-workshop-name'); // Get the workshop name
             const workshopID = this.getAttribute('data-workshop-id');
-            modalContent.textContent = `Are you sure you want to remove the workshop "${workshopName}", ID = "${workshopID}"?`;
+            modalContent.innerHTML = `Are you sure you want to permenantly remove the workshop "${workshopName}", ID = "${workshopID}"? <p>All registered users will be automatically de-registered.</p>`;
             confirmRemoveButton.setAttribute('href', `/adminWorkshops/delete/${workshopID}`);
             confirmationModal.style.display = 'block';
         });
@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             
             // Set placeholders
             document.getElementById('workshopID').innerHTML = workshopID;
+            document.getElementById('headerWorkshopName').innerHTML = workshopName;
             document.getElementById('updateWorkshopName').value = workshopName;
             document.getElementById('previewWorkshopImage').src = `../images/${workshopImage}`;
             document.getElementById('updateWorkshopStartDate').value = workshopStartDate;

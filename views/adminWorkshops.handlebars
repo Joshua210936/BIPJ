@@ -129,7 +129,7 @@
     <div class="modal-content">
         <span class="close-confirmation">&times;</span>
         <form id="updateWorkshopForm" method="post" class="addWorkshopForm">
-        <h1>Update Workshop ID = <span id="workshopID"></span></h1>
+        <h1>Update "<span id="headerWorkshopName"></span>" ID = "<span id="workshopID"></span>"</h1>
             <div class="input-group">
                         <label for="updateWorkshopName">Workshop Name</label>
                         <input type="text" id="updateWorkshopName" name="workshopName" required>
@@ -180,11 +180,15 @@
     <div class="modal-content">
         <span class="close-confirmation">&times;</span>
         <p></p> 
-        <a id="confirmRemoveButton"><button id="confirmRemoveButton" class="confirm-button">Yes, Remove</button></a>
+        <br>
+        <a id="confirmRemoveButton" class="removeplacement"><button id="confirmRemoveButton" class="confirm-button">Remove</button></a>
         <button id="cancelRemoveButton" class="cancel-button">Cancel</button>
     </div>
 </div>
  
+ <div class="registered-users-container container" style="text-align:center;">
+    <h1>Registered Users</h1>
+ </div>
 
  <script>
     function updateCounter(id, value) {
