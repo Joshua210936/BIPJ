@@ -213,6 +213,45 @@
     transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and scaling */
     float:right;
     margin:10px;
+    width:15vh;
+}
+
+.btn-delist{
+    background-color: #f44336; /* blue background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    padding: 10px 20px; /* Padding */
+    font-size: 16px; /* Font size */
+    font-weight: 500; /* Font weight */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and scaling */
+    margin:10px;
+    width:15vh;
+}
+
+.btn-delist:hover {
+    background-color: #d32f2f; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
+}
+
+.btn-relist{
+    background-color: rgb(0, 81, 255); /* blue background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 6px; /* Rounded corners */
+    padding: 10px 20px; /* Padding */
+    font-size: 16px; /* Font size */
+    font-weight: 500; /* Font weight */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and scaling */
+    margin:10px;
+    width:15vh;
+}
+
+.btn-relist:hover {
+    background-color: rgb(0, 26, 255); /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
 }
 
 .updateButton:hover {
@@ -222,7 +261,7 @@
 
 /* Remove Button */
 .remove-button {
-    background-color: #f44336; /* Red background */
+    background-color: red; /* Red background */
     color: white; /* White text */
     border: none; /* No border */
     border-radius: 6px; /* Rounded corners */
@@ -233,10 +272,11 @@
     transition: background-color 0.3s, transform 0.3s; /* Smooth transition for background color and scaling */
     float:left;
     margin:10px;
+    width:15vh;
 }
 
 .remove-button:hover {
-    background-color: #d32f2f; /* Darker red on hover */
+    background-color: rgb(168, 0, 0); /* Darker red on hover */
     transform: scale(1.05); /* Slightly larger on hover */
 }
 

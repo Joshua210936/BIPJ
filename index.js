@@ -246,8 +246,10 @@ app.post('/goalsPage/delete', async function (req, res) {
 
 
 app.get('/workshops', function (req, res) {
-    addWorkshops.findAll()
-        .then(workshops => {
+
+    addWorkshops.findAll({
+        where: { Workshop_Status: true }
+    }).then(workshops => {
             res.render('workshops', {
                 layout: 'main',
                 workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
@@ -558,6 +560,28 @@ app.post('/adminWorkshops', function (req, res) {
         res.redirect('/adminWorkshops');
     })
         .catch(err => console.log(err))
+});
+
+app.post('/adminWorkshops/toggleStatus/:id', async (req, res) => {
+    const workshopId = req.params.id;
+
+    try {
+        const workshop = await addWorkshops.findByPk(workshopId);
+
+        if (!workshop) {
+            return res.status(404).json({ error: 'Workshop not found' });
+        }
+
+        // Toggle the status
+        await workshop.update({
+            Workshop_Status: !workshop.Workshop_Status
+        });
+
+        res.redirect('/adminWorkshops');
+    } catch (error) {
+        console.error('Error toggling workshop status:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 // ---------------------------- Quiz Stuff ---------------------------- //

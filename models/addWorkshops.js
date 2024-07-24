@@ -31,6 +31,10 @@ const addWorkshops = db.define('addWorkshops', {
     },
     Workshop_Image:{
         type: sequelize.STRING
+    },
+    Workshop_Status: {
+        type: sequelize.BOOLEAN,
+        defaultValue: true  // Assuming the default status is 'not sold'
     }
 });
 

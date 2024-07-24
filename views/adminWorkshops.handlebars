@@ -16,25 +16,44 @@
     {{#if workshops.length}}
         <div class="flex-container">
         {{#each workshops}}
-            <table class="workshopTables">
-                <tr class="workshopImage">
-                    <td colspan="2">
-                        <img src="/images/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}" class="workshopTableImage"/>
-                    </td>
-                </tr>
-                <tr>
-                    <th colspan="2" style="padding-left:10px;">{{this.Workshop_Name}} (ID={{this.Workshop_ID}})</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th><button class="remove-button" data-workshop-name="{{this.Workshop_Name}}" data-workshop-id="{{this.Workshop_ID}}">Remove</button></th>
-                    <td><button class="updateButton" data-workshop-id="{{this.Workshop_ID}}" data-workshop-name="{{this.Workshop_Name}}" data-workshop-image="{{this.Workshop_Image}}"
+    <table class="workshopTables">
+        <tr class="workshopImage">
+            <td colspan="2">
+                <img src="/images/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}" class="workshopTableImage"/>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2" style="padding-left:10px;">{{this.Workshop_Name}} (ID={{this.Workshop_ID}})
+                <p>
+                {{#if this.Workshop_Status}}
+                    Status: Listed
+                {{else}}
+                    Status: De-listed
+                {{/if}}
+                </p>
+            </th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>
+                <button class="toggle-status-button {{#if this.Workshop_Status}}btn-delist{{else}}btn-relist{{/if}}" data-workshop-id="{{this.Workshop_ID}}" data-workshop-status="{{this.Workshop_Status}}">
+                    {{#if this.Workshop_Status}}De-list{{else}}Re-list{{/if}}
+                </button>
+            </th>
+            <td>
+                <button class="updateButton" data-workshop-id="{{this.Workshop_ID}}" data-workshop-name="{{this.Workshop_Name}}" data-workshop-image="{{this.Workshop_Image}}"
                     data-workshop-start-date="{{this.Workshop_StartDate}}" data-workshop-end-date="{{this.Workshop_EndDate}}" 
                     data-workshop-time-start="{{this.Workshop_StartTime}}" data-workshop-time-end="{{this.Workshop_EndTime}}" 
-                    data-workshop-address="{{this.Workshop_Address}}" data-workshop-description="{{this.Workshop_Description}}">Update Workshop</button></td>
-                </tr>
-            </table>
-        {{/each}}
+                    data-workshop-address="{{this.Workshop_Address}}" data-workshop-description="{{this.Workshop_Description}}">Update</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button class="remove-button" data-workshop-name="{{this.Workshop_Name}}" data-workshop-id="{{this.Workshop_ID}}">Delete</button>
+            </td>
+        </tr>
+    </table>
+{{/each}}
         <button class="filter-icon" ></button>
         </div>
     {{else}}
@@ -202,4 +221,41 @@
             reader.readAsDataURL(file);
         }
     }
+
+   document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.toggle-status-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const workshopId = this.getAttribute('data-workshop-id');
+            const currentStatus = this.getAttribute('data-workshop-status') === 'true';
+
+            fetch(`/adminWorkshops/toggleStatus/${workshopId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // Toggle button text and class based on the new status
+                    if (currentStatus) {
+                        this.textContent = 'Re-list';
+                        this.classList.remove('btn-delist');
+                        this.classList.add('btn-relist');
+                        this.setAttribute('data-workshop-status', 'false');
+                        window.location.reload();
+                    } else {
+                        this.textContent = 'De-list';
+                        this.classList.remove('btn-relist');
+                        this.classList.add('btn-delist');
+                        this.setAttribute('data-workshop-status', 'true');
+                        window.location.reload();
+                    }
+                } else {
+                    console.error('Failed to toggle workshop status');
+                }
+            }).catch(err => {
+                console.error('Error:', err);
+            });
+        });
+    });
+});
 </script>
