@@ -246,8 +246,10 @@ app.post('/goalsPage/delete', async function (req, res) {
 
 
 app.get('/workshops', function (req, res) {
-    addWorkshops.findAll()
-        .then(workshops => {
+
+    addWorkshops.findAll({
+        where: { Workshop_Status: true }
+    }).then(workshops => {
             res.render('workshops', {
                 layout: 'main',
                 workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
@@ -263,12 +265,13 @@ app.get('/workshops', function (req, res) {
 });
 
 app.post('/workshops', function (req, res) {
-    let {registerName, registerEmail, registerDate} = req.body;
+    let {registerName, registerEmail, registerDate, workshopID} = req.body;
 
     register.create({
         Register_Name: registerName,
         Register_Email: registerEmail,
-        Register_Date: registerDate
+        Register_Date: registerDate,
+        Workshop_ID: workshopID
     }).then((registers) => {
         res.redirect('/workshops');
     })
@@ -560,6 +563,28 @@ app.post('/adminWorkshops', function (req, res) {
         .catch(err => console.log(err))
 });
 
+app.post('/adminWorkshops/toggleStatus/:id', async (req, res) => {
+    const workshopId = req.params.id;
+
+    try {
+        const workshop = await addWorkshops.findByPk(workshopId);
+
+        if (!workshop) {
+            return res.status(404).json({ error: 'Workshop not found' });
+        }
+
+        // Toggle the status
+        await workshop.update({
+            Workshop_Status: !workshop.Workshop_Status
+        });
+
+        res.redirect('/adminWorkshops');
+    } catch (error) {
+        console.error('Error toggling workshop status:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 // ---------------------------- Quiz Stuff ---------------------------- //
 
 // Function to fetch tests with number of questions and total points
@@ -611,6 +636,34 @@ app.get('/userQuiz/:testID', async (req, res) => {
         });
     } catch (err) {
         console.error('Error fetching quiz:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Handle quiz submission
+app.post('/userQuiz/:testID', async (req, res) => {
+    try {
+        const testID = req.params.testID;
+        const userAnswers = req.body.questions;
+
+        let totalScore = 0;
+
+        // Fetch questions for the test
+        const questions = await Question.findAll({ where: { testID } });
+
+        // Calculate the score
+        questions.forEach(question => {
+            const userAnswer = userAnswers.find(answer => answer.id == question.id);
+            if (userAnswer && parseInt(userAnswer.correctOption) === question.correctOption) {
+                totalScore += question.points;
+            }
+        });
+
+        // Render the result page with the score
+        res.render('quizResult', { totalScore });
+
+    } catch (error) {
+        console.error('Error processing quiz submission:', error);
         res.status(500).send('Internal Server Error');
     }
 });

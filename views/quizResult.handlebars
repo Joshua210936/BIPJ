@@ -1,0 +1,30 @@
+<head>
+    <title>Quiz Result</title>
+    <!-- Include Bootstrap CSS for modal -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <main class="containerQuiz">
+        <!-- Modal for displaying the score -->
+        <div class="modal fade show" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel" aria-hidden="true" style="display: block;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="scoreModalLabel">Quiz Result</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>You scored <span id="totalScore">{{totalScore}}</span> points!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Include Bootstrap JS and dependencies for modal -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>

@@ -6,23 +6,23 @@
 
 .formContainer{
     background-color: rgb(187, 187, 187);
-    height:400px;
     border-radius:10px;
     width: 85%; /* Adjust the width as needed */
     margin: auto; /* Center the info section */
     padding: 20px; /* Add some padding */
     box-sizing: border-box; /* Ensure padding is included in the width */
+    height:56vh;
 }
 
 .infoContainer{
     background-color: #FFD43B;
-    height:400px;
     border-radius:10px;
     width: 85%; /* Adjust the width as needed */
     margin: auto; /* Center the info section */
     padding: 20px; /* Add some padding */
     box-sizing: border-box; /* Ensure padding is included in the width */
     overflow-y: scroll;
+    height:56vh;
 }
 
 .title-div{
@@ -102,4 +102,66 @@
     padding-right: 10px;
     padding-top:20px;
     color: #57007B;
+}
+
+.formContainer {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.formContainer h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.formContainer label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 5px;
+}
+
+.formContainer input[type="text"],
+.formContainer input[type="email"],
+.formContainer input[type="date"] {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.formContainer button.registerButton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.formContainer button.registerButton:hover {
+    background-color: #45a049;
+}
+
+
+.infoContainer h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.infoContainer p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.infoContainer strong {
+    display: block;
+    margin: 10px 0 5px;
 }
