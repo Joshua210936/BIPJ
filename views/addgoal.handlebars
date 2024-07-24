@@ -1,8 +1,6 @@
-
 <title>Add a New Goal</title> 
 <head>
-     
-     <link rel="stylesheet" href="/css/goalAddpage.css">
+    <link rel="stylesheet" href="/css/goalAddpage.css">
 </head>
 
 <body>
@@ -10,14 +8,14 @@
         <button class="go-back" onclick="window.history.back()">Go Back</button>
         <h1>Add a new goal</h1>
         <p>Let's save for something awesome!</p>
-        <form id="goal-form" method="post">
+        <form id="goal-form" method="post" onsubmit="return validateForm()">
             <div class="section">
                 <h2>Goal Details</h2>
                 <label for="goal_name">Goal Name:</label>
                 <input type="text" id="goal_name" name="goal_name" placeholder="Enter a goal" required>
 
                 <label for="target_amount">Target Amount to Save:</label>
-                <input type="text" id="target_amount" name="target_amount" placeholder="Enter the amount you wish to save"required>
+                <input type="text" id="target_amount" name="target_amount" placeholder="Enter the amount you wish to save" required>
             </div>
 
             <div class="section">
@@ -39,7 +37,6 @@
                 <input type="file" id="add_picture" name="add_picture">
             </div>
 
-           
             <input type="hidden" id="calculated_savings" name="calculated_savings">
 
             <button type="button" class="calculate-goal" onclick="calculateSavings()">Calculate</button>
@@ -52,13 +49,39 @@
         <h3>Savings Calculation</h3>
         <p id="savings-result"></p>
         <button class="edit-popup" onclick="closePopup()">Edit</button>
-       <button type="button" class="submit-goal" onclick="submitGoal()">Create Goal</button>
+        <button type="button" class="submit-goal" onclick="submitGoal()">Create Goal</button>
     </div>
-</body>
-
 
     <script>
+        function validateForm() {
+            const goalName = document.getElementById('goal_name').value.trim();
+            const targetAmount = document.getElementById('target_amount').value.trim();
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+
+            if (goalName === '') {
+                alert('Goal Name is required.');
+                return false;
+            }
+
+            if (targetAmount === '' || isNaN(targetAmount) || parseFloat(targetAmount) <= 0) {
+                alert('Please enter a valid target amount.');
+                return false;
+            }
+
+            if (new Date(startDate) >= new Date(endDate)) {
+                alert('End date must be after the start date.');
+                return false;
+            }
+
+            return true;
+        }
+
         function calculateSavings() {
+            if (!validateForm()) {
+                return;
+            }
+
             const targetAmount = parseFloat(document.getElementById('target_amount').value);
             const startDate = new Date(document.getElementById('start_date').value);
             const endDate = new Date(document.getElementById('end_date').value);
@@ -84,10 +107,7 @@
 
             const amountToSave = (targetAmount / period).toFixed(2);
 
-          
             document.getElementById('calculated_savings').value = amountToSave;
-            
-
             document.getElementById('savings-result').innerText = `To achieve your goal, you will need to save $${amountToSave} ${frequency}.`;
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('popup').style.display = 'block';
@@ -97,9 +117,11 @@
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('popup').style.display = 'none';
         }
+
         function submitGoal() {
-            document.getElementById('goal-form').submit();
+            if (validateForm()) {
+                document.getElementById('goal-form').submit();
+            }
         }
-
     </script>
-
+</body>

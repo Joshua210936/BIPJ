@@ -1,11 +1,9 @@
-
-    <title>Savings Goals</title>
-    <head>
+<title>Savings Goals</title>
+<head>
     <link rel="stylesheet" href="/css/goalsMain.css">
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 </head>
 
 <body>
@@ -15,8 +13,6 @@
             <button class="arrow-button" onclick="scrollSliderLeft()"><i class="fas fa-chevron-left"></i></button>
             <div class="goal-slider">
                 {{#if savings.length}}
-       
- 
                     {{#each savings}}
                         <div class="goal-item">
                             <div class="goal-header">
@@ -29,25 +25,22 @@
                                 </div>
                             </div>
                             <div class="goal-details">
-                                <img src="images/{{this.Saving_picture}}" alt="images/{{this.Saving_picture}}" class="savings-image" >
+                                <img src="images/{{this.Saving_picture}}" alt="images/{{this.Saving_picture}}" class="savings-image">
                                 <p>Goal amount: ${{this.Saving_amount}}</p>
                                 <p>{{this.Saving_frequency}} target: ${{this.Saving_calculate}}</p>
                                 <p>Start date: {{this.Saving_startDate}}</p>
                                 <p>End date: {{this.Saving_endDate}}</p>
                             </div>
-                           
                             <div class="goal-graph">
-      <canvas id="graph-{{this.Saving_id}}"></canvas>
-</div>
+                                <canvas id="graph-{{this.Saving_id}}"></canvas>
+                            </div>
                         </div>
                     {{/each}}
                 {{else}}
                     <p>No Current Savings Goals</p>
                 {{/if}}
             </div>
-                      
             <button class="arrow-button" onclick="scrollSliderRight()"><i class="fas fa-chevron-right"></i></button>
-
         </div>
     </div>
 
@@ -76,7 +69,7 @@
             <h2 id="edit-popup-title">Edit Goal</h2>
             <button onclick="hideEditPopup()">Close</button>
         </div>
-        <form id="edit-form" method="post" action="/editGoal">
+        <form id="edit-form" method="post" action="/editGoal" onsubmit="return validateEditForm()">
             <input type="hidden" id="edit-saving-id" name="saving_id">
             <div class="form-group">
                 <label for="edit-goal-name">Goal Name:</label>
@@ -113,187 +106,148 @@
             <button type="submit" class="btn-primary">Save</button>
         </form>
     </div>
-    </body>
+</body>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  
-
-        
-
-
-  <script>
-
- $(document).ready(function() {
-    // Fetch data from the server
-    $.ajax({
-        url: '/goalsPage/data',
-        method: 'GET',
-        success: function(data) {
-            data.forEach(goal => {
-                renderGoalGraph(goal);
-            });
-        },
-        error: function(err) {
-            console.error('Error fetching goals data:', err);
-        }
-    });
-
-    function renderGoalGraph(goal) {
-        const ctx = document.getElementById(`graph-${goal.Saving_id}`).getContext('2d');
-        const totalAmount = goal.Saving_amount;
-        const savedAmount = goal.saving_entries.reduce((total, entry) => total + entry.Amount_saved, 0);
-        const remainingAmount = totalAmount - savedAmount;
-
-        const data = {
-            labels: ['Saved', 'Remaining'],
-            datasets: [{
-                data: [savedAmount, remainingAmount],
-                backgroundColor: ['#ffcc00', '#808080'],
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                const value = tooltipItem.raw;
-                                const percentage = ((value / totalAmount) * 100).toFixed(2);
-                                return `${tooltipItem.label}: ${percentage}% (${value})`;
-                            }
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top',
-                    }
-                }
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/goalsPage/data',
+            method: 'GET',
+            success: function(data) {
+                data.forEach(goal => {
+                    renderGoalGraph(goal);
+                });
+            },
+            error: function(err) {
+                console.error('Error fetching goals data:', err);
             }
         });
-    }
-});
 
+        function renderGoalGraph(goal) {
+            const ctx = document.getElementById(`graph-${goal.Saving_id}`).getContext('2d');
+            const totalAmount = goal.Saving_amount;
+            const savedAmount = goal.saving_entries.reduce((total, entry) => total + entry.Amount_saved, 0);
+            const remainingAmount = totalAmount - savedAmount;
 
+            const data = {
+                labels: ['Saved', 'Remaining'],
+                datasets: [{
+                    data: [savedAmount, remainingAmount],
+                    backgroundColor: ['#ffcc00', '#808080'],
+                }]
+            };
 
-
-
- 
-        function showPopup(goalName, savingId) {
-            $('.popup').show();
-            $('.overlay').show();
-            $('#popup-title').text(`Add Savings for ${goalName}`);
-            $('#saving-id').val(savingId);
-        }
-
-        function hidePopup() {
-            $('.popup').hide();
-            $('.overlay').hide();
-        }
-
-        function showEditPopup(savingId, goalName, amount, startDate, endDate, frequency, calculate, picture) {
-            $('.popup-edit').show();
-            $('.overlay').show();
-            $('#edit-popup-title').text(`Edit Goal: ${goalName}`);
-            $('#edit-saving-id').val(savingId);
-            $('#edit-goal-name').val(goalName);
-            $('#edit-target-amount').val(amount);
-            $('#edit-start-date').val(startDate);
-            $('#edit-end-date').val(endDate);
-            $('#edit-frequency').val(frequency);
-            $('#edit-calculated-savings').val(calculate);
-            $('#edit-picture').val(picture);
-
-            calculateSavings();
-        }
-
-        function hideEditPopup() {
-            $('.popup-edit').hide();
-            $('.overlay').hide();
-        }
-
-        function calculateSavings() {
-            const amount = parseFloat($('#edit-target-amount').val());
-            const startDate = new Date($('#edit-start-date').val());
-            const endDate = new Date($('#edit-end-date').val());
-            const frequency = $('#edit-frequency').val();
-
-            const timeDiff = Math.abs(endDate - startDate);
-            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-
-            let period = 0;
-            if (frequency === 'daily') {
-                period = daysDiff;
-            } else if (frequency === 'weekly') {
-                period = Math.ceil(daysDiff / 7);
-            } else if (frequency === 'monthly') {
-                period = Math.ceil(daysDiff / 30);
-            }
-
-            const calculatedSavings = (amount / period).toFixed(2);
-            $('#edit-calculated-savings').val(calculatedSavings);
-        }
-
-        $('#edit-frequency, #edit-target-amount, #edit-start-date, #edit-end-date').on('change', calculateSavings);
-
-        function deleteGoal(savingId) {
-            if (confirm("Are you sure you want to delete this goal?")) {
-                $.ajax({
-                    url: '/goalsPage/delete', 
-                    method: 'POST',
-                    data: { saving_id: savingId },
-                    success: function(response) {
-                       
-                        console.log('Goal deleted successfully');
-                        
-                    },
-                    error: function(err) {
-                        console.error('Error deleting goal:', err);
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const value = tooltipItem.raw;
+                                    const percentage = ((value / totalAmount) * 100).toFixed(2);
+                                    return `${tooltipItem.label}: ${percentage}% (${value})`;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        }
                     }
-                });
-            }
-        }
-
-       function addNewSavingEntry(savingId, date, amountSaved, amountLeft) {
-    $.ajax({
-        url: '/goalsPage/addEntry',  // Your endpoint for adding a new saving entry
-        method: 'POST',
-        data: {
-            saving_id: savingId,
-            entry_date: date,
-            amount_saved: amountSaved,
-            amount_left: amountLeft
-        },
-        success: function(response) {
-            console.log('New saving entry added successfully');
-
-            // Fetch the updated data for the specific saving goal
-            $.ajax({
-                url: `/goalsPage/data/${savingId}`,  // Your endpoint for fetching data for a specific goal
-                method: 'GET',
-                success: function(goal) {
-                    // Re-render the graph for this goal
-                    renderGoalGraph(goal);
-                },
-                error: function(err) {
-                    console.error('Error fetching goal data:', err);
                 }
             });
-        },
-        error: function(err) {
-            console.error('Error adding new saving entry:', err);
         }
     });
-}
 
+    function showPopup(goalName, savingId) {
+        $('.popup').show();
+        $('.overlay').show();
+        $('#popup-title').text(`Add Savings for ${goalName}`);
+        $('#saving-id').val(savingId);
+    }
 
-       
+    function hidePopup() {
+        $('.popup').hide();
+        $('.overlay').hide();
+    }
 
-        function scrollSliderLeft() {
+    function showEditPopup(savingId, goalName, amount, startDate, endDate, frequency, calculate, picture) {
+        $('.popup-edit').show();
+        $('.overlay').show();
+        $('#edit-popup-title').text(`Edit Goal: ${goalName}`);
+        $('#edit-saving-id').val(savingId);
+        $('#edit-goal-name').val(goalName);
+        $('#edit-target-amount').val(amount);
+        $('#edit-start-date').val(startDate);
+        $('#edit-end-date').val(endDate);
+        $('#edit-frequency').val(frequency);
+        $('#edit-calculated-savings').val(calculate);
+        $('#edit-picture').val(picture);
+
+        calculateSavings();
+    }
+
+    function hideEditPopup() {
+        $('.popup-edit').hide();
+        $('.overlay').hide();
+    }
+
+    function calculateSavings() {
+        const amount = parseFloat($('#edit-target-amount').val());
+        const startDate = new Date($('#edit-start-date').val());
+        const endDate = new Date($('#edit-end-date').val());
+        const frequency = $('#edit-frequency').val();
+
+        const timeDiff = Math.abs(endDate - startDate);
+        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+        let period = 0;
+        if (frequency === 'daily') {
+            period = daysDiff;
+        } else if (frequency === 'weekly') {
+            period = Math.ceil(daysDiff / 7);
+        } else if (frequency === 'monthly') {
+            period = Math.ceil(daysDiff / 30);
+        }
+
+        const calculatedSavings = (amount / period).toFixed(2);
+        $('#edit-calculated-savings').val(calculatedSavings);
+    }
+
+    function validateEditForm() {
+        const goalName = $('#edit-goal-name').val().trim();
+        const amount = $('#edit-target-amount').val().trim();
+        const startDate = $('#edit-start-date').val();
+        const endDate = $('#edit-end-date').val();
+        const frequency = $('#edit-frequency').val();
+        const calculate = $('#edit-calculated-savings').val().trim();
+        
+        if (!goalName || !amount || !startDate || !endDate || !frequency || !calculate) {
+            alert('Please fill out all fields.');
+            return false;
+        }
+
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid target amount.');
+            return false;
+        }
+
+        if (new Date(startDate) >= new Date(endDate)) {
+            alert('Start date must be before end date.');
+            return false;
+        }
+
+        return true;
+    }
+
+    $('#edit-target-amount, #edit-start-date, #edit-end-date, #edit-frequency').on('input change', calculateSavings);
+
+     function scrollSliderLeft() {
             const slider = document.querySelector('.goal-slider');
             const goalWidth = slider.querySelector('.goal-item').offsetWidth;
             slider.scrollBy({ left: -goalWidth, behavior: 'smooth' });
@@ -306,6 +260,19 @@
             
         }
 
-    </script>
 
-
+    function deleteGoal(savingId) {
+        if (confirm('Are you sure you want to delete this goal?')) {
+            $.ajax({
+                url: `/deleteGoal/${savingId}`,
+                method: 'DELETE',
+                success: function() {
+                    location.reload();
+                },
+                error: function(err) {
+                    console.error('Error deleting goal:', err);
+                }
+            });
+        }
+    }
+</script>
