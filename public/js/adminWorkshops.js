@@ -24,6 +24,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const form = modal.querySelector('form');
     form.addEventListener('submit', (event) => {
         event.preventDefault();
+
+        const workshopStartDate = document.getElementById('workshopStartDate');
+        const workshopEndDate = document.getElementById('workshopEndDate');
+
+        workshopStartDate.value = new Date(workshopStartDate.value).toISOString().slice(0, 10);
+        workshopEndDate.value = new Date(workshopEndDate.value).toISOString().slice(0, 10);
+
         form.submit(); // Now submit the form
         modal.style.display = 'none'; // Close modal after handling the form data
         alert("Workshop added successfully!"); // Show confirmation popup
@@ -105,14 +112,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-//update button modal placeholder
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', (event) => {
+
+    // update button modal logic
     const updateButtons = document.querySelectorAll('.updateButton');
     
     updateButtons.forEach(button => {
         button.addEventListener('click', (event) => {
             const workshopID = button.getAttribute('data-workshop-id');
             const workshopName = button.getAttribute('data-workshop-name');
+            const workshopImage = button.getAttribute('data-workshop-image');
             const workshopStartDate = button.getAttribute('data-workshop-start-date');
             const workshopEndDate = button.getAttribute('data-workshop-end-date');
             const workshopTimeStart = button.getAttribute('data-workshop-time-start');
@@ -125,7 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('updateModal').style.display = 'block';
             
             // Set placeholders
+            document.getElementById('workshopID').innerHTML = workshopID;
             document.getElementById('updateWorkshopName').value = workshopName;
+            document.getElementById('previewWorkshopImage').src = `../images/${workshopImage}`;
             document.getElementById('updateWorkshopStartDate').value = workshopStartDate;
             document.getElementById('updateWorkshopEndDate').value = workshopEndDate;
             document.getElementById('updateStartTime').value = workshopTimeStart;
@@ -134,11 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('updateWorkshopLatitude').value = workshopLatitude;
             document.getElementById('updateWorkshopLongitude').value = workshopLongitude;
             document.getElementById('updateDescription').value = workshopDescription;
-
-            document.getElementById('workshopID').innerHTML = workshopID;
+            document.getElementById('updateWorkshopID').value = workshopID; // Hidden input field for ID
+            document.getElementById('updateWorkshopForm').action = `/adminWorkshops/edit/${workshopID}`; // Set form action URL
         });
     });
 
+    // Close modal logic
     const closeButtons = document.querySelectorAll('.close-confirmation');
     closeButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -153,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('updateModal').querySelector('.modal-content').addEventListener('click', (event) => {
         event.stopPropagation();
     });
+
     // Prevent form submission
     const form = document.getElementById('updateModal').querySelector('form');
     form.addEventListener('submit', (event) => {
@@ -161,31 +174,4 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('updateModal').style.display = 'none'; // Close modal after handling the form data
         alert("Workshop updated successfully!"); // Show confirmation popup
     });
-});
-
-//change update form to PUT method
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('updateWorkshopForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const workshopId = document.getElementById('workshopID').textContent;
-        const formData = new FormData(this);
-
-        fetch(`/adminWorkshops/edit/${workshopId}`, {
-        method: 'PUT',
-        body: new URLSearchParams(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-        if (data.error) {
-            alert(data.error);
-        } else {
-            alert(data.message);
-        }
-        })
-        .catch(error => {
-        console.error('Error updating workshop:', error);
-        alert('An error occurred while updating the workshop.');
-        });
-    })
 });
