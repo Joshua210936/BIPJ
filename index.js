@@ -13,6 +13,7 @@ bipjDB.setUpDB(false);
 const Saving = require('./models/savings');
 const addWorkshops = require('./models/addWorkshops');
 const { Test, Question } = require('./models/test');
+const QuizResult = require('./models/quizResult');
 const Customer = require('./models/customer');
 const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
@@ -641,9 +642,38 @@ app.get('/userQuiz/:testID', async (req, res) => {
 });
 
 // Handle quiz submission
+// IT IS WORKING [DO NOT TOUCH]
+// app.post('/userQuiz/:testID', async (req, res) => {
+//     try {
+//         const testID = req.params.testID;
+//         const userAnswers = req.body.questions;
+
+//         let totalScore = 0;
+
+//         // Fetch questions for the test
+//         const questions = await Question.findAll({ where: { testID } });
+
+//         // Calculate the score
+//         questions.forEach(question => {
+//             const userAnswer = userAnswers.find(answer => answer.id == question.id);
+//             if (userAnswer && parseInt(userAnswer.correctOption) === question.correctOption) {
+//                 totalScore += question.points;
+//             }
+//         });
+
+//         // Render the result page with the score
+//         res.render('quizResult', { totalScore });
+
+//     } catch (error) {
+//         console.error('Error processing quiz submission:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// });
+
 app.post('/userQuiz/:testID', async (req, res) => {
     try {
         const testID = req.params.testID;
+        const customerID = req.body.customerID; // Assuming you pass customer ID from the form
         const userAnswers = req.body.questions;
 
         let totalScore = 0;
@@ -657,6 +687,13 @@ app.post('/userQuiz/:testID', async (req, res) => {
             if (userAnswer && parseInt(userAnswer.correctOption) === question.correctOption) {
                 totalScore += question.points;
             }
+        });
+
+        // Save the result to the database
+        await QuizResult.create({
+            testID,
+            customerID,
+            score: totalScore
         });
 
         // Render the result page with the score
