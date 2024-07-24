@@ -87,11 +87,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             <br>
                             <label for="registerDate">Date</label>
                             <input type="date" id="registerDate" name="registerDate" required>
-                            <input type="hidden" id="workshopID" name="workshopID">
+                            <input type="hidden" id="workshopID" name="workshopID" value="${workshop.Workshop_ID}">
                             <br>
                             <br>
                             <div>By registering, I agree to FinancialFlare's Terms of Service</div>
-                            <button class="registerButton" type="submit" data-workshop-id="{{this.Workshop_ID}}">Register</button>
+                            <button class="registerButton" type="submit">Register</button>
                         </form>
                     </div>
                 </div>

@@ -265,12 +265,13 @@ app.get('/workshops', function (req, res) {
 });
 
 app.post('/workshops', function (req, res) {
-    let {registerName, registerEmail, registerDate} = req.body;
+    let {registerName, registerEmail, registerDate, workshopID} = req.body;
 
     register.create({
         Register_Name: registerName,
         Register_Email: registerEmail,
-        Register_Date: registerDate
+        Register_Date: registerDate,
+        Workshop_ID: workshopID
     }).then((registers) => {
         res.redirect('/workshops');
     })

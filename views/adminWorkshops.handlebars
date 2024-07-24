@@ -99,9 +99,9 @@
                             Workshop Time
                         </div>
                         <div>
-                            <input style="width:40%;margin-right:2.5rem" type="text" id="startTime" name="startTime" placeholder="Enter Start Time">
+                            <input style="width:38%;margin-right:2.5rem;float:left;" type="time" id="startTime" name="startTime" placeholder="Enter Start Time">
                             -
-                            <input style="width:40%;margin-left:2.5rem;" type="text" id="endTime" name="endTime" placeholder="Enter End Time">
+                            <input style="width:38%;margin-left:2.5rem;" type="time" id="endTime" name="endTime" placeholder="Enter End Time">
                         </div>
                     </div>
                     <div class="input-group">
@@ -143,13 +143,13 @@
                         <input type="date" id="updateWorkshopEndDate" name="workshopEndDate" required>
                     </div>
                     <div class="input-group">
-                        <div style="margin-right:200px;margin-bottom:10px;">
-                            Workshop Time
+                        <div style="margin-right:400px;margin-bottom:10px;">
+                            <p>Workshop Time</p>
                         </div>
                         <div>
-                            <input style="width:40%;margin-right:2.5rem" type="text" id="updateStartTime" name="startTime" required>
+                            <input style="width:38%;margin-right:2.5rem;float:left;" type="time" id="updateStartTime" name="startTime" required>
                             -
-                            <input style="width:40%;margin-left:2.5rem;" type="text" id="updateEndTime" name="endTime" required>
+                            <input style="width:38%;margin-left:2.5rem;" type="time" id="updateEndTime" name="endTime" required>
                         </div>
                     </div>
                     <div class="input-group">
@@ -258,4 +258,52 @@
         });
     });
 });
+
+function setMinDate() {
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('input[type="date"]').forEach(input => {
+            input.setAttribute('min', today);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Set min date for date inputs
+        setMinDate();
+
+        // Toggle status button event listener
+        document.querySelectorAll('.toggle-status-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const workshopId = this.getAttribute('data-workshop-id');
+                const currentStatus = this.getAttribute('data-workshop-status') === 'true';
+
+                fetch(`/adminWorkshops/toggleStatus/${workshopId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        // Toggle button text and class based on the new status
+                        if (currentStatus) {
+                            this.textContent = 'Re-list';
+                            this.classList.remove('btn-delist');
+                            this.classList.add('btn-relist');
+                            this.setAttribute('data-workshop-status', 'false');
+                            window.location.reload();
+                        } else {
+                            this.textContent = 'De-list';
+                            this.classList.remove('btn-relist');
+                            this.classList.add('btn-delist');
+                            this.setAttribute('data-workshop-status', 'true');
+                            window.location.reload();
+                        }
+                    } else {
+                        console.error('Failed to toggle workshop status');
+                    }
+                }).catch(err => {
+                    console.error('Error:', err);
+                });
+            });
+        });
+    });
 </script>
