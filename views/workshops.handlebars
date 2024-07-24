@@ -21,7 +21,7 @@
         <h2>Filter</h2>
         <label for="workshopFilter">Workshop Travel Info:</label>
         <span></span>
-        <select id="workshopFilter" onchange="filterWorkshop()">
+        <select id="workshopFilter" onchange="filterWorkshop()" style="width:200px">
             <option value="" disabled selected>Select a workshop</option>
             {{#each workshops}}
                 <option value="{{this.Workshop_Name}}">{{this.Workshop_Name}}</option>

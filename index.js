@@ -7,6 +7,7 @@ const path = require('path');
 const Handlebars = require('handlebars');
 const methodOverride = require('method-override');
 
+
 // Database
 const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
@@ -461,23 +462,45 @@ app.get('/aboutUs', function (req, res) {
 });
 
 //admin
-app.get('/adminWorkshops', function (req, res) {
-    addWorkshops.findAll()
-        .then(workshops => {
-            res.render('adminWorkshops', {
-                layout: 'adminMain',
-                workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
-                json: JSON.stringify // Pass JSON.stringify to the template
-            });
-        })
-        .catch(err => {
-            console.error('Error fetching workshops:', err);
-            if (!res.headersSent) {
-                res.status(500).send('Internal Server Error');
-            }
+app.get('/adminWorkshops', async function (req, res) {
+    const workshopID = req.params.id;
+
+    try {
+        const registrationData = await register.findAll();
+        const workshops = await addWorkshops.findAll();
+
+        res.render('adminWorkshops', {
+            layout: 'adminMain',
+            workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
+            registrationData: registrationData.map(registrationData => registrationData.get({ plain: true })),
+            json: JSON.stringify // Pass JSON.stringify to the template
         });
+    } catch (err) {
+        console.error('Error fetching workshops:', err);
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
+    }
 });
 
+//delete registered user
+app.post('/removeRegistration/:id', async function (req, res) {
+    const registrationId = req.params.id;
+
+    try {
+        await register.destroy({
+            where: { Register_ID: registrationId }
+        });
+
+        // Redirect back to the adminWorkshops page
+        res.redirect('/adminWorkshops');
+    } catch (err) {
+        console.error('Error removing registration:', err);
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
+    }
+});
 
 //admin workshop delete
 app.get('/adminWorkshops/delete/:id', (req, res) => {

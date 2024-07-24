@@ -23,12 +23,12 @@
             </td>
         </tr>
         <tr>
-            <th colspan="2" style="padding-left:10px;">{{this.Workshop_Name}} (ID={{this.Workshop_ID}})
+            <th colspan="2" style="padding-left:10px;"><h5 style="font-weight:bold;">{{this.Workshop_Name}} (ID={{this.Workshop_ID}})</h5>
                 <p>
                 {{#if this.Workshop_Status}}
-                    Status: Listed
+                    Status: <span style="color:green;">Listed</span>
                 {{else}}
-                    Status: De-listed
+                    Status: <span style="color:red;">De-listed</span>
                 {{/if}}
                 </p>
             </th>
@@ -186,8 +186,38 @@
     </div>
 </div>
  
- <div class="registered-users-container container" style="text-align:center;">
+ <div class="registered-users-container" style="text-align:center;">
     <h1>Registered Users</h1>
+    <table class="table table-striped" style="width:70%;margin-left:auto;margin-right:auto;">
+        <thead class="thead-dark">
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Date Attending</th>
+            <th scope="col">Workshop ID</th>
+            <th scope="col">Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each this.registrationData}}
+                <tr>
+                <th scope="row" id="tableCount">{{add @index 1}}</th>
+                <td>{{this.Register_ID}}</td>
+                <td>{{this.Register_Name}}</td>
+                <td>{{this.Register_Email}}</td>
+                <td>{{this.Register_Date}}</td>
+                <td>{{this.Workshop_ID}}</td>
+                <td>
+                    <form action="/removeRegistration/{{this.Register_ID}}" method="POST" class="remove-form">
+                        <button type="submit" class="btn btn-danger userRemoveButton" data-register-id="{{this.Register_ID}}">Remove</button>
+                    </form>
+                </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
  </div>
 
  <script>
@@ -310,4 +340,30 @@ function setMinDate() {
             });
         });
     });
+
+//remove user alert
+document.addEventListener('DOMContentLoaded', function () {
+    // Track the current registerID to be used for confirmation
+    let currentRegisterID = null;
+
+    // Add click event listener to all remove buttons
+    document.querySelectorAll('.userRemoveButton').forEach(button => {
+        button.addEventListener('click', function () {
+            currentRegisterID = this.getAttribute('data-register-id');
+        });
+    });
+
+    // Add submit event listener to all remove forms
+    const forms = document.querySelectorAll('.remove-form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function (event) {
+            if (currentRegisterID !== null) {
+                const confirmRemove = confirm(`Are you sure you want to remove user (ID=${currentRegisterID})?`);
+                if (!confirmRemove) {
+                    event.preventDefault(); // Prevent form submission
+                }
+            }
+        });
+    });
+});
 </script>

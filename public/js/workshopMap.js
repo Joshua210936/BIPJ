@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 <div class="col">
                     <div class="formContainer">
                         <h2>Registration</h2>
-                        <form action="/workshops" method="post">
+                        <form id="registrationForm" action="/workshops" method="post">
                             <label for="registerName">Full Name</label>
                             <input type="text" id="registerName" name="registerName" required>
                             <br>
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             <input type="email" id="registerEmail" name="registerEmail" required>
                             <br>
                             <label for="registerDate">Date</label>
-                            <input type="date" min="${workshop.Workshop_StartDate}" max="${workshop.Workshop_EndDate}"id="registerDate" name="registerDate" required>
+                            <input type="date" min="${workshop.Workshop_StartDate}" max="${workshop.Workshop_EndDate}" id="registerDate" name="registerDate" required>
                             <input type="hidden" id="workshopID" name="workshopID" value="${workshop.Workshop_ID}">
                             <br>
                             <br>
@@ -181,16 +181,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
             </div>
         `;
         modal.style.display = "block";
-    }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-    const registerButton = document.querySelectorAll('.registerButton');
-    
-    registerButton.forEach(button => {
-        button.addEventListener('click', (event) => {
-            const workshopID = button.getAttribute('data-workshop-id');
+        // Add the event listener to the form after it's been added to the DOM
+        const registrationForm = document.getElementById('registrationForm');
+        
+        registrationForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent the default form submission
+            
+            const confirmRegistration = confirm("Are you sure you want to register for this workshop?");
+            
+            if (confirmRegistration) {
+                registrationForm.submit(); // Proceed with form submission if user confirms
+            }
         });
-    });
-    document.getElementById('workshopID').value = workshopID;
+    }
 });

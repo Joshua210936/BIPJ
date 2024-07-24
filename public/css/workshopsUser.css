@@ -4,15 +4,37 @@
     border-radius:20px;
 }
 
+.filter-container label {
+    display: block;           
+    font-size: 14px;          
+    margin-bottom: 5px;       
+    color: #555;
+}
+
+.filter-container select {
+    font-size: 14px;         
+    padding: 5px;            
+    border: 1px solid #ccc;   
+    border-radius: 4px;       
+    background-color: #fff;   
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); 
+}
+
+.filter-container select:focus {
+    border-color: #007bff;    
+    outline: none;            
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25); 
+}
+
 .filter-container {
-    width: 20%; /* Adjust the width as needed */
+    width: 20%; 
     padding: 10px;
     background-color: #f8f8f8;
-    border-right: 1px solid #ddd; /* Optional: add a border to separate the filter from the map */
+    border-right: 1px solid #ddd; 
 }
 
 .flex-container {
-    width:100%; /* Adjust the width as needed */
+    width:100%; 
 }
 
 .filter-box {
@@ -23,20 +45,20 @@
 .formContainer{
     background-color: rgb(187, 187, 187);
     border-radius:10px;
-    width: 85%; /* Adjust the width as needed */
-    margin: auto; /* Center the info section */
-    padding: 20px; /* Add some padding */
-    box-sizing: border-box; /* Ensure padding is included in the width */
+    width: 85%; 
+    margin: auto; 
+    padding: 20px; 
+    box-sizing: border-box; 
     height:56vh;
 }
 
 .infoContainer{
     background-color: #FFD43B;
     border-radius:10px;
-    width: 85%; /* Adjust the width as needed */
-    margin: auto; /* Center the info section */
-    padding: 20px; /* Add some padding */
-    box-sizing: border-box; /* Ensure padding is included in the width */
+    width: 85%; 
+    margin: auto; 
+    padding: 20px; 
+    box-sizing: border-box; 
     overflow-y: scroll;
     height:56vh;
 }
@@ -47,9 +69,9 @@
 
 .flex-container {
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping of items to the next line if they overflow */
-    gap: 20px; /* Adds space between the tables */
-    justify-content: center; /* Centers the tables horizontally */
+    flex-wrap: wrap; 
+    gap: 20px; 
+    justify-content: center; 
 }
 
 .workshopImage{
@@ -149,7 +171,7 @@
 }
 
 .formContainer button.registerButton {
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50; 
     border: none;
     color: white;
     padding: 15px 20px;
