@@ -3,7 +3,7 @@ const mySQLDB = require('./DBConfig');
 const user = require('../models/customer');
 const saving = require('../models/savings');
 const Test = require('../models/test');
-const Leaderboard = require('../models/leaderboard');
+
 
 const setUpDB = (drop) => {
     mySQLDB.authenticate()
