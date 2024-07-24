@@ -1,0 +1,91 @@
+<body>
+    <div class="containerQuiz">
+        <h1>Tests Overview</h1>
+        <table class="test-table">
+            <thead>
+                <tr>
+                    <th>Module Number</th>
+                    <th>Number of Questions</th>
+                    <th>Total Points</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each tests}}
+                    <tr class="test-item">
+                        <td>{{this.module}}</td>
+                        <td>{{this.numberOfQuestions}}</td>
+                        <td>{{this.totalPoints}}</td>
+                        <td>
+                            <button onclick="takeQuiz('{{this.testID}}')" class="btn-take-quiz">Take Quiz</button>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script>
+    function takeQuiz(testID) {
+        window.location.href = `/userQuiz/${testID}`;
+    }
+</script>
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .containerQuiz {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .test-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .test-table th, .test-table td {
+        border: 1px solid #ddd;
+        padding: 12px 15px;
+        text-align: center;
+    }
+
+    .test-table th {
+        background-color: #f4f4f9;
+        color: #333;
+    }
+
+    .test-table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn-take-quiz {
+        padding: 0.5em 1em;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .btn-take-quiz:hover {
+        background-color: #45a049;
+    }
+</style>

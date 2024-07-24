@@ -621,6 +621,36 @@ app.post('/adminWorkshops/toggleStatus/:id', async (req, res) => {
 // ---------------------------- Quiz Stuff ---------------------------- //
 
 // Function to fetch tests with number of questions and total points
+// Temporary [Original]
+// async function fetchTestsAndDetails() {
+//     try {
+//         const tests = await Test.findAll({
+//             include: [{
+//                 model: Question,
+//                 as: 'questions'
+//             }]
+//         });
+
+//         // Process each test to calculate number of questions and total points
+//         const testsWithDetails = tests.map(test => {
+//             const numberOfQuestions = test.questions.length;
+//             const totalPoints = test.questions.reduce((acc, question) => acc + question.points, 0);
+
+//             return {
+//                 testID: test.testID,
+//                 module: test.module,
+//                 numberOfQuestions,
+//                 totalPoints
+//             };
+//         });
+
+//         return testsWithDetails;
+//     } catch (error) {
+//         console.error('Error fetching tests and details:', error);
+//         throw error;
+//     }
+// }
+
 async function fetchTestsAndDetails() {
     try {
         const tests = await Test.findAll({
@@ -737,21 +767,38 @@ app.post('/userQuiz/:testID', async (req, res) => {
     }
 });
 
-app.get('/userQuizList', function (req, res) {
-    Test.findAll()
-        .then(tests => {
-            res.render('userQuizList', {
-                layout: 'main',
-                tests: tests.map(test => {
-                    test = test.get({ plain: true });
-                    return test;
-                })
-            });
-        })
-        .catch(err => {
-            console.error('Error fetching tests:', err);
-            res.status(500).send('Internal Server Error');
+// Original 
+// app.get('/userQuizList', function (req, res) {
+//     Test.findAll()
+//         .then(tests => {
+//             res.render('userQuizList', {
+//                 layout: 'main',
+//                 tests: tests.map(test => {
+//                     test = test.get({ plain: true });
+//                     return test;
+//                 })
+//             });
+//         })
+//         .catch(err => {
+//             console.error('Error fetching tests:', err);
+//             res.status(500).send('Internal Server Error');
+//         });
+// });
+
+app.get('/userQuizList', async (req, res) => {
+    try {
+        // Fetch tests with details
+        const testsWithDetails = await fetchTestsAndDetails();
+
+        // Render userQuizList template with tests data
+        res.render('userQuizList', {
+            layout: 'main',
+            tests: testsWithDetails
         });
+    } catch (error) {
+        console.error('Error fetching tests:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 // Admin Quiz

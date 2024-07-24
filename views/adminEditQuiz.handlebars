@@ -3,7 +3,7 @@
 </head>
 
 <body>
-    <main class="container">
+    <main class="containerQuiz">
         <form action="/adminEditQuiz/{{quiz.testID}}" method="POST" id="quizForm">
             <!-- Add hidden input to use PUT method -->
             <input type="hidden" name="_method" value="PUT">
@@ -24,7 +24,6 @@
                     <h3 class="header">Question {{add @index 1}}</h3>
                     <input type="hidden" name="questions[{{@index}}][id]" value="{{this.id}}">
                     <div class="input-group">
-                        <div>{{this.questionText}}</div> {{!-- This line is for user quiz view reference --}}
                         <label for="questionText{{@index}}">Question Text</label>
                         <input type="text" id="questionText{{@index}}" name="questions[{{@index}}][questionText]" placeholder="Enter Question Text" value="{{this.questionText}}">
                     </div>
@@ -53,7 +52,7 @@
             </div>
 
             <button type="button" class="add-question-button" id="addQuestionButton">Add Question</button>
-            <button type="submit">Update Quiz</button>
+            <button type="submit" class="btnUpdateQuiz">Update Quiz</button>
         </form>
     </main>
 
@@ -98,30 +97,101 @@
 </body>
 
 <style>
-    .question {
-        margin-bottom: 1em;
-        color: burlywood;
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
     }
 
-    .add-question-button {
-        display: block;
-        margin: 1em 0;
+    .containerQuiz {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
     }
 
-    #quizModule, .question input, .question input::placeholder {
-        background-color: white;
-        color: gray;
-    }
-
-    #quizForm label {
-        color: black;
-    }
-
-    .header {
-        color: black;
+    form {
+        display: flex;
+        flex-direction: column;
     }
 
     label {
-        display: inline-block !important;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    input[type="text"], input[type="number"], select {
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .options {
+        margin-top: 10px;
+    }
+
+    .options label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .options input[type="radio"], .options input[type="text"] {
+        margin-bottom: 5px;
+    }
+
+    .add-question-button, .submit-button {
+        width: 200px;
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .add-question-button:hover, .submit-button:hover {
+        background-color: #45a049;
+    }
+
+    .question {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f4f4f9;
+        border-radius: 5px;
+    }
+
+    .header {
+        text-align: center;
+        color: #333;
+    }
+
+    .input-group {
+        margin-bottom: 10px;
+    }
+
+    .btnUpdateQuiz {
+        width: auto;
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        background-color: #0cc4b5;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btnUpdateQuiz:hover {
+        background-color: #218a93;
     }
 </style>
