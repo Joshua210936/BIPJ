@@ -118,7 +118,7 @@
 <div id="updateModal" class="modal">
     <div class="modal-content">
         <span class="close-confirmation">&times;</span>
-        <form id="updateWorkshopForm" class="addWorkshopForm">
+        <form id="updateWorkshopForm" method="post" class="addWorkshopForm">
         <h1>Update Workshop ID = <span id="workshopID"></span></h1>
             <div class="input-group">
                         <label for="updateWorkshopName">Workshop Name</label>
@@ -162,6 +162,7 @@
                         <label for="updateWorkshopImage">Workshop Image</label>
                         <input type="file" id="updateWorkshopImage" name="workshopImage" multiple accept="image/*" onchange="previewImages()" required>
                     </div>
+                    <input type="hidden" id="updateWorkshopID" name="workshopID"> <!-- Hidden input field for ID -->
                     <div id="image-preview"></div>
                     <button class="formbutton" type="submit">Update</button>
         </form>

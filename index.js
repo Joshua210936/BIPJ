@@ -502,7 +502,7 @@ app.get('/adminWorkshops/delete/:id', (req,res) => {
 });
 
 //admin workshop edit
-app.put('/adminWorkshops/edit/:id', async (req, res) => {
+app.post('/adminWorkshops/edit/:id', async (req, res) => {
     const workshopId = req.params.id;
     const {
       workshopName,
@@ -539,15 +539,16 @@ app.put('/adminWorkshops/edit/:id', async (req, res) => {
         Workshop_Image: workshopImage
       });
   
-      res.status(200).json({ message: 'Workshop updated successfully' });
+      res.redirect('/adminWorkshops')
     } catch (error) {
       console.error('Error updating workshop:', error);
+      res.status(500).send('Internal Server Error');
     }
   });
 
 app.post('/adminWorkshops', function (req, res) {
     let { workshopName, workshopStartDate, workshopEndDate, startTime, endTime, workshopAddress, workshopLatitude, workshopLongitude, description, workshopImage } = req.body;
-
+    
     addWorkshops.create({
         Workshop_Name: workshopName,
         Workshop_StartDate: workshopStartDate,
