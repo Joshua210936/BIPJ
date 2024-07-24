@@ -1,7 +1,8 @@
 // models/quizResult.js
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
-const Customer = require('./customer'); // Assuming you have a customer model
+const Customer = require('./customer'); 
+const {Test} = require('../models/test');
 
 const QuizResult = db.define('QuizResult', {
     resultID: {
@@ -37,5 +38,8 @@ const QuizResult = db.define('QuizResult', {
 }, {
     tableName: 'quizResults'
 });
+
+QuizResult.belongsTo(Customer, { foreignKey: 'Customer_id', as: 'Customer' });
+QuizResult.belongsTo(Test, { foreignKey: 'testID', as: 'Test' });
 
 module.exports = QuizResult;

@@ -19,6 +19,7 @@ const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
 const register = require('./models/workshopRegister')
 
+
 let port = 3001;
 
 //Sets handlebars confirgurations
@@ -883,6 +884,47 @@ app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
         res.status(500).json({ success: false, message: 'Error deleting quiz', error: error });
     }
 });
+
+app.get('/leaderboard', async (req, res) => {
+    try {
+        // Query to join Customer, Test, and QuizResult tables and get the required data
+        const leaderboardData = await QuizResult.findAll({
+            attributes: ['testID', 'score'],
+            include: [
+                {
+                    model: Customer,
+                    as: 'Customer',  // Use the alias defined in the association
+                    attributes: ['Customer_fName', 'Customer_lName'],
+                },
+                {
+                    model: Test,
+                    as: 'Test',  // Use the alias defined in the association
+                    attributes: ['module'],
+                }
+            ],
+            order: [['score', 'DESC']] // Order by score in descending order
+        });
+
+        // Format the data for the leaderboard
+        const leaderboard = leaderboardData.map(result => ({
+            customerName: `${result.Customer.Customer_fName} ${result.Customer.Customer_lName}`,
+            testID: result.testID,
+            score: result.score,
+            module: result.Test.module // Add the test module to the leaderboard data
+        }));
+
+        // Render the leaderboard view with top three and other scores
+        res.render('leaderboardView', {
+            topThree: leaderboard.slice(0, 3), // Top three scores
+            otherScores: leaderboard.slice(3)  // Remaining scores
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 
 const adminRoute = require('./routes/admin_routes');
 app.use(adminRoute);

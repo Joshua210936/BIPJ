@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Courses on Beginner Investing</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Online Courses on Beginner Investing</h1>
+    <p>Welcome to our online learning center, where you can find courses to help you get started with investing. Explore the courses below to begin your journey.</p>
+  </header>
+  
+  <main>
+    {{#each courses}}
+    <section class="course">
+      <div class="course-header">
+        <h2>{{this.title}}</h2>
+        <img src="{{this.image}}" alt="{{this.title}}">
+        <p>By {{this.author}}</p>
+      </div>
+      <div class="course-details">
+        <ul>
+          {{#each this.details}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </section>
+    {{/each}}
+  </main>
+
+  <br>
+<h1 style="text-align:center;">Upcoming Workshops</h1>
+<div class="container">
+    {{#if workshops.length}}
+        <div class="flex-container">
+        {{#each workshops}}
+            <table class="workshopTables">
+                <tr class="workshopImage">
+                    <td colspan="2">
+                        <img src="/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Workshop Name:</th>
+                    <td>{{this.Workshop_Name}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Start Date:</th>
+                    <td>{{this.Workshop_StartDate}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop End Date:</th>
+                    <td>{{this.Workshop_EndDate}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Time:</th>
+                    <td>{{this.Workshop_StartTime}} to {{this.Workshop_EndTime}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Address:</th>
+                    <td>{{this.Workshop_Address}}</td>
+                </tr>
+                <tr>
+                    <th>Workshop Description:</th>
+                    <td>{{this.Workshop_Description}}</td>
+                </tr>
+            </table>
+        {{/each}}
+        </div>
+    {{else}}
+        No Current Workshops
+    {{/if}}
+</div>
+
+  <footer>
+    <p>&copy; 2024 Financial Flare. All rights reserved.</p>
+  </footer>
+</body>
+</html>
