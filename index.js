@@ -6,6 +6,7 @@ const exphbs = require('express-handlebars')
 const path = require('path');
 const Handlebars = require('handlebars');
 const methodOverride = require('method-override');
+const paypal = require('@paypal/checkout-server-sdk');
 
 
 // Database
@@ -22,6 +23,15 @@ const register = require('./models/workshopRegister')
 
 
 let port = 3001;
+
+// PAYPAL
+
+const clientId = "ATPBOA2kFS1GZCsIIWNDjVr6bsDAz58J3GAbYtNA4mlPHpTtas7aroJcZIgw5YlAtPnZ_Q_N0lW9DuQZ";
+const clientSecret = "EGExhKQodcXX9D_mYJlWwfJFTVvM0-v3KAjsWPwlZhHlS0xivjn4LpUR_zyQGzG2UtiUw4PeWyGYLOjc";
+
+// Create environment
+const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
+const client = new paypal.core.PayPalHttpClient(environment);
 
 //Sets handlebars confirgurations
 app.engine('handlebars', exphbs.engine({ //part of handlebars setup
@@ -298,7 +308,7 @@ app.get('/subscription', async (req, res) => {
     try {
         const plans = await SubscriptionPlans.findAll({
             where: {
-                isActive: true // Filter for active plans only
+                isActive: true
             }
         });
 
@@ -322,6 +332,68 @@ app.get('/subscription', async (req, res) => {
     }
 });
 
+app.post('/subscriptions/select/:plan_ID', async (req, res) => {
+    const planID = req.params.plan_ID;
+
+    try {
+        const plan = await SubscriptionPlans.findOne({
+            where: {
+                plan_ID: planID,
+                isActive: true
+            }
+        });
+
+        if (!plan) {
+            return res.status(404).send("Plan not found");
+        }
+
+        let request = new paypal.orders.OrdersCreateRequest();
+        request.prefer("return=representation");
+        request.requestBody({
+            intent: 'CAPTURE',
+            purchase_units: [{
+                amount: {
+                    currency_code: 'USD',
+                    value: plan.price.toFixed(2) 
+                }
+            }],
+            application_context: {
+                return_url: `http://localhost:3001/payment/success?plan_ID=${planID}`,
+                cancel_url: 'http://localhost:3001/payment/cancel'
+            }
+        });
+
+        const order = await client.execute(request);
+
+        const approvalUrl = order.result.links.find(link => link.rel === 'approve').href;
+        res.redirect(approvalUrl);
+    } catch (err) {
+        console.error('Error creating PayPal order:', err);
+        res.status(500).send("Error creating PayPal order");
+    }
+});
+
+
+app.get('/payment/success', async (req, res) => {
+    const planID = req.query.plan_ID;
+    const orderID = req.query.token;
+
+    let request = new paypal.orders.OrdersCaptureRequest(orderID);
+    request.requestBody({});
+
+    try {
+        const capture = await client.execute(request);
+        console.log('Capture result:', capture.result);
+        res.render('payment-success', { planID });
+    } catch (err) {
+        console.error('Error capturing PayPal payment:', err);
+        res.status(500).send("Error capturing PayPal payment");
+    }
+});
+
+app.get('/payment/cancel', (req, res) => {
+    res.send("Payment was cancelled. Please try again.");
+});
 
 
 
