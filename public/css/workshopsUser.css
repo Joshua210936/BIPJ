@@ -2,6 +2,8 @@
     width:30%;
     background-color:white;
     border-radius:20px;
+    height:500px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 .filter-container label {
@@ -40,6 +42,9 @@
 .filter-box {
     display: flex;
     flex-direction: row;
+    width:80%;
+    margin-right:auto;
+    margin-left:auto;
 }
 
 .formContainer{
@@ -81,7 +86,7 @@
 }
 
 #map{
-    height:60vh;
+    height:70vh;
     width:100%;
     margin-left:auto;
     margin-right:auto;
@@ -91,6 +96,7 @@
     height:200px;
     width:100%;
     border-radius:20px 20px 0px 0px;
+    border-bottom:solid 1px;
 }
 
 /* Modal CSS */
@@ -140,12 +146,20 @@
 }
 
 /* Open Modal */
-.readMoreButton{
-    text-align:right;
-    padding-right: 10px;
-    padding-top:20px;
-    color: #57007B;
-}
+.readMoreButton {
+    background-color: white; 
+    border: 1px solid black; 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    transition: background-color 0.4s ease, transform 0.3s ease; 
+    border-radius:10px;
+    width:80%;
+  }
+  
+  .readMoreButton:hover {
+    background-color: #FFD43B; 
+    transform: scale(1.05); 
+  }
 
 .formContainer {
     padding: 20px;

@@ -9,14 +9,14 @@
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDY0zEGiZRJ6kmm79kgqTkxuGnkXgJ0zhg&loading=async&callback=initMap">
     </script>
 </head>
-<div class="title-div">
+<div class="title-div" style="text-align:center;">
     <h1>Find Your Financial Literacy Workshop</h1>
     <p>Explore our interactive map to find where our upcoming partnered financial literacy workshops are located.</p>
     <p>Use our map to sort by distance and find the fastest route there!</p>
 </div>
 
 {{!-- map api here --}}
-<div class="filter-box container">
+<div class="filter-box">
     <div class="filter-container">
         <h2>Filter</h2>
         <label for="workshopFilter">Workshop Travel Info:</label>
@@ -27,33 +27,35 @@
                 <option value="{{this.Workshop_Name}}">{{this.Workshop_Name}}</option>
             {{/each}}
         </select>
+        <br>
+        <span id="travel-time" class="travel-time-info"></span>
     </div>
     <div class="flex-container">
-            <div id="map"></div>
+        <div id="map"></div>
     </div>
 </div>
 
 <br>
-<h1 style="text-align:center;">Upcoming Workshops</h1>
-<div class="container">
+<h1 style="text-align:center;padding-top:30px;">Upcoming Workshops</h1>
+<p style="text-align:center;">Sign up here to confirm your visit at our partnered financial literacy workshops!</p>
+<div class="container" style="padding-bottom:50px;">
     {{#if workshops.length}}
         <div class="flex-container">
         {{#each workshops}}
-            <table class="workshopTables">
-                <tr class="workshopImage">
-                    <td colspan="2">
+            <div class="workshopTables">
+                <div class="workshopImage">
                         <img src="/images/{{this.Workshop_Image}}" alt="{{this.Workshop_Image}}" class="workshopTableImage"/>
-                    </td>
-                </tr>
-                <tr>
-                    <th colspan="2" style="padding-left:10px;">{{this.Workshop_Name}}</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <td onclick="openWorkshopModal({{json this}})" class="readMoreButton"><a href="#">Read More &rarr;</a></td>
-                </tr>
-            </table>
+                </div>
+                <div>
+                    <div style="padding:10px;font-weight:bold;font-size:22px;">{{this.Workshop_Name}}</div>
+                </div>
+                <div>
+                    <div style="padding-left:10px;padding-top:10px;">{{this.Workshop_Address}}</div>
+                </div>
+                <div style="text-align:center;margin-top:150px;">
+                    <button onclick="openWorkshopModal({{json this}})" class="readMoreButton">Read More</button>
+                </div>
+            </div>
         {{/each}}
         </div>
     {{else}}

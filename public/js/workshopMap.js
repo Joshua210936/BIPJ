@@ -55,6 +55,7 @@ function initMap() {
 function updateWorkshopsOnMap(workshopsToDisplay) {
     // Clear previous directions
     directionsRenderer.set('directions', null);
+    document.getElementById('travel-time').innerHTML = ''; // Clear previous travel times
 
     workshopsToDisplay.forEach(workshop => {
         const address = workshop.Workshop_Address;
@@ -97,6 +98,12 @@ function updateWorkshopsOnMap(workshopsToDisplay) {
                     directionsService.route(request, (result, status) => {
                         if (status === 'OK') {
                             directionsRenderer.setDirections(result);
+
+                            // Get and display travel time
+                            const travelTime = result.routes[0].legs[0].duration.text;
+                            const travelTimeElement = document.createElement('p');
+                            travelTimeElement.textContent = `Travel time to ${workshop.Workshop_Name}: ${travelTime} by car.`;
+                            document.getElementById('travel-time').appendChild(travelTimeElement);
                         } else {
                             console.error('Directions request failed due to ' + status);
                         }
