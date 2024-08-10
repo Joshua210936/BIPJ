@@ -38,10 +38,10 @@ ul {
 }
 
 .footer {
-    background-color: #FFD43B;
+    background-color:rgb(243, 243, 243);
     padding: 70px 0;
     padding-top: 50px;
-	border-top: 1px solid #000000;
+	border-top: 1px solid #FFD43B;
 }
 
 .footer-col {

@@ -867,17 +867,20 @@ app.get('/aboutUs', function (req, res) {
 
 //admin
 app.get('/adminWorkshops', async function (req, res) {
-    const workshopID = req.params.id;
-
     try {
-        const registrationData = await register.findAll();
+        const registrationData = await register.findAll({
+            include: [{
+                model: addWorkshops,
+                attributes: ['Workshop_Name'] // Select only the workshop name
+            }]
+        });
         const workshops = await addWorkshops.findAll();
 
         res.render('adminWorkshops', {
             layout: 'adminMain',
-            workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
-            registrationData: registrationData.map(registrationData => registrationData.get({ plain: true })),
-            json: JSON.stringify // Pass JSON.stringify to the template
+            workshops: workshops.map(workshop => workshop.get({ plain: true })),
+            registrationData: registrationData.map(registration => registration.get({ plain: true })),
+            json: JSON.stringify
         });
     } catch (err) {
         console.error('Error fetching workshops:', err);

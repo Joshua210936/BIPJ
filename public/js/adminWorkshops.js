@@ -172,3 +172,85 @@ document.addEventListener('DOMContentLoaded', (event) => {
         alert("Workshop updated successfully!"); // Show confirmation popup
     });
 });
+
+//for sorting register table
+
+document.addEventListener('DOMContentLoaded', () => {
+    const table = document.querySelector('.registered-users-table');
+    const headers = table.querySelectorAll('thead button[data-sort]');
+    const tbody = table.querySelector('tbody');
+    const searchInput = document.getElementById('search-input');
+    const columnFilter = document.getElementById('column-filter');
+
+    let sortDirection = 'asc'; // Default sort direction
+    let lastSortedColumn = 'Register_ID'; // Default column to sort by
+
+    // Initialize table with default sorting
+    const defaultButton = Array.from(headers).find(button => button.getAttribute('data-sort') === lastSortedColumn);
+    if (defaultButton) {
+        sortTable(lastSortedColumn);
+        updateSortIcons(defaultButton);
+    }
+
+    headers.forEach(button => {
+        button.addEventListener('click', () => {
+            const sortKey = button.getAttribute('data-sort');
+            sortDirection = (lastSortedColumn === sortKey && sortDirection === 'asc') ? 'desc' : 'asc'; // Toggle sort direction
+            lastSortedColumn = sortKey;
+            sortTable(sortKey);
+            updateSortIcons(button);
+        });
+    });
+
+    searchInput.addEventListener('input', () => {
+        filterTable();
+    });
+
+    function sortTable(sortKey) {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const index = Array.from(headers).findIndex(button => button.getAttribute('data-sort') === sortKey);
+
+        rows.sort((a, b) => {
+            const aText = a.children[index].innerText.trim();
+            const bText = b.children[index].innerText.trim();
+            
+            if (sortDirection === 'asc') {
+                return aText.localeCompare(bText, undefined, { numeric: true });
+            } else {
+                return bText.localeCompare(aText, undefined, { numeric: true });
+            }
+        });
+
+        rows.forEach(row => tbody.appendChild(row)); // Reorder rows in the table
+    }
+
+    function updateSortIcons(activeButton) {
+        headers.forEach(button => {
+            const icon = button.querySelector('.sort-icon');
+            if (button === activeButton) {
+                icon.classList.add(sortDirection);
+                icon.classList.remove(sortDirection === 'asc' ? 'desc' : 'asc');
+            } else {
+                icon.classList.remove('asc', 'desc');
+            }
+        });
+    }
+
+    function filterTable() {
+        const selectedColumn = columnFilter.value;
+        const rows = tbody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const columnIndex = Array.from(headers).findIndex(header => header.getAttribute('data-sort') === selectedColumn);
+            const cellText = cells[columnIndex] ? cells[columnIndex].innerText.trim().toLowerCase() : '';
+            const searchText = searchInput.value.trim().toLowerCase();
+            
+            if (searchText === '' || cellText.includes(searchText)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+});

@@ -5,7 +5,7 @@ body {
   }
 
   .gradient{
-    background-image: linear-gradient(white, #FFD43B);
+    background-color:rgb(236, 236, 236);
     padding-bottom:20px;
 }
 
