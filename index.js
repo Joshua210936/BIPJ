@@ -38,6 +38,9 @@ const { formatDate } = require('./helpers/handlebarFunctions.js');
 
 let port = 3001;
 
+//mailer function
+const { sendEmail } = require('./public/js/mailer.js');
+
 // PAYPAL
 
 const clientId = "ATPBOA2kFS1GZCsIIWNDjVr6bsDAz58J3GAbYtNA4mlPHpTtas7aroJcZIgw5YlAtPnZ_Q_N0lW9DuQZ";
@@ -914,32 +917,46 @@ app.get('/adminWorkshops/delete/:id', (req, res) => {
     const workshopId = req.params.id;
 
     addWorkshops.findOne({
-        where: {
-            Workshop_ID: workshopId
-        }
+        where: { Workshop_ID: workshopId }
     }).then(workshop => {
-        if (workshop) {
-            // delete related rows in workshopRegister
-            return register.destroy({
-                where: {
-                    Workshop_ID: workshopId
-                }
-            }).then(() => {
-                // delete the workshop
-                return addWorkshops.destroy({
-                    where: {
-                        Workshop_ID: workshopId
-                    }
-                });
-            });
-        } else {
-            res.status(404).send('Workshop not found');
+        if (!workshop) {
+            return res.status(404).send('Workshop not found');
         }
-    }).then(() => {
-        console.log("Workshop and related registrations deleted!");
-        res.redirect("/adminWorkshops");
+
+        return register.findAll({
+            where: { Workshop_ID: workshopId },
+            attributes: ['Register_Email', 'Register_Name'],
+        }).then(registrants => {
+            if (registrants.length > 0) {
+                const emails = registrants.map(registrant => registrant.Register_Email);
+
+                const subject = 'Workshop Cancellation Notification';
+                const text = `Dear User,\n\n` +
+                    `We regret to inform you that the workshop "${workshop.Workshop_Name}" you have signed up for has been cancelled.\n` +
+                    `We apologize for any inconvenience this may cause.\n\n` +
+                    `Best regards,\nFinancial Flare`;
+
+                return sendEmail(emails, subject, text) // Passing the array of emails directly
+                    .then(() => registrants);
+            } else {
+                return [];
+            }
+        }).then(() => {
+            // Delete related rows in workshopRegister
+            return register.destroy({
+                where: { Workshop_ID: workshopId }
+            });
+        }).then(() => {
+            // Delete the workshop
+            return addWorkshops.destroy({
+                where: { Workshop_ID: workshopId }
+            });
+        }).then(() => {
+            console.log("Workshop and related registrations deleted, and notifications sent!");
+            res.redirect("/adminWorkshops");
+        });
     }).catch(err => {
-        console.error("Error deleting workshop and related registrations:", err);
+        console.error("Error deleting workshop, related registrations, or sending notifications:", err);
         res.status(500).send("Internal Server Error");
     });
 });
