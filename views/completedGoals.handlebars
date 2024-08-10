@@ -1,0 +1,26 @@
+
+<head>
+
+    <title>Completed Goals</title>
+    <link rel="stylesheet" href="/styles/main.css"> <!-- Adjust path as needed -->
+</head>
+<body>
+    <h1>Completed Goals</h1>
+    {{#if completedGoals.length}}
+        <ul>
+            {{#each completedGoals}}
+                <li>
+                    <h2>{{Saving_goalName}}</h2>
+                    <p>Target Amount: {{Saving_amount}}</p>
+                    <p>Start Date: {{Saving_startDate}}</p>
+                    <p>End Date: {{Saving_endDate}}</p>
+                    <p>Frequency: {{Saving_frequency}}</p>
+                    <img src="images/{{this.Saving_picture}}" alt="images/{{this.Saving_picture}}" class="savings-image">
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>No completed goals found.</p>
+    {{/if}}
+</body>
+
