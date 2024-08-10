@@ -7,11 +7,17 @@ const path = require('path');
 const Handlebars = require('handlebars');
 const methodOverride = require('method-override');
 const paypal = require('@paypal/checkout-server-sdk');
+const nodemailer = require('nodemailer');
+const otpGenerator = require('otp-generator');
+const mysql = require('mysql');
 
 
 // Database
 const bipjDB = require('./config/DBConnection');
 bipjDB.setUpDB(false);
+const db = require('./config/db');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const Saving = require('./models/savings');
 const addWorkshops = require('./models/addWorkshops');
 const { Test, Question } = require('./models/test');
@@ -21,6 +27,14 @@ const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
 const register = require('./models/workshopRegister')
 
+
+// Imported Helpers
+const handlebarFunctions = require('./helpers/handlebarFunctions.js');
+const { password } = require('./config/db.js');
+const { error, clear } = require('console');
+const { layouts } = require('chart.js');
+const { Session } = require('inspector');
+const { formatDate } = require('./helpers/handlebarFunctions.js');
 
 let port = 3001;
 
@@ -65,33 +79,351 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(methodOverride('_method'));
 
+const options = {
+    host: db.host,
+    port: db.port,
+    user: db.username,
+    password: db.password,
+    database: db.database,
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+    expiration: 86400000
+}
+const sessionStore = new MySQLStore(options);
+
+app.use(session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false
+}));
+
+// For Navbar
+app.use((req, res, next) => {
+    res.locals.userType = null;
+
+    if (req.session.customerID) {
+        res.locals.userType = 'customer';
+    } else if (req.session.agentID) {
+        res.locals.userType = 'agent';
+    } else if (req.session.adminID) {
+        res.locals.userType = 'admin';
+    }
+
+    next();
+});
+
+// Set up Handlebars with custom helpers
+const hbs = exphbs.create({
+    helpers: handlebarFunctions,
+    defaultLayout: 'main',
+    partialsDir: ['views/partials/']
+});
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
+// Sending Email
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'financial0flare@gmail.com',
+        pass: 'qkgi didt tzll bdub'
+    }
+});
+
 //guest
 app.get('/', function (req, res) { //home page
     res.render('home', { layout: 'main' })
 });
+
+// Customer Logged In
+app.get('/customerHome', function (req, res) {
+    console.log("this is the session id:", req.session.id);
+    console.log('Session:' + JSON.stringify(req.session));
+    console.log('Session:' + req.session.customerID);
+    res.render('home', { layout: 'main' })
+});
+
+// Admin Logged In
+app.get('/adminHome', function(req, res){
+    res.render('adminHome', {layout:'adminMain'});
+});
+
+// ---------------------- Customer Account Routes --------------------------
 app.get('/register', function (req, res) { //home page
-    res.render('register', { layout: 'main' })
+    res.render('Customer/customerRegister', { layout: 'main' })
 });
 
-app.post('/register', function (req, res) {
-    let { fName, lName, email, phone, password, cPassword } = req.body;
+// Customer Register [Updated]
+app.post('/register', async function (req, res) {
+    let errorsList = [];
+    let { firstName, lastName, email, phoneNumber, password, confirmPassword } = req.body;
 
-    Customer.create({
-        Customer_fName: fName,
-        Customer_lName: lName,
-        Customer_Email: email,
-        Customer_Phone: phone,
-        Customer_Password: password,
-        Customer_cPassword: cPassword
-    })
-        .then(() => {
-            res.redirect('/');
-        })
-        .catch(err => {
-            console.error('Error creating account:', err);
-            res.status(400).send({ message: 'Error registering account', error: err });
+    // Check for missing email
+    if (!email) {
+        return res.status(400).send("One or more required payloads were not provided.");
+    }
+
+    try {
+        const data = await Customer.findAll({
+            attributes: ["Customer_Email"]
         });
+
+        console.log('Retrieved customer emails:', data);
+
+        // Check if email already exists
+        for (var cust of data) {
+            if (cust.toJSON().Customer_Email === email) {
+                errorsList.push({ text: 'Email already exists' });
+                break;
+            }
+        }
+
+        // Check if password and confirmPassword match
+        if (password !== confirmPassword) {
+            errorsList.push({ text: 'Passwords do not match' });
+        }
+
+        // If there are errors, render the registration page with error messages
+        if (errorsList.length > 0) {
+            let msg_error = "";
+            for (let i = 0; i < errorsList.length; i++) {
+                console.log('Error:', errorsList[i]);
+                msg_error += errorsList[i].text + "\n";
+            }
+            return res.status(400).send({ message: 'Error registering account', error_msg: msg_error });
+        }
+
+        // Create new customer
+        const newCustomer = await Customer.create({
+            Customer_fName: firstName,
+            Customer_lName: lastName,
+            Customer_Email: email,
+            Customer_Phone: phoneNumber,
+            Customer_Password: password,
+        });
+
+        // Send account registration success email
+        const mailOptions = {
+            from: 'financial0flare@gmail.com',
+            to: email,
+            subject: 'Account Successfully Registered',
+            text: 'Your account has been successfully registered.'
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending registration email:', error);
+                return res.status(500).send({ message: 'Error sending registration email' });
+            } else {
+                console.log('Registration email sent:', info.response);
+            }
+        });
+
+        // Redirect to login page upon successful registration
+        res.redirect('/login');
+    } catch (err) {
+        console.error('Error registering user:', err);
+        res.status(500).send({ message: 'Error registering user', error: err });
+    }
 });
+
+// Customer Login
+app.get('/login', function (req, res) {
+    res.render('Customer/customerLogin', { layout: 'main' })
+});
+
+app.post('/login', async function (req, res) {
+    errorList = [];
+    let { email, password } = req.body;
+
+    // Admin credentials
+    const adminEmail = 'admin@gmail.com';
+    const adminPassword = 'Admin12345';
+
+    if (email === adminEmail && password === adminPassword) {
+        // Admin login
+        req.session.isAdmin = true;
+        req.session.userID = 'admin'; // You can store any identifier for the admin user
+        console.log('Admin logged in');
+        return res.redirect('/adminHome'); // Redirect to the admin home page
+    } else {
+        // Find the customer with the given email
+        Customer.findOne({ where: { Customer_Email: email } })
+            .then(customer => {
+                if (!customer) {
+                    errorList.push({ text: 'customer not found' });
+                    console.log('customer not found');
+                    return res.status(404).send({ message: 'customer not found' });
+                }
+
+                // Check if the password is correct
+                if (customer.Customer_Password !== password) {
+                    errorList.push({ text: 'Incorrect password' });
+                    return res.status(401).send({ message: 'Incorrect password' });
+                }
+
+                // Successful customer login
+                req.session.isAdmin = false;
+                req.session.customerID = customer.Customer_id; // Store customer information in session
+                const customer_id = customer.Customer_id;
+                console.log(req.session.customerID);
+                console.log('Session Test' + JSON.stringify(req.session));
+                console.log("session id in login:", req.session.id);
+                req.session.save();
+                res.redirect('/customerHome');
+            })
+            .catch(err => {
+                console.log('Error during login: ', err);
+                return res.status(500).send({ message: 'Error occurred', error: err });
+            });
+    }
+});
+
+app.get('/userSetProfile', async (req, res) => {
+    const customer_id = req.session.customerID; // IMPORTANT
+    console.log('Customer ID:' + customer_id);
+
+    try {
+        const customer = await Customer.findByPk(customer_id); // IMPORTANT
+        console.log(customer);
+
+        if (customer) {
+            res.render('Customer/userSetProfile', {
+                layout: 'main',
+                customer_id: customer_id,
+                customer: customer.get({ plain: true })
+            });
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching customer details', error });
+    }
+});
+
+app.post('/userSetProfile', async (req, res) => {
+    console.log("this is the request body:",req.body);
+    const { firstName, lastName, phoneNumber, birthday } = req.body;
+
+    const customer_id = req.session.customerID;
+    console.log('Session Test' + JSON.stringify(req.session));
+    console.log("session id in set profile:", req.session.customerID);
+    
+    console.log('Received customer ID:', customer_id); // Log customer ID
+    console.log('Received update data:', { firstName, lastName, phoneNumber, birthday }); // Log update data
+    
+    try {
+        const customer = await Customer.findByPk(customer_id);
+        if (customer) {
+            await Customer.update(
+                {
+                    Customer_fName: firstName,
+                    Customer_lName: lastName,
+                    Customer_Phone: phoneNumber,
+                    Customer_Birthday: birthday,
+                },
+                {
+                    where: {
+                        Customer_id: customer_id
+                    }
+                }
+            );
+            res.redirect(`/userSetProfile`);
+        } else {
+            res.status(404).send("Customer not found");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating customer profile");
+    }
+});
+
+// ---------------------- Reset Password --------------------------
+// Route to render forget password page
+app.get('/forgetpassword', (req, res) => {
+    res.render('Customer/forgetPassword', { layout: 'main' });
+});
+
+// Route to handle OTP request
+app.post('/requestOTP', async (req, res) => {
+    const { email } = req.body;
+    const customer = await Customer.findOne({ where: { Customer_Email: email } });
+
+    if (!customer) {
+        return res.status(404).send({ message: 'Customer not found' });
+    }
+
+    // Generate OTP and expiration time
+    const otp = otpGenerator.generate(6, { upperCase: false, specialChars: false });
+    const otpExpiration = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes from now
+
+    await customer.update({
+        Customer_OTP: otp,
+        OTP_Expiration: otpExpiration
+    });
+
+    // Send OTP email
+    const mailOptions = {
+        from: 'financial0flare@gmail.com',
+        to: email,
+        subject: 'Your OTP for password reset',
+        text: `Your OTP for password reset is: ${otp}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending OTP email:', error);
+            return res.status(500).send({ message: 'Error sending OTP email' });
+        } else {
+            console.log('OTP email sent:', info.response);
+            res.redirect('/verifyOTP');
+        }
+    });
+});
+
+// Route to render verify OTP page
+app.get('/verifyOTP', (req, res) => {
+    res.render('Customer/verifyOTP', { layout: 'main' });
+});
+
+// Route to handle OTP verification and password reset
+app.post('/verifyOTP', async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+    const customer = await Customer.findOne({ where: { Customer_Email: email } });
+
+    if (!customer) {
+        return res.status(404).send({ message: 'Customer not found' });
+    }
+
+    if (customer.Customer_OTP !== otp || new Date() > customer.OTP_Expiration) {
+        return res.status(400).send({ message: 'Invalid or expired OTP' });
+    }
+
+    // Update password and clear OTP fields
+    await customer.update({
+        Customer_Password: newPassword,
+        Customer_OTP: null,
+        OTP_Expiration: null
+    });
+
+    res.redirect('/login');
+});
+// ---------------------- Reset Password --------------------------
+
+// Customer Logout
+app.get('/logout', function (req, res) {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send({ message: 'Error logging out', error: err });
+        }
+        res.redirect('/login');
+    });
+});
+
+// ---------------------- End of Customer Account Routes --------------------------
 
 app.get('/savingplanner', function (req, res) {
     res.render('savingplanner', { layout: 'main' })

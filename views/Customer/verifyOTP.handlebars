@@ -1,0 +1,39 @@
+<head>
+    <link rel="stylesheet" href="/css/userSetprofile.css">
+    <title>Verify OTP - Sigma Properties</title>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <h2>{{customer.Customer_fName}} {{customer.Customer_lName}}</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#">My Profile</a></li>
+                    <li><a href="/forgetpassword">Reset Password</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="register-box">
+                <div class="welcome-text">Verify OTP</div>
+                <form action="/verifyOTP" method="post">
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="otp">OTP</label>
+                        <input type="text" id="otp" name="otp" placeholder="Enter the OTP" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" placeholder="Enter your new password" required>
+                    </div>
+                    <button type="submit" class="formbutton">Verify OTP</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>

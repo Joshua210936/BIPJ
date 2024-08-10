@@ -1,0 +1,149 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    width: 100%;
+    z-index: 10;
+}
+
+.register-page {
+    display: flex;
+    width: 100%;
+    max-width: 1440px;
+    height: auto;
+    margin-top: 80px; /* Adjusted for fixed navbar height */
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.form
+
+.illustration {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    margin-bottom: 20px;
+    background: url('your-illustration-url.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+.registration-box {
+    width: 100%;
+    max-width: 505px;
+    background: white;
+    box-shadow: 0px 4px 64px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    border: 0.5px solid #878787;
+    padding: 36px 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.welcome-text {
+    font-size: 25px;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.sign-up-text {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.sign-up-text h2 {
+    font-size: 31px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.sign-up-text p {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 8px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.input-group label {
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    height: 45px;
+    padding: 0 27px;
+    font-size: 14px;
+    font-weight: 300;
+    color: #ABABAB;
+    border: 1px solid #282828;
+    border-radius: 6px;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.password-visibility-toggle {
+    position: absolute;
+    width: 21px;
+    height: 21px;
+    right: 10px;
+    top: 36px;
+    background: url('visibility-icon.png') no-repeat center center;
+    cursor: pointer;
+}
+
+.formbutton {
+    width: 100%;
+    height: 45px;
+    background: #007bff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.formbutton:hover {
+    background: #0056b3;
+}
+
+.registerbutton {
+    width: 100%;
+    height: 45px;
+    background: #007bff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.registerbutton:hover {
+    background: #0056b3;
+}

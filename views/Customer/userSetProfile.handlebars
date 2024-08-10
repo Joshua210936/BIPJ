@@ -1,0 +1,46 @@
+<head>
+    <link rel="stylesheet" href="/css/userSetprofile.css">
+    <title>User Profile Setup - Sigma Properties</title>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <h2>{{customer.Customer_fName}} {{customer.Customer_lName}}</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/userSetProfile">My Profile</a></li>
+                    <li><a href="/forgetpassword">Reset Password</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="register-box">
+                <div class="welcome-text">Set Up Your User Profile</div>
+                <form method="post" action="/userSetProfile">
+                    <div class="input-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" value="{{customer.Customer_fName}}">
+                    </div>
+                    <div class="input-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" value="{{customer.Customer_lName}}">
+                    </div>
+                    <div class="input-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phoneNumber" placeholder="Enter your phone number" value="{{customer.Customer_Phone}}">
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" value="{{customer.Customer_Email}}">
+                    </div>
+                    <button type="submit" class="formbutton">Update Profile</button>
+                </form> <br>
+                <form action="/deleteUser/{{customer_id}}" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                    <button type="submit" class="formbuttondelete">Delete Profile</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
