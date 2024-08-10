@@ -313,3 +313,88 @@
 .cancel-button:hover {
     background-color:  #1976D2;/* Darker red on hover */
 }
+
+.table-container {
+    height: 60vh; 
+    overflow-y: auto; 
+    display: block; 
+    text-align:center;
+    
+}
+
+.registered-users-container{
+    margin-left:auto;
+    margin-right:auto;
+    padding:30px;
+    width:75%;
+    background-color:rgb(253, 250, 250);
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    border-radius:10px;
+}
+
+.sort-icon {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-left: 5px;
+    vertical-align: middle;
+    font-size: 12px; /* Adjust font size for the icon */
+}
+
+.sort-icon.asc::after {
+    content: '▲'; /* Up arrow */
+}
+
+.sort-icon.desc::after {
+    content: '▼'; /* Down arrow */
+}
+
+.table thead th {
+    background-color: #343a40; /* Match the header background color */
+}
+
+.sort-button {
+    all: unset; /* Remove default button styles */
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-color: #343a40; /* Match the header background color */
+    color: white;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    padding: 8px 10px;
+}
+
+.sort-button:hover {
+    background-color: #495057; /* Optional: Lighter color on hover */
+}
+
+.table-container {
+    position: relative;
+}
+
+.search-input {
+    width: 12%; /* Adjust width as needed */
+    padding: 5px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-input::placeholder {
+    color: #888;
+}
+
+.searchbar-container{
+    width:100%;
+    text-align:right;
+}
+
+.filter-select {
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom:10px;
+}

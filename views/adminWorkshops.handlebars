@@ -185,41 +185,69 @@
         <button id="cancelRemoveButton" class="cancel-button">Cancel</button>
     </div>
 </div>
- 
- <div class="registered-users-container" style="text-align:center;">
+    
+    <div class="registered-users-container">
     <h1>Registered Users</h1>
-    <table class="table table-striped" style="width:70%;margin-left:auto;margin-right:auto;">
-        <thead class="thead-dark">
-            <tr>
-            <th scope="col">#</th>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Date Attending</th>
-            <th scope="col">Workshop ID</th>
-            <th scope="col">Remove</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each this.registrationData}}
+    <div class="searchbar-container">
+        <select id="column-filter" class="filter-select">
+            <option value="Register_ID">ID</option>
+            <option value="Register_Name">Name</option>
+            <option value="Register_Email">Email</option>
+            <option value="Register_Date">Date Attending</option>
+            <option value="Workshop_ID">Workshop ID</option>
+            <option value="Workshop_Name">Workshop Name</option>
+        </select>
+        <input type="text" id="search-input" class="search-input" placeholder="Search...">
+    </div>
+    <div class="table-container">
+        <table class="table table-striped registered-users-table">
+            <thead class="thead-dark">
                 <tr>
-                <th scope="row" id="tableCount">{{add @index 1}}</th>
-                <td>{{this.Register_ID}}</td>
-                <td>{{this.Register_Name}}</td>
-                <td>{{this.Register_Email}}</td>
-                <td>{{this.Register_Date}}</td>
-                <td>{{this.Workshop_ID}}</td>
-                <td>
-                    <form action="/removeRegistration/{{this.Register_ID}}" method="POST" class="remove-form">
-                        <button type="submit" class="btn btn-danger userRemoveButton" data-register-id="{{this.Register_ID}}">Remove</button>
-                    </form>
-                </td>
+                    <th scope="col">
+                        <button class="sort-button" data-sort="index"># <span class="sort-icon"></span></button>
+                    </th>
+                    <th scope="col">
+                        <button class="sort-button" data-sort="Register_ID">ID <span class="sort-icon"></span></button>
+                    </th>
+                    <th scope="col">
+                        <button class="sort-button" data-sort="Register_Name">Name <span class="sort-icon"></span></button>
+                    </th>
+                    <th scope="col">
+                        <button class="sort-button" data-sort="Register_Email">Email <span class="sort-icon"></span></button>
+                    </th>
+                    <th scope="col">
+                        <button class="sort-button" data-sort="Register_Date">Date Attending <span class="sort-icon"></span></button>
+                    </th>
+                    <th scope="col">
+                        <button class="sort-button" data-sort="Workshop_ID">Workshop ID <span class="sort-icon"></span></button>
+                    </th>
+                    <th scope="col">
+                        <button class="sort-button" data-sort="Workshop_Name">Workshop Name <span class="sort-icon"></span></button>
+                    </th>
+                    <th scope="col">Remove</th>
                 </tr>
-            {{/each}}
-        </tbody>
-    </table>
- </div>
-
+            </thead>
+            <tbody>
+                {{#each this.registrationData}}
+                    <tr>
+                        <td>{{add @index 1}}</td>
+                        <td>{{this.Register_ID}}</td>
+                        <td>{{this.Register_Name}}</td>
+                        <td>{{this.Register_Email}}</td>
+                        <td>{{this.Register_Date}}</td>
+                        <td>{{this.Workshop_ID}}</td>
+                        <td>{{this.addWorkshop.Workshop_Name}}</td>
+                        <td>
+                            <form action="/removeRegistration/{{this.Register_ID}}" method="POST" class="remove-form">
+                                <button type="submit" class="btn btn-danger userRemoveButton" data-register-id="{{this.Register_ID}}">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
  <script>
     function updateCounter(id, value) {
         document.getElementById(id + '-counter').textContent = value;
