@@ -30,6 +30,14 @@
                                 <p>{{this.Saving_frequency}} target: ${{this.Saving_calculate}}</p>
                                 <p>Start date: {{this.Saving_startDate}}</p>
                                 <p>End date: {{this.Saving_endDate}}</p>
+                                   {{#if isCompleted}}
+            <p>Status: Completed</p>
+        {{else}}
+            <form action="/completeGoal" method="POST">
+                <input type="hidden" name="saving_id" value="{{Saving_id}}">
+                <button type="submit">Mark as Completed</button>
+            </form>
+        {{/if}}
                             </div>
                             <div class="goal-graph">
                                 <canvas id="graph-{{this.Saving_id}}"></canvas>

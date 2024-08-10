@@ -30,6 +30,9 @@ const Savings = db.define('savings', {
     },
     Saving_picture: {
         type: sequelize.STRING
+    },
+    isCompleted: {
+        type: sequelize.BOOLEAN
     }
 });
 

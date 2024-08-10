@@ -592,6 +592,37 @@ app.post('/goalsPage/delete', async function (req, res) {
     }
 });
 
+app.get('/completedGoals', async (req, res) => {
+    try {
+        const completedGoals = await Saving.findAll({
+            where: { isCompleted: true }
+        });
+        res.render('completedGoals', {
+            layout: 'main',
+            completedGoals: completedGoals.map(goal => goal.get({ plain: true }))
+        });
+    } catch (err) {
+        console.error('Error fetching completed goals:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/completeGoal', async (req, res) => {
+    const { saving_id } = req.body;
+
+    try {
+        await Saving.update(
+            { isCompleted: true },
+            { where: { Saving_id: saving_id } }
+        );
+        res.redirect('/goalsPage');
+    } catch (err) {
+        console.error('Error updating goal status:', err);
+        res.status(400).send({ message: 'Error updating goal status', error: err });
+    }
+});
+
+
 
 app.get('/workshops', function (req, res) {
 
