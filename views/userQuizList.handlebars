@@ -4,6 +4,7 @@
         <table class="test-table">
             <thead>
                 <tr>
+                    <th>Test Name</th>
                     <th>Module Number</th>
                     <th>Number of Questions</th>
                     <th>Total Points</th>
@@ -13,6 +14,7 @@
             <tbody>
                 {{#each tests}}
                     <tr class="test-item">
+                        <td>{{this.testName}}</td>
                         <td>{{this.module}}</td>
                         <td>{{this.numberOfQuestions}}</td>
                         <td>{{this.totalPoints}}</td>

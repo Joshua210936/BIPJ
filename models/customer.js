@@ -1,6 +1,5 @@
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
-// const QuizResult = require('./quizResult');
 
 const Customer = db.define('customer', {
     Customer_id: {
@@ -31,6 +30,5 @@ const Customer = db.define('customer', {
     }
 });
 
-// Customer.hasMany(QuizResult, { foreignKey: 'Customer_id', as: 'quizResults' });
 
 module.exports = Customer;

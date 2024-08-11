@@ -39,7 +39,7 @@ const QuizResult = db.define('QuizResult', {
     tableName: 'quizResults'
 });
 
-QuizResult.belongsTo(Customer, { foreignKey: 'Customer_id', as: 'Customer' });
+QuizResult.belongsTo(Customer, { foreignKey: 'Customer_id' });
 QuizResult.belongsTo(Test, { foreignKey: 'testID', as: 'Test' });
 
 module.exports = QuizResult;
