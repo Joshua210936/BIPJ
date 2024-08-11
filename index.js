@@ -1132,6 +1132,42 @@ app.post('/adminWorkshops/toggleStatus/:id', async (req, res) => {
     }
 });
 
+app.get('/adminContactUs', async function (req, res) {
+    try {
+        // Fetch all contact messages from the database
+        const contacts = await contactUs.findAll({
+            raw: true // Convert the data to plain objects
+        });
+
+        // Render the template and pass the contacts data
+        res.render('adminContactUs', {
+            layout: 'adminMain',
+            contacts: contacts, // Pass the data to the template
+        });
+    } catch (error) {
+        console.error('Error fetching contacts:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+//remove feedback
+app.post('/removeContactUs/:Contact_ID', async function (req, res) {
+    try {
+        const contactId = req.params.Contact_ID;
+
+        // Delete the contact entry from the database
+        await contactUs.destroy({
+            where: { Contact_ID: contactId }
+        });
+
+        // Redirect back to the adminContactUs page after deletion
+        res.redirect('/adminContactUs');
+    } catch (error) {
+        console.error('Error removing contact:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 // ---------------------------- Quiz Stuff ---------------------------- //
 
 // Function to fetch tests with number of questions and total points
