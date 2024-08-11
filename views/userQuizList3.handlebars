@@ -1,6 +1,7 @@
 <head>
     <title>Quiz Overview</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         /* Include your existing styles here */
         
@@ -79,6 +80,23 @@
             font-size: 24px;
             color: #888;
         }
+        .filter-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .filter-select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -88,6 +106,18 @@
         <div class="search">
             <span class="search-icon material-symbols-outlined">search</span>
             <input class="search-input" type="search" placeholder="Search Test">
+        </div>
+
+        <div class="filter-group">
+            <label for="moduleFilter" class="filter-label">Filter by Module:</label>
+            <select id="moduleFilter" class="filter-select">
+                <option value="">All Modules</option>
+                <option value="1">Module 1</option>
+                <option value="2">Module 2</option>
+                <option value="3">Module 3</option>
+                <option value="4">Module 4</option>
+                <option value="5">Module 5</option>
+            </select>
         </div>
         
         <table class="test-table">
@@ -109,6 +139,10 @@
                         <td>{{this.totalPoints}}</td>
                         <td>
                             <button onclick="takeQuiz('{{this.testID}}')" class="btn-take-quiz">Take Quiz</button>
+                            <div>
+                                <p>Attempts: {{this.attempts}}</p>
+                                <p>Highest Score: {{this.highestScore}}</p>
+                            </div>
                         </td>
                     </tr>
                 {{/each}}
@@ -117,3 +151,8 @@
     </div>
 </body>
 <script src="/js/userQuizList.js"></script>
+<script>
+    function takeQuiz(testID) {
+        window.location.href = `/userQuiz/${testID}`;
+    }
+</script>

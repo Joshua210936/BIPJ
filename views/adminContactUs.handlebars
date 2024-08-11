@@ -35,6 +35,7 @@
                         <button class="sort-button" data-sort="Register_Date">Response Type <span class="sort-icon"></span></button>
                     </th>
                     <th scope="col">Message</th>
+                    <th scope="col">Reply</th>
                     <th scope="col">Remove</th>
                 </tr>
             </thead>
@@ -64,6 +65,14 @@
                             </div>
                         </td>
                         <td>
+                            <form action="/replyContactUs/{{this.Contact_ID}}" method="POST" class="reply-form">
+                                <div class="form-group">
+                                    <textarea name="replyMessage" class="form-control" placeholder="Type your reply here..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Reply</button>
+                            </form>
+                        </td>
+                        <td>
                             <form action="/removeContactUs/{{this.Contact_ID}}" method="POST" class="remove-form">
                                 <button type="submit" class="btn btn-danger userRemoveButton" data-register-id="{{this.Contact_ID}}">Remove</button>
                             </form>
@@ -76,49 +85,44 @@
 </div>
 
 <script>
-    //remove user alert
-document.addEventListener('DOMContentLoaded', function () {
-    // Track the current registerID to be used for confirmation
-    let currentRegisterID = null;
+    // Remove user alert
+    document.addEventListener('DOMContentLoaded', function () {
+        let currentRegisterID = null;
 
-    // Add click event listener to all remove buttons
-    document.querySelectorAll('.userRemoveButton').forEach(button => {
-        button.addEventListener('click', function () {
-            currentRegisterID = this.getAttribute('data-register-id');
+        document.querySelectorAll('.userRemoveButton').forEach(button => {
+            button.addEventListener('click', function () {
+                currentRegisterID = this.getAttribute('data-register-id');
+            });
+        });
+
+        const forms = document.querySelectorAll('.remove-form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function (event) {
+                if (currentRegisterID !== null) {
+                    const confirmRemove = confirm(`Are you sure you want to remove user (ID=${currentRegisterID})?`);
+                    if (!confirmRemove) {
+                        event.preventDefault(); // Prevent form submission
+                    }
+                }
+            });
         });
     });
 
-    // Add submit event listener to all remove forms
-    const forms = document.querySelectorAll('.remove-form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function (event) {
-            if (currentRegisterID !== null) {
-                const confirmRemove = confirm(`Are you sure you want to remove user (ID=${currentRegisterID})?`);
-                if (!confirmRemove) {
-                    event.preventDefault(); // Prevent form submission
-                }
+    // Modal functions
+    function openModal(contactID) {
+        document.getElementById('messageModal' + contactID).style.display = 'block';
+    }
+
+    function closeModal(contactID) {
+        document.getElementById('messageModal' + contactID).style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
             }
         });
-    });
-});
-
-//modal
-
-function openModal(contactID) {
-        document.getElementById('messageModal' + contactID).style.display = 'block';
-}
-
-function closeModal(contactID) {
-    document.getElementById('messageModal' + contactID).style.display = 'none';
-}
-
-// Close modal when clicking outside of it
-window.onclick = function(event) {
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    });
-};
+    };
 </script>
