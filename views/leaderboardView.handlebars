@@ -226,12 +226,22 @@
             <p>Celebrate the top performers and track your progress in real-time. Compete, climb the ranks, and see who’s leading the charge!</p>
         </div>
 
-        <div class="filters">
-            <a href="/leaderboard?filter=points"><button>All time</button></a>
-            <a href="/leaderboard?filter=today"><button>Today</button></a>
-            <a href="/leaderboard?filter=weekly"><button>This week</button></a>
-            <a href="/leaderboard?filter=monthly"><button>This month</button></a>
-        </div>
+       <div class="filters">
+         <!-- Dynamic Test Name Filter -->
+    <select id="testNameFilter">
+        <option value="">All Tests</option>
+        {{#each testNames}}
+        <option value="{{this}}">{{this}}</option>
+        {{/each}}
+    </select>
+    <button onclick="applyTestFilter()">Filter by Test</button>
+    <a href="/leaderboard?filter=points"><button>All time</button></a>
+    <a href="/leaderboard?filter=today"><button>Today</button></a>
+    <a href="/leaderboard?filter=weekly"><button>This week</button></a>
+    <a href="/leaderboard?filter=monthly"><button>This month</button></a>
+
+   
+</div>
 
         <div class="top-three">
             {{#each topThree}}
@@ -257,3 +267,22 @@
         </div>
     </div>
 </body>
+
+ <script>
+function applyTestFilter() {
+        const testName = document.getElementById('testNameFilter').value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('testName', testName);
+        window.location.href = url.toString();
+    }
+
+    // If a test name is selected in the URL, set it as selected in the dropdown
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        const testName = params.get('testName');
+        if (testName) {
+            document.getElementById('testNameFilter').value = testName;
+        }
+    };
+
+   </script>

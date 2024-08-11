@@ -1635,8 +1635,9 @@ app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
 
 app.get('/leaderboard', async (req, res) => {
     try {
-        // Get the filter from query parameters, default to 'all-time'
+        // Get the filters from query parameters
         const filter = req.query.filter || 'all-time';
+        const testName = req.query.testName || ''; // Get the test name from query parameters
 
         // Initialize date range for the filter
         let startDate;
@@ -1657,8 +1658,20 @@ app.get('/leaderboard', async (req, res) => {
             startDate.setHours(0, 0, 0, 0); // Start of the first day
         }
 
-        // Fetch all quiz results
+        // Fetch all available test names
+        const allTests = await Test.findAll({
+            attributes: ['testName'],
+            order: [['testName', 'ASC']], // Sort alphabetically
+        });
+
+        // Fetch all quiz results with filters applied
+        const whereCondition = {};
+        if (testName) {
+            whereCondition['$Test.testName$'] = testName; // Filter by test name
+        }
+
         const leaderboardData = await QuizResult.findAll({
+            where: whereCondition,
             include: [
                 {
                     model: Customer,
@@ -1668,7 +1681,7 @@ app.get('/leaderboard', async (req, res) => {
                 {
                     model: Test,
                     as: 'Test',
-                    attributes: ['module'],
+                    attributes: ['module', 'testName'],
                 }
             ],
             order: [['score', 'DESC']] // Order by score in descending order
@@ -1687,12 +1700,14 @@ app.get('/leaderboard', async (req, res) => {
         const leaderboard = filteredData.map(result => ({
             customerName: `${result.Customer.Customer_fName} ${result.Customer.Customer_lName}`,
             testID: result.testID,
+            testName: result.Test.testName, // Include the test name
             score: result.score,
             module: result.Test.module,
         }));
 
         // Render the leaderboard view with top three and other scores
         res.render('leaderboardView', {
+            testNames: allTests.map(test => test.testName), // Pass the test names to the view
             topThree: leaderboard.slice(0, 3), // Top three scores
             otherScores: leaderboard.slice(3)  // Remaining scores
         });
@@ -1701,6 +1716,7 @@ app.get('/leaderboard', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 
