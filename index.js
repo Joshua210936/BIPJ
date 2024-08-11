@@ -437,8 +437,15 @@ app.get('/savingplanner', function (req, res) {
 app.get('/goalsPage', function (req, res) {
     const filter = req.query.filter || 'all';
 
+    // Check if the user is logged in
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
+
     // Define the filter conditions
-    let filterCondition = {};
+    let filterCondition = { Customer_id: customerID };
     if (filter === 'ongoing') {
         filterCondition.isCompleted = false;
     } else if (filter === 'completed') {
@@ -461,11 +468,17 @@ app.get('/goalsPage', function (req, res) {
 });
 
 
+
 app.get('/addgoal', function (req, res) {
     res.render('addgoal', { layout: 'main' })
 });
 
 app.post('/addgoal', function (req, res) {
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
     let { goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
 
     Saving.create({
@@ -476,6 +489,7 @@ app.post('/addgoal', function (req, res) {
         Saving_frequency: savings_frequency,
         Saving_calculate: calculated_savings,
         Saving_picture: add_picture,
+        Customer_id: customerID // Associate with the logged-in customer
     })
         .then(() => {
             res.redirect('/goalsPage');
@@ -551,6 +565,11 @@ app.post('/goalsPage', async function (req, res) {
 
 
 app.post('/editGoal', function (req, res) {
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
     let { saving_id, goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
 
     Saving.update(
@@ -564,7 +583,7 @@ app.post('/editGoal', function (req, res) {
             Saving_picture: add_picture
         },
         {
-            where: { Saving_id: saving_id }
+            where: { Saving_id: saving_id, Customer_id: customerID } // Ensure only the customer can edit their own goals
         }
     )
         .then(() => {
@@ -577,21 +596,33 @@ app.post('/editGoal', function (req, res) {
 });
 
 
+
 app.post('/goalsPage/delete', async function (req, res) {
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
     const savingId = req.body.saving_id;
 
     try {
-
+        // Ensure only the customer's entries are deleted
         await SavingsEntry.destroy({
             where: {
-                Saving_id: savingId
-            }
+                Saving_id: savingId,
+                '$Saving.Customer_id$': customerID
+            },
+            include: [{
+                model: Saving,
+                required: true
+            }]
         });
 
-
+        // Ensure only the customer's goal is deleted
         await Saving.destroy({
             where: {
-                Saving_id: savingId
+                Saving_id: savingId,
+                Customer_id: customerID
             }
         });
 
@@ -602,13 +633,19 @@ app.post('/goalsPage/delete', async function (req, res) {
     }
 });
 
+
 app.post('/completeGoal', async function (req, res) {
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
     const { saving_id } = req.body;
 
     try {
         await Saving.update(
             { isCompleted: true },
-            { where: { Saving_id: saving_id } }
+            { where: { Saving_id: saving_id, Customer_id: customerID } } // Ensure only the customer can complete their own goals
         );
         res.redirect('/goalsPage');
     } catch (err) {
@@ -616,6 +653,7 @@ app.post('/completeGoal', async function (req, res) {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 

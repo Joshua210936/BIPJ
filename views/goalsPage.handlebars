@@ -14,7 +14,9 @@
             <button onclick="filterGoals('all')">All Goals</button>
             <button onclick="filterGoals('ongoing')">Ongoing Goals</button>
             <button onclick="filterGoals('completed')">Completed Goals</button>
+            <a href="/addgoal"><button class="add-goal">Add new goal</button></a>
         </div>
+         
 
           <div class="goal-container">
             <button class="arrow-button" onclick="scrollSliderLeft()"><i class="fas fa-chevron-left"></i></button>
@@ -28,7 +30,7 @@
                                     <button onclick="showPopup('{{this.Saving_goalName}}', '{{this.Saving_id}}')">Add savings</button>
                                     <button onclick="showEditPopup('{{this.Saving_id}}', '{{this.Saving_goalName}}', '{{this.Saving_amount}}', '{{this.Saving_startDate}}', '{{this.Saving_endDate}}', '{{this.Saving_frequency}}', '{{this.Saving_calculate}}', '{{this.Saving_picture}}')">Edit goal</button>
                                     <button onclick="deleteGoal('{{this.Saving_id}}')">Delete goal</button>
-                                    <a href="/addgoal"><button >Add new goal</button></a>
+                                   
                                 </div>
                             </div>
                             <div class="goal-details">
@@ -42,7 +44,7 @@
                                 {{else}}
                                     <form action="/completeGoal" method="POST">
                                         <input type="hidden" name="saving_id" value="{{this.Saving_id}}">
-                                        <button type="submit">Mark as Completed</button>
+                                        <button type="submit" >Mark as Completed</button>
                                     </form>
                                 {{/if}}
                             </div>
