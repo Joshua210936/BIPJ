@@ -2,18 +2,19 @@
     background-color:#FFD43B;
     color:black;
     border-radius:10px 0px 0px 10px;
+    padding-top:30px;
 }
 
 .contact-form{
     background-color:white;
     border-radius:0px 10px 10px 0px;
+    padding-top:30px;
 }
 
 .wrapdiv{
     width:80%;
-    height:60vh;
+    height:auto;
     padding-bottom:20px;
-    padding-top:20px;
     margin-left:auto;
     margin-right:auto;
 }
@@ -48,7 +49,7 @@
     color: #333;
 }
 
-.contact-form .submitButton {
+.submitButton {
     padding: 10px;
     background-color: black;
     color: white;
@@ -58,6 +59,7 @@
     font-size: 1.2em;
     margin-top: 20px;
     float:right;
+    margin-bottom:20px;
 }
 
 .contact-form .submitButton:hover {
