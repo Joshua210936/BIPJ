@@ -27,7 +27,7 @@ const addWorkshops = db.define('addWorkshops', {
         type: sequelize.STRING
     },
     Workshop_Description:{
-        type: sequelize.STRING
+        type: sequelize.TEXT
     },
     Workshop_Image:{
         type: sequelize.STRING

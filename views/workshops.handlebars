@@ -22,10 +22,13 @@
         <label for="workshopFilter">Workshop Travel Info:</label>
         <span></span>
         <select id="workshopFilter" onchange="filterWorkshop()" style="width:200px">
-            <option value="" disabled selected>Select a workshop</option>
-            {{#each workshops}}
-                <option value="{{this.Workshop_Name}}">{{this.Workshop_Name}}</option>
-            {{/each}}
+            {{#if workshops.length}}
+                {{#each workshops}}
+                    <option value="{{this.Workshop_Name}}" {{#if @first}}selected{{/if}}>{{this.Workshop_Name}}</option>
+                {{/each}}
+            {{else}}
+                <option value="" disabled>No workshops available</option>
+            {{/if}}
         </select>
         <br>
         <span id="travel-time" class="travel-time-info"></span>

@@ -26,6 +26,7 @@ const Customer = require('./models/customer');
 const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
 const register = require('./models/workshopRegister')
+const contactUs = require('./models/contactUs')
 
 
 // Imported Helpers
@@ -622,7 +623,31 @@ app.post('/completeGoal', async (req, res) => {
     }
 });
 
+app.get('/contactUs', function (req, res) {
+    res.render('contactUs', {
+        layout: 'main',// Convert to plain objects 
+        json: JSON.stringify // Pass JSON.stringify to the template
+    });
+});
 
+app.post('/contactUs', function(req, res){
+    try {
+        let { contactName, contactEmail, messageType, message } = req.body;
+
+        contactUs.create({
+            Contact_Name: contactName,
+            Contact_Email: contactEmail,
+            Contact_Type: messageType,
+            Contact_Message: message
+        }).then((contactUs) => {
+            res.redirect('/contactUs');
+        })
+    } catch (error) {
+        console.error('Error saving contact form data:', error);
+        // Handle the error appropriately, such as rendering an error page or showing a message
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 app.get('/workshops', function (req, res) {
 

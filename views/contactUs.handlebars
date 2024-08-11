@@ -1,0 +1,55 @@
+<head>
+    <link rel="stylesheet" href="/css/contactUs.css">
+</head>
+
+<h1 style="text-align:center;">Contact Us</h1>
+<p style="text-align:center;">Any question or remarks? Just write us a message!</p>
+<div class="row wrapdiv">
+    <div class="col-md-4 info-panel">
+        <h2>Contact Information:</h2>
+    </div>
+    <div class="col-md-8 contact-form">
+        
+        <form id="registrationForm" action="/workshops" method="post">
+            <table class="formtable">
+                <tr>
+                    <td class="label">
+                        <label for="contactName">Full Name:</label>
+                    </td>
+                    <td class="inputbox">
+                        <input type="text" id="contactName" name="contactName" placeholder="E.g John Smith" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        <label for="contactEmail">Email:</label>
+                    </td>
+                    <td class="inputbox">
+                        <input type="email" id="contactEmail" name="contactEmail" placeholder="E.g JohnSmith@gmail.com" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">
+                        <label for="phoneNumber">Phone Number:</label>
+                    </td>
+                    <td class="inputbox">
+                        <input type="tel" pattern="[0-9]{8}" id="phoneNumber" name="phoneNumber" placeholder="E.g: 87992400" required>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <div style="padding-top:40px;">Select Subject:</div>
+            <input type="radio" id="generalInquiry" name="messageType" value="generalInquiry">
+            <label for="generalInquiry">General Inquiry</label>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <input type="radio" id="feedback" name="messageType" value="feedback">
+            <label for="feedback">Feedback</label>
+            <br>
+            <label for="message" style="padding-top:40px;">Message</label>
+            <br>
+            <input style="margin-bottom:20px;" type="text" id="message" name="message" placeholder="Write your message..">
+            <br>
+            <button class="submitButton" type="submit">Send Message</button>
+        </form>
+    </div>
+</div>

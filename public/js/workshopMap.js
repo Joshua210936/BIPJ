@@ -39,8 +39,8 @@ function initMap() {
                 // Center map on user's location
                 map.setCenter(userLocation);
 
-                // Display all workshops initially
-                updateWorkshopsOnMap(workshops);
+                // Display workshops based on the default selected workshop in the dropdown
+                filterWorkshop();
             },
             (error) => {
                 console.error('Error getting user location:', error);
