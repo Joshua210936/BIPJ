@@ -12,17 +12,17 @@
             Where to find us:
         </div>
         <div style="margin-bottom:40px;">
-            +65 6451 5115
+            <span><img src="images/phoneSign.png" width="50" height="50"></span>+65 6451 5115
         </div>
         <div style="margin-bottom:40px;">
-            FinancialFlare420@gmail.com
+            <span><img src="images/emailsign.png" width="50" height="50"></span>FinancialFlare420@gmail.com
         </div>
         <div>
-            180 Ang Mo Kio Ave 8, Singapore 569830
+            <span><img src="images/map-marker.png" width="50" height="50"></span>180 Ang Mo Kio Ave 8, Singapore 569830
         </div>
     </div>
     <div class="col-md-8 contact-form">
-        <form action="/contactUs" method="post">
+        <form action="/contactUs" method="post" id="contactForm">
             <table class="formtable">
                 <tr>
                     <td class="label">
@@ -55,10 +55,10 @@
             </table>
             <br>
             <div style="padding-top:40px;">Select Subject:</div>
-            <input type="radio" id="generalInquiry" name="messageType" value="generalInquiry">
+            <input type="radio" id="generalInquiry" name="messageType" value="General Inquiry">
             <label for="generalInquiry">General Inquiry</label>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <input type="radio" id="feedback" name="messageType" value="feedback">
+            <input type="radio" id="feedback" name="messageType" value="Feedback">
             <label for="feedback">Feedback</label>
             <br>
             <label for="message" style="padding-top:40px;">Message</label>
@@ -69,3 +69,21 @@
         </form>
     </div>
 </div>
+
+<script>
+    // JavaScript to handle form submission and show an alert
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('contactForm');
+        
+        form.addEventListener('submit', function (event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Show an alert
+            alert('Your message has been sent successfully!');
+
+            // Optionally, submit the form after showing the alert
+            form.submit();
+        });
+    });
+</script>
