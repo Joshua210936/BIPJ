@@ -95,22 +95,20 @@
 <body>
     <div class="leaderboard">
         <div class="filters">
-            <button>Points</button>
-            <button>Today</button>
-            <button>This week</button>
-            <button>This month</button>
-            <button>Most Active</button>
-        </div>
+    <a href="/leaderboard?filter=points"><button>All time</button></a>
+    <a href="/leaderboard?filter=today"><button>Today</button></a>
+    <a href="/leaderboard?filter=weekly"><button>This week</button></a>
+    <a href="/leaderboard?filter=monthly"><button>This month</button></a>
+</div>
 
         <div class="top-three">
-            {{#each topThree}}
-            <div class="person">
-                <div>{{this.customerName}}</div>
-                <div>{{this.score}}</div>
-                <!-- Optionally, you can add an image here -->
-            </div>
-            {{/each}}
-        </div>
+    {{#each topThree}}
+    <div class="person">
+        <div>{{this.customerName}}</div>
+        <div>{{this.score}}</div>
+    </div>
+    {{/each}}
+</div>
 
         <div class="other-scores">
             {{#each otherScores}}

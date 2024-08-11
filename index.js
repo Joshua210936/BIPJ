@@ -1445,30 +1445,60 @@ app.post('/adminViewQuiz/delete/:testID', async function (req, res) {
 
 app.get('/leaderboard', async (req, res) => {
     try {
-        // Query to join Customer, Test, and QuizResult tables and get the required data
+        // Get the filter from query parameters, default to 'all-time'
+        const filter = req.query.filter || 'all-time';
+
+        // Initialize date range for the filter
+        let startDate;
+        const endDate = new Date(); // current date
+
+        // Set the date range based on the filter
+        if (filter === 'today') {
+            startDate = new Date();
+            startDate.setHours(0, 0, 0, 0); // Start of the day
+            endDate.setHours(23, 59, 59, 999); // End of the day
+        } else if (filter === 'weekly') {
+            startDate = new Date();
+            startDate.setDate(endDate.getDate() - 7); // Last 7 days
+            startDate.setHours(0, 0, 0, 0); // Start of the first day
+        } else if (filter === 'monthly') {
+            startDate = new Date();
+            startDate.setDate(1); // Start of the current month
+            startDate.setHours(0, 0, 0, 0); // Start of the first day
+        }
+
+        // Fetch all quiz results
         const leaderboardData = await QuizResult.findAll({
-            attributes: ['testID', 'score'],
             include: [
                 {
                     model: Customer,
-                    as: 'Customer',  // Use the alias defined in the association
+                    as: 'Customer',
                     attributes: ['Customer_fName', 'Customer_lName'],
                 },
                 {
                     model: Test,
-                    as: 'Test',  // Use the alias defined in the association
+                    as: 'Test',
                     attributes: ['module'],
                 }
             ],
             order: [['score', 'DESC']] // Order by score in descending order
         });
 
+        // Filter the results based on the date range
+        const filteredData = leaderboardData.filter(result => {
+            const createdAt = new Date(result.createdAt);
+            if (filter === 'today' || filter === 'weekly' || filter === 'monthly') {
+                return createdAt >= startDate && createdAt <= endDate;
+            }
+            return true; // No filter applied (all-time)
+        });
+
         // Format the data for the leaderboard
-        const leaderboard = leaderboardData.map(result => ({
+        const leaderboard = filteredData.map(result => ({
             customerName: `${result.Customer.Customer_fName} ${result.Customer.Customer_lName}`,
             testID: result.testID,
             score: result.score,
-            module: result.Test.module // Add the test module to the leaderboard data
+            module: result.Test.module,
         }));
 
         // Render the leaderboard view with top three and other scores
@@ -1481,6 +1511,8 @@ app.get('/leaderboard', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 
 
