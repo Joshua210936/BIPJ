@@ -1377,7 +1377,7 @@ app.get('/userQuizList', async (req, res) => {
         const testsWithDetails = await fetchTestsAndDetails();
 
         // Render userQuizList template with tests data
-        res.render('userQuizList', {
+        res.render('userQuizList2', {
             layout: 'main',
             tests: testsWithDetails
         });
