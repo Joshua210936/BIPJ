@@ -40,7 +40,7 @@ const QuizResult = db.define('QuizResult', {
 });
 
 // Relations
-QuizResult.belongsTo(Customer, { foreignKey: 'Customer_id' });
+QuizResult.belongsTo(Customer, { foreignKey: 'Customer_id' , as: 'Customer'});
 QuizResult.belongsTo(Test, { foreignKey: 'testID', as: 'Test' });
 
 // Static method to count attempts
