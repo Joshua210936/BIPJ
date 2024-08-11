@@ -1,8 +1,8 @@
 // models/quizResult.js
 const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
-const Customer = require('./customer'); 
-const {Test} = require('../models/test');
+const Customer = require('./customer');
+const { Test } = require('./test');
 
 const QuizResult = db.define('QuizResult', {
     resultID: {
@@ -39,7 +39,28 @@ const QuizResult = db.define('QuizResult', {
     tableName: 'quizResults'
 });
 
-QuizResult.belongsTo(Customer, { foreignKey: 'Customer_id' , as: 'Customer'});
+// Relations
+QuizResult.belongsTo(Customer, { foreignKey: 'Customer_id' });
 QuizResult.belongsTo(Test, { foreignKey: 'testID', as: 'Test' });
+
+// Static method to count attempts
+QuizResult.countAttempts = async function(customerId, testId) {
+    return await this.count({
+        where: {
+            Customer_id: customerId,
+            testID: testId
+        }
+    });
+};
+
+// Static method to get the highest score
+QuizResult.highestScore = async function(customerId, testId) {
+    return await this.max('score', {
+        where: {
+            Customer_id: customerId,
+            testID: testId
+        }
+    });
+};
 
 module.exports = QuizResult;
