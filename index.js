@@ -27,7 +27,7 @@ const SavingsEntry = require('./models/SavingsEntry');
 const SubscriptionPlans = require('./models/subscription')
 const register = require('./models/workshopRegister')
 const contactUs = require('./models/contactUs')
-
+const association = require('./models/association');
 
 // Imported Helpers
 const handlebarFunctions = require('./helpers/handlebarFunctions.js');
@@ -1146,6 +1146,7 @@ async function fetchTestsAndDetails() {
             const totalPoints = test.questions.reduce((acc, question) => acc + question.points, 0);
 
             return {
+                testName: test.testName,
                 testID: test.testID,
                 module: test.module,
                 numberOfQuestions,
@@ -1215,7 +1216,7 @@ app.get('/userQuiz/:testID', async (req, res) => {
 app.post('/userQuiz/:testID', async (req, res) => {
     try {
         const testID = req.params.testID;
-        const customerID = req.body.customerID; // Assuming you pass customer ID from the form
+        const customerID = req.session.customerID; // Assuming you pass customer ID from the form
         const userAnswers = req.body.questions;
 
         let totalScore = 0;
@@ -1234,12 +1235,13 @@ app.post('/userQuiz/:testID', async (req, res) => {
         // Save the result to the database
         await QuizResult.create({
             testID,
-            customerID,
+            Customer_id: customerID,
             score: totalScore
         });
 
         // Render the result page with the score
         res.render('quizResult', { totalScore });
+        console.log('Quiz completed by customer:', customerID);
 
     } catch (error) {
         console.error('Error processing quiz submission:', error);
@@ -1289,13 +1291,14 @@ app.get('/adminQuiz', function (req, res) {
 app.post('/adminQuiz', function(req, res) {
     let {
         testID,
+        testName,
         quizModule,
         questions // Assuming the form data has been updated to send questions as an array
     } = req.body;
 
     try {
         // Create a new test
-        Test.create({ testID: testID, module: quizModule })
+        Test.create({ testID: testID, module: quizModule, testName: testName })
             .then(newTest => {
                 // Iterate over each question and create them along with their options
                 const questionPromises = questions.map(question => {

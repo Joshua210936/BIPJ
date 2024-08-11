@@ -7,6 +7,9 @@
         <form action="/adminQuiz" method="POST" id="quizForm">
             <label for="testID">Test ID</label>
             <input type="text" id="testID" name="testID" placeholder="Enter Test ID"><br>
+
+            <label for="testName">Test Name</label>
+            <input type="text" id="testName" name="testName" placeholder="Enter Test Name" required><br>
             
             <label for="quizModule">Module</label>
             <select id="quizModule" name="quizModule">
@@ -88,6 +91,19 @@
             `;
             document.getElementById('questions').appendChild(newQuestion);
             questionCount++;
+        });
+
+        document.getElementById('quizForm').addEventListener('submit', function(event) {
+            const questions = document.querySelectorAll('.question');
+            for (let i = 0; i < questions.length; i++) {
+                const correctOptionSelected = questions[i].querySelector('input[type="radio"]:checked');
+                if (!correctOptionSelected) {
+                    alert(`Please select the correct option for Question ${i + 1}.`);
+                    event.preventDefault();
+                    return false;
+                }
+            }
+            return true;
         });
     </script>
 </body>
