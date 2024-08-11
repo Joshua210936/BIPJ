@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
@@ -17,6 +17,12 @@ h1 {
     text-align: center;
     font-size: 24px;
     margin-bottom: 20px;
+}
+.intro-text {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #777;
 }
 .goal-container {
     display: flex;

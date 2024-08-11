@@ -9,16 +9,16 @@
 <body>
     <div class="container">
         <h1>Savings Goals</h1>
+        <p class="intro-text">"A penny saved is a penny earned." Track your progress and stay motivated as you reach each financial milestone.</p>
 
         <div class="filter-buttons">
-            <button onclick="filterGoals('all')">All Goals</button>
-            <button onclick="filterGoals('ongoing')">Ongoing Goals</button>
-            <button onclick="filterGoals('completed')">Completed Goals</button>
-            <a href="/addgoal"><button class="add-goal">Add new goal</button></a>
+            <button onclick="filterGoals('all')" class="filter-btn">All Goals</button>
+            <button onclick="filterGoals('ongoing')" class="filter-btn">Ongoing Goals</button>
+            <button onclick="filterGoals('completed')" class="filter-btn">Completed Goals</button>
+            <a href="/addgoal"><button class="add-goal-btn">+ Add New Goal</button></a>
         </div>
          
-
-          <div class="goal-container">
+        <div class="goal-container">
             <button class="arrow-button" onclick="scrollSliderLeft()"><i class="fas fa-chevron-left"></i></button>
             <div class="goal-slider">
                 {{#if savings.length}}
@@ -26,25 +26,24 @@
                         <div class="goal-item" data-status="{{#if this.isCompleted}}completed{{else}}ongoing{{/if}}">
                             <div class="goal-header">
                                 <h2>{{this.Saving_goalName}}</h2>
-                                <div>
-                                    <button onclick="showPopup('{{this.Saving_goalName}}', '{{this.Saving_id}}')">Add savings</button>
-                                    <button onclick="showEditPopup('{{this.Saving_id}}', '{{this.Saving_goalName}}', '{{this.Saving_amount}}', '{{this.Saving_startDate}}', '{{this.Saving_endDate}}', '{{this.Saving_frequency}}', '{{this.Saving_calculate}}', '{{this.Saving_picture}}')">Edit goal</button>
-                                    <button onclick="deleteGoal('{{this.Saving_id}}')">Delete goal</button>
-                                   
+                                <div class="goal-actions">
+                                    <button class="goal-action-btn" onclick="showPopup('{{this.Saving_goalName}}', '{{this.Saving_id}}')">Add Savings</button>
+                                    <button class="goal-action-btn" onclick="showEditPopup('{{this.Saving_id}}', '{{this.Saving_goalName}}', '{{this.Saving_amount}}', '{{this.Saving_startDate}}', '{{this.Saving_endDate}}', '{{this.Saving_frequency}}', '{{this.Saving_calculate}}', '{{this.Saving_picture}}')">Edit Goal</button>
+                                    <button class="goal-action-btn" onclick="deleteGoal('{{this.Saving_id}}')">Delete Goal</button>
                                 </div>
                             </div>
                             <div class="goal-details">
-                                <img src="images/{{this.Saving_picture}}" alt="images/{{this.Saving_picture}}" class="savings-image">
-                                <p>Goal amount: ${{this.Saving_amount}}</p>
-                                <p>{{this.Saving_frequency}} target: ${{this.Saving_calculate}}</p>
-                                <p>Start date: {{this.Saving_startDate}}</p>
-                                <p>End date: {{this.Saving_endDate}}</p>
+                                <img src="images/{{this.Saving_picture}}" alt="{{this.Saving_goalName}}" class="savings-image">
+                                <p>Target Amount: ${{this.Saving_amount}}</p>
+                                <p>{{this.Saving_frequency}} Target: ${{this.Saving_calculate}}</p>
+                                <p>Start Date: {{this.Saving_startDate}}</p>
+                                <p>End Date: {{this.Saving_endDate}}</p>
                                 {{#if this.isCompleted}}
-                                    <p>Status: Completed</p>
+                                    <p class="status-completed">Status: Completed</p>
                                 {{else}}
                                     <form action="/completeGoal" method="POST">
                                         <input type="hidden" name="saving_id" value="{{this.Saving_id}}">
-                                        <button type="submit" >Mark as Completed</button>
+                                        <button type="submit" class="complete-btn">Mark as Completed</button>
                                     </form>
                                 {{/if}}
                             </div>
@@ -54,19 +53,18 @@
                         </div>
                     {{/each}}
                 {{else}}
-                    <p>No Current Savings Goals</p>
+                    <p class="no-goals-message">You currently have no savings goals. Start a new one today!</p>
                 {{/if}}
             </div>
             <button class="arrow-button" onclick="scrollSliderRight()"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
-
     <div class="overlay" onclick="hidePopup()"></div>
     <div class="popup">
         <div class="popup-header">
             <h2 id="popup-title">Add Savings</h2>
-            <button onclick="hidePopup()">Close</button>
+            <button class="close-popup-btn" onclick="hidePopup()">Close</button>
         </div>
         <form id="savings-form" method="post">
             <input type="hidden" id="saving-id" name="saving_id">
@@ -85,7 +83,7 @@
     <div class="popup-edit">
         <div class="popup-header">
             <h2 id="edit-popup-title">Edit Goal</h2>
-            <button onclick="hideEditPopup()">Close</button>
+            <button class="close-popup-btn" onclick="hideEditPopup()">Close</button>
         </div>
         <form id="edit-form" method="post" action="/editGoal" onsubmit="return validateEditForm()">
             <input type="hidden" id="edit-saving-id" name="saving_id">
@@ -125,6 +123,8 @@
         </form>
     </div>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
