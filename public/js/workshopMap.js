@@ -39,8 +39,9 @@ function initMap() {
                 // Center map on user's location
                 map.setCenter(userLocation);
 
-                // Display workshops based on the default selected workshop in the dropdown
-                filterWorkshop();
+                // Display all workshops and path to the first workshop by default
+                updateWorkshopsOnMap(workshops);
+                pathToFirstWorkshop();
             },
             (error) => {
                 console.error('Error getting user location:', error);
@@ -53,10 +54,6 @@ function initMap() {
 
 // Update the workshops displayed on the map
 function updateWorkshopsOnMap(workshopsToDisplay) {
-    // Clear previous directions
-    directionsRenderer.set('directions', null);
-    document.getElementById('travel-time').innerHTML = ''; // Clear previous travel times
-
     workshopsToDisplay.forEach(workshop => {
         const address = workshop.Workshop_Address;
         const encodedAddress = encodeURIComponent(address);
@@ -87,8 +84,32 @@ function updateWorkshopsOnMap(workshopsToDisplay) {
                     marker.addListener("click", () => {
                         infowindow.open(map, marker);
                     });
+                } else {
+                    console.error('Geocoding error:', data.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    });
+}
 
-                    // Request directions from user location to workshop
+// Path to the first workshop by default
+function pathToFirstWorkshop() {
+    if (workshops.length > 0) {
+        const firstWorkshop = workshops[0];
+        const address = firstWorkshop.Workshop_Address;
+        const encodedAddress = encodeURIComponent(address);
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${API_KEY}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'OK') {
+                    const location = data.results[0].geometry.location;
+                    const latitude = location.lat;
+                    const longitude = location.lng;
+
                     const request = {
                         origin: userLocation,
                         destination: { lat: latitude, lng: longitude },
@@ -102,7 +123,7 @@ function updateWorkshopsOnMap(workshopsToDisplay) {
                             // Get and display travel time
                             const travelTime = result.routes[0].legs[0].duration.text;
                             const travelTimeElement = document.createElement('p');
-                            travelTimeElement.textContent = `Travel time to ${workshop.Workshop_Name}: ${travelTime} by car.`;
+                            travelTimeElement.textContent = `Travel time to ${firstWorkshop.Workshop_Name}: ${travelTime} by car.`;
                             document.getElementById('travel-time').appendChild(travelTimeElement);
                         } else {
                             console.error('Directions request failed due to ' + status);
@@ -115,17 +136,62 @@ function updateWorkshopsOnMap(workshopsToDisplay) {
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-    });
+    }
 }
 
 // Filter workshops based on selected workshop name
 function filterWorkshop() {
     const selectedWorkshopName = document.getElementById('workshopFilter').value;
-    if (selectedWorkshopName) {
-        const filteredWorkshops = workshops.filter(workshop => workshop.Workshop_Name === selectedWorkshopName);
-        updateWorkshopsOnMap(filteredWorkshops);
+
+    // Clear the previous directions and travel time
+    directionsRenderer.set('directions', null);
+    document.getElementById('travel-time').innerHTML = ''; // Clear previous travel times
+
+    // Find the selected workshop
+    const selectedWorkshop = workshops.find(workshop => workshop.Workshop_Name === selectedWorkshopName);
+
+    if (selectedWorkshop) {
+        const address = selectedWorkshop.Workshop_Address;
+        const encodedAddress = encodeURIComponent(address);
+        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${API_KEY}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'OK') {
+                    const location = data.results[0].geometry.location;
+                    const latitude = location.lat;
+                    const longitude = location.lng;
+
+                    const request = {
+                        origin: userLocation,
+                        destination: { lat: latitude, lng: longitude },
+                        travelMode: 'DRIVING'
+                    };
+
+                    directionsService.route(request, (result, status) => {
+                        if (status === 'OK') {
+                            directionsRenderer.setDirections(result);
+
+                            // Get and display travel time
+                            const travelTime = result.routes[0].legs[0].duration.text;
+                            const travelTimeElement = document.createElement('p');
+                            travelTimeElement.textContent = `Travel time to ${selectedWorkshop.Workshop_Name}: ${travelTime} by car.`;
+                            document.getElementById('travel-time').appendChild(travelTimeElement);
+                        } else {
+                            console.error('Directions request failed due to ' + status);
+                        }
+                    });
+                } else {
+                    console.error('Geocoding error:', data.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
     } else {
-        updateWorkshopsOnMap(workshops);
+        // If no workshop is selected or "All" is selected, path to the first workshop by default
+        pathToFirstWorkshop();
     }
 }
 
