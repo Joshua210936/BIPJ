@@ -152,6 +152,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Function to open the modal with specific workshop details
     window.openWorkshopModal = function(workshop) {
         const modalContent = document.getElementById("modalWorkshopContent");
+
+        const customerName = customer && customer.Customer_fName && customer.Customer_lName
+        ? `${customer.Customer_fName} ${customer.Customer_lName}`
+        : '';
+        const customerEmail = customer && customer.Customer_Email ? customer.Customer_Email : '';
+
         modalContent.innerHTML = `
             <h2 style="text-align:center;padding-bottom:30px;">${workshop.Workshop_Name}</h2>
             <div class="row">
@@ -160,10 +166,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         <h2>Registration</h2>
                         <form id="registrationForm" action="/workshops" method="post">
                             <label for="registerName">Full Name</label>
-                            <input type="text" id="registerName" name="registerName" required>
+                            <input type="text" id="registerName" name="registerName" value="${customerName}" placeholder="John Tan" required>
                             <br>
                             <label for="registerEmail">Email</label>
-                            <input type="email" id="registerEmail" name="registerEmail" required>
+                            <input type="email" id="registerEmail" name="registerEmail" value="${customerEmail}" placeholder="john@email.com" required>
                             <br>
                             <label for="registerDate">Date</label>
                             <input type="date" min="${workshop.Workshop_StartDate}" max="${workshop.Workshop_EndDate}" id="registerDate" name="registerDate" required>

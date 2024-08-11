@@ -8,9 +8,20 @@
 <div class="row wrapdiv">
     <div class="col-md-4 info-panel">
         <h2>Contact Information:</h2>
+        <div style="margin-bottom:80px;">
+            Where to find us:
+        </div>
+        <div style="margin-bottom:40px;">
+            +65 6451 5115
+        </div>
+        <div style="margin-bottom:40px;">
+            FinancialFlare420@gmail.com
+        </div>
+        <div>
+            180 Ang Mo Kio Ave 8, Singapore 569830
+        </div>
     </div>
     <div class="col-md-8 contact-form">
-        
         <form action="/contactUs" method="post">
             <table class="formtable">
                 <tr>
@@ -18,7 +29,9 @@
                         <label for="contactName">Full Name:</label>
                     </td>
                     <td class="inputbox">
-                        <input type="text" id="contactName" name="contactName" placeholder="E.g John Smith" required>
+                        <input type="text" id="contactName" name="contactName" 
+                            placeholder="E.g John Smith" 
+                            value="{{#if customer}}{{customer.Customer_fName}} {{customer.Customer_lName}}{{/if}}">
                     </td>
                 </tr>
                 <tr>
@@ -26,7 +39,9 @@
                         <label for="contactEmail">Email:</label>
                     </td>
                     <td class="inputbox">
-                        <input type="email" id="contactEmail" name="contactEmail" placeholder="E.g JohnSmith@gmail.com" required>
+                        <input type="email" id="contactEmail" name="contactEmail" 
+                            placeholder="E.g JohnSmith@gmail.com" 
+                            value="{{#if customer}}{{customer.Customer_Email}}{{/if}}">
                     </td>
                 </tr>
                 <tr>
@@ -34,7 +49,7 @@
                         <label for="phoneNumber">Phone Number:</label>
                     </td>
                     <td class="inputbox">
-                        <input type="tel" pattern="[0-9]{8}" id="phoneNumber" name="phoneNumber" placeholder="E.g: 87992400" required>
+                        <input type="tel" pattern="[0-9]{8}" id="phoneNumber" name="phoneNumber" placeholder="E.g: 87992400" value="{{#if customer}}{{customer.Customer_Phone}}{{/if}}" required>
                     </td>
                 </tr>
             </table>
@@ -48,7 +63,7 @@
             <br>
             <label for="message" style="padding-top:40px;">Message</label>
             <br>
-            <input style="margin-bottom:20px;" type="text" id="message" name="message" placeholder="Write your message..">
+            <input style="margin-bottom:20px;width:100%;" type="text" id="message" name="message" placeholder="Write your message..">
             <br>
             <button class="submitButton" type="submit">Send Message</button>
         </form>
