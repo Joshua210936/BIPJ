@@ -658,10 +658,30 @@ app.post('/completeGoal', async function (req, res) {
 
 
 app.get('/contactUs', function (req, res) {
-    res.render('contactUs', {
-        layout: 'main',// Convert to plain objects 
-        json: JSON.stringify // Pass JSON.stringify to the template
-    });
+    const customerID = req.session.customerID;
+
+    // Fetch customer details if customerID exists
+    if (customerID) {
+        Customer.findOne({
+            where: { Customer_ID: customerID }
+        }).then(customer => {
+            res.render('contactUs', {
+                layout: 'main',
+                customer: customer ? customer.get({ plain: true }) : null, // Convert to plain object
+                json: JSON.stringify // Pass JSON.stringify to the template
+            });
+        }).catch(err => {
+            console.error('Error fetching customer data:', err);
+            res.status(500).send('Internal Server Error');
+        });
+    } else {
+        // Render without customer details if no customerID
+        res.render('contactUs', {
+            layout: 'main',
+            customer: null,
+            json: JSON.stringify // Pass JSON.stringify to the template
+        });
+    }
 });
 
 app.post('/contactUs', function(req, res){
@@ -684,22 +704,36 @@ app.post('/contactUs', function(req, res){
 });
 
 app.get('/workshops', function (req, res) {
+    const customerID = req.session.customerID; 
 
-    addWorkshops.findAll({
-        where: { Workshop_Status: true }
-    }).then(workshops => {
+    let customerData = null; // Default to null if no customer data is found
+
+    // Fetch customer details if customerID exists
+    const customerPromise = customerID 
+        ? Customer.findOne({ where: { Customer_ID: customerID } })
+        : Promise.resolve(null);
+
+    customerPromise.then(customer => {
+        if (customer) {
+            customerData = customer.get({ plain: true }); // Store customer data if found
+        }
+
+        return addWorkshops.findAll({
+            where: { Workshop_Status: true }
+        }).then(workshops => {
             res.render('workshops', {
                 layout: 'main',
+                customer: customerData, // Pass customer data or null
                 workshops: workshops.map(workshop => workshop.get({ plain: true })), // Convert to plain objects 
                 json: JSON.stringify // Pass JSON.stringify to the template
             });
-        })
-        .catch(err => {
-            console.error('Error fetching workshops:', err);
-            if (!res.headersSent) {
-                res.status(500).send('Internal Server Error');
-            }
         });
+    }).catch(err => {
+        console.error('Error fetching data:', err);
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
+    });
 });
 
 app.post('/workshops', function (req, res) {
