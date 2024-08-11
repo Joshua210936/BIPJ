@@ -32,3 +32,9 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.messageBox{
+    border:solid 1px black;
+    height:40vh;
+    overflow-y:auto;
+}

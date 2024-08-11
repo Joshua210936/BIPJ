@@ -55,9 +55,11 @@
                             <!-- Modal -->
                             <div id="messageModal{{this.Contact_ID}}" class="modal">
                                 <div class="modal-content">
-                                    <span class="close" onclick="closeModal({{this.Contact_ID}})">&times;</span>
-                                    <h2>Message from {{this.Contact_Name}}</h2>
-                                    <p>{{this.Contact_Message}}</p>
+                                    <span class="close" onclick="closeModal({{this.Contact_ID}})" style="margin-left:auto;">&times;</span>
+                                    <h2 style="margin-bottom:80px;">{{this.Contact_Type}} from {{this.Contact_Name}}</h2>
+                                    <div class="messageBox">
+                                        <p>{{this.Contact_Message}}</p>
+                                    </div>
                                 </div>
                             </div>
                         </td>
