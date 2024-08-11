@@ -429,6 +429,47 @@ app.get('/logout', function (req, res) {
 
 // ---------------------- End of Customer Account Routes --------------------------
 
+// Admin User Management
+app.get('/adminUsersView', function(req, res){
+    Customer.findAll()
+    .then((customers)=>{
+        res.render('adminUsersView', {
+            layout:'adminMain', 
+            customers:customers.map(customer=>{
+                customer = customer.get({plain:true});
+                return customer;    
+            })
+        });
+    })
+    .catch(err => {
+        console.error('Error fetching customers:', err);
+        res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/customers', async (req, res) => {
+    try {
+        const customers = await Customer.findAll();
+        res.json(customers);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching customers', error });
+    }
+});
+
+app.get('/getCustomer/:id', async (req, res) => {
+    const customerId = req.params.id;
+    try {
+        const customer = await Customer.findByPk(customerId);
+        if (customer) {
+            res.json(customer);
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching Customer details', error });
+    }
+});
+
 app.get('/savingplanner', function (req, res) {
     res.render('savingplanner', { layout: 'main' })
 });
