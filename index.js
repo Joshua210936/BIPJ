@@ -655,8 +655,6 @@ app.post('/completeGoal', async function (req, res) {
 });
 
 
-
-
 app.get('/contactUs', function (req, res) {
     const customerID = req.session.customerID;
 
@@ -1180,6 +1178,39 @@ app.get('/adminContactUs', async function (req, res) {
         });
     } catch (error) {
         console.error('Error fetching contacts:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/replyContactUs/:id', async function (req, res) {
+    const contactID = req.params.id;
+    const replyMessage = req.body.replyMessage;
+
+    try {
+        // Fetch the contact details using the contact ID
+        const contact = await contactUs.findOne({
+            where: { Contact_ID: contactID },
+            raw: true
+        });
+
+        if (contact) {
+            // Prepare the email details
+            const email = contact.Contact_Email;
+            const subject = 'FinancialFlare Feedback Reply';
+            const text = `Dear ${contact.Contact_Name},\n\n` +
+                         `${replyMessage}\n\n` +
+                         `Best regards,\nFinancial Flare`;
+
+            // Send the email (Assuming sendEmail is a function you've implemented)
+            await sendEmail([email], subject, text);
+
+            // Redirect back to the admin contact page
+            res.redirect('/adminContactUs');
+        } else {
+            res.status(404).send('Contact not found');
+        }
+    } catch (error) {
+        console.error('Error sending reply:', error);
         res.status(500).send('Internal Server Error');
     }
 });
