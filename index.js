@@ -435,15 +435,23 @@ app.get('/savingplanner', function (req, res) {
 
 
 app.get('/goalsPage', function (req, res) {
-    Saving.findAll()
+    const filter = req.query.filter || 'all';
+
+    // Define the filter conditions
+    let filterCondition = {};
+    if (filter === 'ongoing') {
+        filterCondition.isCompleted = false;
+    } else if (filter === 'completed') {
+        filterCondition.isCompleted = true;
+    }
+
+    Saving.findAll({
+        where: filterCondition
+    })
         .then(savings => {
             res.render('goalsPage', {
                 layout: 'main',
-                savings: savings.map(saving => {
-                    saving = saving.get({ plain: true });
-
-                    return saving;
-                })
+                savings: savings.map(saving => saving.get({ plain: true }))
             });
         })
         .catch(err => {
@@ -451,6 +459,7 @@ app.get('/goalsPage', function (req, res) {
             res.status(500).send('Internal Server Error');
         });
 });
+
 
 app.get('/addgoal', function (req, res) {
     res.render('addgoal', { layout: 'main' })
@@ -593,22 +602,7 @@ app.post('/goalsPage/delete', async function (req, res) {
     }
 });
 
-app.get('/completedGoals', async (req, res) => {
-    try {
-        const completedGoals = await Saving.findAll({
-            where: { isCompleted: true }
-        });
-        res.render('completedGoals', {
-            layout: 'main',
-            completedGoals: completedGoals.map(goal => goal.get({ plain: true }))
-        });
-    } catch (err) {
-        console.error('Error fetching completed goals:', err);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-app.post('/completeGoal', async (req, res) => {
+app.post('/completeGoal', async function (req, res) {
     const { saving_id } = req.body;
 
     try {
@@ -618,10 +612,12 @@ app.post('/completeGoal', async (req, res) => {
         );
         res.redirect('/goalsPage');
     } catch (err) {
-        console.error('Error updating goal status:', err);
-        res.status(400).send({ message: 'Error updating goal status', error: err });
+        console.error('Error marking goal as completed:', err);
+        res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 app.get('/contactUs', function (req, res) {
     res.render('contactUs', {
