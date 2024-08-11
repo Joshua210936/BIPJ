@@ -3,12 +3,21 @@ const sequelize = require('sequelize');
 const db = require('../config/DBConfig');
 
 const SavingsEntry = require('./SavingsEntry');
+const Customer = require('./customer'); 
 
 const Savings = db.define('savings', {
     Saving_id: {
         type: sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
+    },
+    Customer_id: {
+        type: sequelize.INTEGER,
+        references: {
+            model: Customer,
+            key: 'Customer_id'
+        },
+        allowNull: true
     },
     Saving_goalName: {
         type : sequelize.STRING
@@ -37,6 +46,7 @@ const Savings = db.define('savings', {
 });
 
 Savings.hasMany(SavingsEntry, { foreignKey: 'Saving_id' });
+Savings.belongsTo(Customer, { foreignKey: 'Customer_id', as: 'Customer' });
 
 
 module.exports = Savings;

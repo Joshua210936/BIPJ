@@ -9,19 +9,28 @@
 <body>
     <div class="container">
         <h1>Savings Goals</h1>
-        <div class="goal-container">
+
+        <div class="filter-buttons">
+            <button onclick="filterGoals('all')">All Goals</button>
+            <button onclick="filterGoals('ongoing')">Ongoing Goals</button>
+            <button onclick="filterGoals('completed')">Completed Goals</button>
+            <a href="/addgoal"><button class="add-goal">Add new goal</button></a>
+        </div>
+         
+
+          <div class="goal-container">
             <button class="arrow-button" onclick="scrollSliderLeft()"><i class="fas fa-chevron-left"></i></button>
             <div class="goal-slider">
                 {{#if savings.length}}
                     {{#each savings}}
-                        <div class="goal-item">
+                        <div class="goal-item" data-status="{{#if this.isCompleted}}completed{{else}}ongoing{{/if}}">
                             <div class="goal-header">
                                 <h2>{{this.Saving_goalName}}</h2>
                                 <div>
                                     <button onclick="showPopup('{{this.Saving_goalName}}', '{{this.Saving_id}}')">Add savings</button>
                                     <button onclick="showEditPopup('{{this.Saving_id}}', '{{this.Saving_goalName}}', '{{this.Saving_amount}}', '{{this.Saving_startDate}}', '{{this.Saving_endDate}}', '{{this.Saving_frequency}}', '{{this.Saving_calculate}}', '{{this.Saving_picture}}')">Edit goal</button>
                                     <button onclick="deleteGoal('{{this.Saving_id}}')">Delete goal</button>
-                                    <a href="/addgoal"><button >Add new goal</button></a>
+                                   
                                 </div>
                             </div>
                             <div class="goal-details">
@@ -30,14 +39,14 @@
                                 <p>{{this.Saving_frequency}} target: ${{this.Saving_calculate}}</p>
                                 <p>Start date: {{this.Saving_startDate}}</p>
                                 <p>End date: {{this.Saving_endDate}}</p>
-                                   {{#if isCompleted}}
-            <p>Status: Completed</p>
-        {{else}}
-            <form action="/completeGoal" method="POST">
-                <input type="hidden" name="saving_id" value="{{Saving_id}}">
-                <button type="submit">Mark as Completed</button>
-            </form>
-        {{/if}}
+                                {{#if this.isCompleted}}
+                                    <p>Status: Completed</p>
+                                {{else}}
+                                    <form action="/completeGoal" method="POST">
+                                        <input type="hidden" name="saving_id" value="{{this.Saving_id}}">
+                                        <button type="submit" >Mark as Completed</button>
+                                    </form>
+                                {{/if}}
                             </div>
                             <div class="goal-graph">
                                 <canvas id="graph-{{this.Saving_id}}"></canvas>
@@ -51,6 +60,7 @@
             <button class="arrow-button" onclick="scrollSliderRight()"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
+
 
     <div class="overlay" onclick="hidePopup()"></div>
     <div class="popup">
@@ -286,5 +296,20 @@
                 });
             }
         }
+
+     function filterGoals(filter) {
+        const goalItems = document.querySelectorAll('.goal-item');
+
+        goalItems.forEach(item => {
+            if (filter === 'all') {
+                item.style.display = 'block';
+            } else if (filter === item.getAttribute('data-status')) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
 
 </script>

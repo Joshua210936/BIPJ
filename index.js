@@ -435,15 +435,30 @@ app.get('/savingplanner', function (req, res) {
 
 
 app.get('/goalsPage', function (req, res) {
-    Saving.findAll()
+    const filter = req.query.filter || 'all';
+
+    // Check if the user is logged in
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
+
+    // Define the filter conditions
+    let filterCondition = { Customer_id: customerID };
+    if (filter === 'ongoing') {
+        filterCondition.isCompleted = false;
+    } else if (filter === 'completed') {
+        filterCondition.isCompleted = true;
+    }
+
+    Saving.findAll({
+        where: filterCondition
+    })
         .then(savings => {
             res.render('goalsPage', {
                 layout: 'main',
-                savings: savings.map(saving => {
-                    saving = saving.get({ plain: true });
-
-                    return saving;
-                })
+                savings: savings.map(saving => saving.get({ plain: true }))
             });
         })
         .catch(err => {
@@ -452,11 +467,18 @@ app.get('/goalsPage', function (req, res) {
         });
 });
 
+
+
 app.get('/addgoal', function (req, res) {
     res.render('addgoal', { layout: 'main' })
 });
 
 app.post('/addgoal', function (req, res) {
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
     let { goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
 
     Saving.create({
@@ -467,6 +489,7 @@ app.post('/addgoal', function (req, res) {
         Saving_frequency: savings_frequency,
         Saving_calculate: calculated_savings,
         Saving_picture: add_picture,
+        Customer_id: customerID // Associate with the logged-in customer
     })
         .then(() => {
             res.redirect('/goalsPage');
@@ -542,6 +565,11 @@ app.post('/goalsPage', async function (req, res) {
 
 
 app.post('/editGoal', function (req, res) {
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
     let { saving_id, goal_name, target_amount, start_date, end_date, savings_frequency, calculated_savings, add_picture } = req.body;
 
     Saving.update(
@@ -555,7 +583,7 @@ app.post('/editGoal', function (req, res) {
             Saving_picture: add_picture
         },
         {
-            where: { Saving_id: saving_id }
+            where: { Saving_id: saving_id, Customer_id: customerID } // Ensure only the customer can edit their own goals
         }
     )
         .then(() => {
@@ -568,21 +596,33 @@ app.post('/editGoal', function (req, res) {
 });
 
 
+
 app.post('/goalsPage/delete', async function (req, res) {
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
     const savingId = req.body.saving_id;
 
     try {
-
+        // Ensure only the customer's entries are deleted
         await SavingsEntry.destroy({
             where: {
-                Saving_id: savingId
-            }
+                Saving_id: savingId,
+                '$Saving.Customer_id$': customerID
+            },
+            include: [{
+                model: Saving,
+                required: true
+            }]
         });
 
-
+        // Ensure only the customer's goal is deleted
         await Saving.destroy({
             where: {
-                Saving_id: savingId
+                Saving_id: savingId,
+                Customer_id: customerID
             }
         });
 
@@ -593,35 +633,29 @@ app.post('/goalsPage/delete', async function (req, res) {
     }
 });
 
-app.get('/completedGoals', async (req, res) => {
-    try {
-        const completedGoals = await Saving.findAll({
-            where: { isCompleted: true }
-        });
-        res.render('completedGoals', {
-            layout: 'main',
-            completedGoals: completedGoals.map(goal => goal.get({ plain: true }))
-        });
-    } catch (err) {
-        console.error('Error fetching completed goals:', err);
-        res.status(500).send('Internal Server Error');
-    }
-});
 
-app.post('/completeGoal', async (req, res) => {
+app.post('/completeGoal', async function (req, res) {
+    if (!req.session.customerID) {
+        return res.redirect('/login'); // Redirect to login if not logged in
+    }
+
+    const customerID = req.session.customerID;
     const { saving_id } = req.body;
 
     try {
         await Saving.update(
             { isCompleted: true },
-            { where: { Saving_id: saving_id } }
+            { where: { Saving_id: saving_id, Customer_id: customerID } } // Ensure only the customer can complete their own goals
         );
         res.redirect('/goalsPage');
     } catch (err) {
-        console.error('Error updating goal status:', err);
-        res.status(400).send({ message: 'Error updating goal status', error: err });
+        console.error('Error marking goal as completed:', err);
+        res.status(500).send('Internal Server Error');
     }
 });
+
+
+
 
 app.get('/contactUs', function (req, res) {
     res.render('contactUs', {
@@ -1094,6 +1128,42 @@ app.post('/adminWorkshops/toggleStatus/:id', async (req, res) => {
         res.redirect('/adminWorkshops');
     } catch (error) {
         console.error('Error toggling workshop status:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/adminContactUs', async function (req, res) {
+    try {
+        // Fetch all contact messages from the database
+        const contacts = await contactUs.findAll({
+            raw: true // Convert the data to plain objects
+        });
+
+        // Render the template and pass the contacts data
+        res.render('adminContactUs', {
+            layout: 'adminMain',
+            contacts: contacts, // Pass the data to the template
+        });
+    } catch (error) {
+        console.error('Error fetching contacts:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+//remove feedback
+app.post('/removeContactUs/:Contact_ID', async function (req, res) {
+    try {
+        const contactId = req.params.Contact_ID;
+
+        // Delete the contact entry from the database
+        await contactUs.destroy({
+            where: { Contact_ID: contactId }
+        });
+
+        // Redirect back to the adminContactUs page after deletion
+        res.redirect('/adminContactUs');
+    } catch (error) {
+        console.error('Error removing contact:', error);
         res.status(500).send('Internal Server Error');
     }
 });
