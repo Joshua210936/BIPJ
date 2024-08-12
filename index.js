@@ -1374,6 +1374,7 @@ app.get('/userQuiz/:testID', async (req, res) => {
 //     }
 // });
 
+// This Works, So do not Delete yet
 app.post('/userQuiz/:testID', async (req, res) => {
     try {
         const testID = req.params.testID;
@@ -1420,18 +1421,46 @@ app.post('/userQuiz/:testID', async (req, res) => {
     }
 });
 
-// app.get('/userQuizList', async (req, res) => {
+// This is for the Modal one, need to check in the morning
+// app.post('/userQuiz/:testID', async (req, res) => {
 //     try {
-//         // Fetch tests with details
-//         const testsWithDetails = await fetchTestsAndDetails();
+//         const testID = req.params.testID;
+//         const customerID = req.session.customerID;
+//         const userAnswers = req.body.questions;
 
-//         // Render userQuizList template with tests data
-//         res.render('userQuizList2', {
-//             layout: 'main',
-//             tests: testsWithDetails
+//         if (!Array.isArray(userAnswers)) {
+//             console.log('User Answers is not an array:', userAnswers);
+//             return res.status(400).send('Invalid user answers.');
+//         }
+
+//         let totalScore = 0;
+//         const questions = await Question.findAll({ where: { testID } });
+
+//         if (!Array.isArray(questions)) {
+//             console.log('Questions is not an array:', questions);
+//             return res.status(500).send('Failed to retrieve questions.');
+//         }
+
+//         const totalPoints = questions.reduce((sum, question) => sum + question.points, 0);
+
+//         questions.forEach(question => {
+//             const userAnswer = userAnswers.find(answer => answer.id == question.id);
+//             if (userAnswer && parseInt(userAnswer.correctOption) === question.correctOption) {
+//                 totalScore += question.points;
+//             }
 //         });
+
+//         // Save the result to the database
+//         await QuizResult.create({
+//             testID,
+//             Customer_id: customerID,
+//             score: totalScore
+//         });
+
+//         // Respond with JSON data
+//         res.json({ totalScore, totalPoints });
 //     } catch (error) {
-//         console.error('Error fetching tests:', error);
+//         console.error('Error processing quiz submission:', error);
 //         res.status(500).send('Internal Server Error');
 //     }
 // });
