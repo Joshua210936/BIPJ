@@ -1,93 +1,129 @@
 <body>
     <div class="containerQuiz">
         <h1>Tests Overview</h1>
-        <table class="test-table">
-            <thead>
-                <tr>
-                    <th>Test Name</th>
-                    <th>Module Number</th>
-                    <th>Number of Questions</th>
-                    <th>Total Points</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each tests}}
-                    <tr class="test-item">
-                        <td>{{this.testName}}</td>
-                        <td>{{this.module}}</td>
-                        <td>{{this.numberOfQuestions}}</td>
-                        <td>{{this.totalPoints}}</td>
-                        <td>
-                            <button onclick="takeQuiz('{{this.testID}}')" class="btn-take-quiz">Take Quiz</button>
-                        </td>
+        {{#if isMember}}
+            <table class="test-table">
+                <thead>
+                    <tr>
+                        <th>Test Name</th>
+                        <th>Module Number</th>
+                        <th>Number of Questions</th>
+                        <th>Total Points</th>
+                        <th>Actions</th>
                     </tr>
-                {{/each}}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {{#each tests}}
+                        <tr class="test-item">
+                            <td>{{this.testName}}</td>
+                            <td>{{this.module}}</td>
+                            <td>{{this.numberOfQuestions}}</td>
+                            <td>{{this.totalPoints}}</td>
+                            <td>
+                                <button onclick="takeQuiz('{{this.testID}}')" class="btn-take-quiz">Take Quiz</button>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            <!-- Modal HTML -->
+            <div class="modal fade" id="membershipModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Membership Required</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            You need to be a member to access this feature. Please subscribe to access this feature.
+                        </div>
+                        <div class="modal-footer">
+                            <a href="/subscription" class="btn" style="background-color:rgb(247, 171, 31)">Subscribe Now</a>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/if}}
     </div>
+
+    <!-- Bootstrap and other scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show the modal if the user is not a member
+            const isMember = {{isMember}};
+            if (!isMember) {
+                $('#membershipModal').modal('show');
+            }
+        });
+
+        function takeQuiz(testID) {
+            window.location.href = `/userQuiz/${testID}`;
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .containerQuiz {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .test-table th, .test-table td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        .test-table th {
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .test-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-take-quiz {
+            padding: 0.5em 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-take-quiz:hover {
+            background-color: #45a049;
+        }
+    </style>
 </body>
-
-<script>
-    function takeQuiz(testID) {
-        window.location.href = `/userQuiz/${testID}`;
-    }
-</script>
-
-<style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #f4f4f9;
-        margin: 0;
-        padding: 0;
-    }
-
-    .containerQuiz {
-        max-width: 1000px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-    }
-
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-
-    .test-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    .test-table th, .test-table td {
-        border: 1px solid #ddd;
-        padding: 12px 15px;
-        text-align: center;
-    }
-
-    .test-table th {
-        background-color: #f4f4f9;
-        color: #333;
-    }
-
-    .test-table tr:hover {
-        background-color: #f1f1f1;
-    }
-
-    .btn-take-quiz {
-        padding: 0.5em 1em;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        background-color: #4CAF50;
-        color: white;
-    }
-
-    .btn-take-quiz:hover {
-        background-color: #45a049;
-    }
-</style>
