@@ -1,9 +1,11 @@
+/* Existing CSS */
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
 }
+
 .container {
     background-color: #fff;
     padding: 50px;
@@ -13,22 +15,30 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
 }
+
 h1 {
     text-align: center;
-    font-size: 24px;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 1px;
     margin-bottom: 20px;
+    color: #333;
 }
+
 .intro-text {
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: 300;
+    color: #555;
     margin-bottom: 30px;
-    color: #777;
 }
+
 .goal-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
+
 .goal-slider {
     display: flex;
     overflow-x: hidden; 
@@ -36,6 +46,7 @@ h1 {
     width: 100%;  
     position: relative;
 }
+
 .goal-item {
     flex: 0 0 100%;  
     background-color: #f9f9f9;
@@ -45,31 +56,61 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
 }
+
 .goal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
+
 .goal-header h2 {
-    font-size: 20px;
+    font-size: 22px;
+    font-weight: 500;
     margin: 0;
+    color: #444;
 }
-.goal-header button {
-    background-color: #ffcc00;
+
+.goal-header button,
+.complete-btn {
+    background-color: #ffaa00;
     border: none;
-    padding: 5px 10px;
-    font-size: 14px;
+    padding: 8px 15px;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
     border-radius: 5px;
-    color: #000;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
+.goal-header button:hover,
+.complete-btn:hover {
+    background-color: #cc8800;
+    transform: scale(1.05);
+}
+
+.goal-header button:focus,
+.complete-btn:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
 .goal-details {
     margin-bottom: 20px;
 }
+
 .goal-details p {
-    margin: 5px 0;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #666;
 }
+
+.status-completed {
+    color: #28a745;
+    font-weight: 600;
+}
+
 .arrow-button {
     background-color: #ffcc00;
     border: none;
@@ -79,6 +120,7 @@ h1 {
     border-radius: 5px;
     color: #000;
 }
+
 .popup, .popup-edit {
     display: none;
     position: fixed;
@@ -95,16 +137,19 @@ h1 {
     width: 400px;
     overflow-y: auto;
 }
+
 .popup-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
+
 .popup-header h2 {
     font-size: 20px;
     margin: 0;
 }
+
 .popup-header button {
     background-color: #ffcc00;
     border: none;
@@ -114,6 +159,7 @@ h1 {
     border-radius: 5px;
     color: #000;
 }
+
 .overlay {
     position: fixed;
     top: 0;
@@ -126,13 +172,16 @@ h1 {
     backdrop-filter: blur(2px);
     transition: all 0.3s ease-in-out;
 }
+
 .form-group {
     margin-bottom: 15px;
 }
+
 .form-group label {
     display: block;
     margin-bottom: 5px;
 }
+
 .form-group input, .form-group select {
     width: 100%;
     padding: 8px;
@@ -140,6 +189,7 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
 .btn-primary {
     background-color: #ffcc00;
     color: #fff;
@@ -190,3 +240,8 @@ h1 {
     outline: none;
 }
 
+.no-goals-message {
+    font-size: 18px;
+    color: #999;
+    text-align: center;
+}
