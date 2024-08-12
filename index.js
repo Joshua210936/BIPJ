@@ -158,9 +158,6 @@ app.use(async (req, res, next) => {
     } else if (req.session.adminID) {
         res.locals.userType = 'admin';
     }
-    console.log('Middleware - Is member:', res.locals.isMember); // Check value
-    console.log('User type:', res.locals.userType);
-    console.log('Is member:', res.locals.isMember);
     next();
 });
 
