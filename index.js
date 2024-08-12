@@ -597,7 +597,7 @@ app.post('/goalsPage', async function (req, res) {
             throw new Error('Savings record not found');
         }
 
-        const Saving_amount = savingsRecord.Saving_amount;
+        const totalAmount = savingsRecord.Saving_amount;
 
         // Calculate the sum of Amount_saved in saving_entries for the given saving_id
         const entries = await SavingsEntry.findAll({
@@ -610,15 +610,26 @@ app.post('/goalsPage', async function (req, res) {
         });
 
         // Calculate Amount_left including the new entry
-        const Amount_left = Saving_amount - (sumAmountSaved + parseInt(saving_amount));
+        const amountLeft = totalAmount - (sumAmountSaved + parseFloat(saving_amount));
 
         // Create new entry in saving_entries
         await SavingsEntry.create({
             Saving_id: saving_id,
             Entry_date: saving_date,
             Amount_saved: saving_amount,
-            Amount_left: Amount_left
+            Amount_left: amountLeft
         });
+
+        // Check if the goal should be marked as completed
+        const isCompleted = amountLeft <= 0;
+
+        // Only update the goal if it's not already completed
+        if (isCompleted && !savingsRecord.isCompleted) {
+            await Saving.update(
+                { isCompleted: true },
+                { where: { Saving_id: saving_id } }
+            );
+        }
 
         res.redirect('/goalsPage');
     } catch (err) {
@@ -626,6 +637,9 @@ app.post('/goalsPage', async function (req, res) {
         res.status(400).send({ message: 'Error adding saving entry', error: err });
     }
 });
+
+
+
 
 
 
@@ -709,16 +723,21 @@ app.post('/completeGoal', async function (req, res) {
     const { saving_id } = req.body;
 
     try {
+        // Mark the goal as completed directly
         await Saving.update(
             { isCompleted: true },
-            { where: { Saving_id: saving_id, Customer_id: customerID } } // Ensure only the customer can complete their own goals
+            { where: { Saving_id: saving_id, Customer_id: customerID } }
         );
+
         res.redirect('/goalsPage');
     } catch (err) {
         console.error('Error marking goal as completed:', err);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+
 
 
 app.get('/contactUs', function (req, res) {
@@ -1412,6 +1431,7 @@ app.get('/userQuiz/:testID', async (req, res) => {
 //     }
 // });
 
+// This Works, So do not Delete yet
 app.post('/userQuiz/:testID', async (req, res) => {
     try {
         const testID = req.params.testID;
@@ -1458,18 +1478,46 @@ app.post('/userQuiz/:testID', async (req, res) => {
     }
 });
 
-// app.get('/userQuizList', async (req, res) => {
+// This is for the Modal one, need to check in the morning
+// app.post('/userQuiz/:testID', async (req, res) => {
 //     try {
-//         // Fetch tests with details
-//         const testsWithDetails = await fetchTestsAndDetails();
+//         const testID = req.params.testID;
+//         const customerID = req.session.customerID;
+//         const userAnswers = req.body.questions;
 
-//         // Render userQuizList template with tests data
-//         res.render('userQuizList2', {
-//             layout: 'main',
-//             tests: testsWithDetails
+//         if (!Array.isArray(userAnswers)) {
+//             console.log('User Answers is not an array:', userAnswers);
+//             return res.status(400).send('Invalid user answers.');
+//         }
+
+//         let totalScore = 0;
+//         const questions = await Question.findAll({ where: { testID } });
+
+//         if (!Array.isArray(questions)) {
+//             console.log('Questions is not an array:', questions);
+//             return res.status(500).send('Failed to retrieve questions.');
+//         }
+
+//         const totalPoints = questions.reduce((sum, question) => sum + question.points, 0);
+
+//         questions.forEach(question => {
+//             const userAnswer = userAnswers.find(answer => answer.id == question.id);
+//             if (userAnswer && parseInt(userAnswer.correctOption) === question.correctOption) {
+//                 totalScore += question.points;
+//             }
 //         });
+
+//         // Save the result to the database
+//         await QuizResult.create({
+//             testID,
+//             Customer_id: customerID,
+//             score: totalScore
+//         });
+
+//         // Respond with JSON data
+//         res.json({ totalScore, totalPoints });
 //     } catch (error) {
-//         console.error('Error fetching tests:', error);
+//         console.error('Error processing quiz submission:', error);
 //         res.status(500).send('Internal Server Error');
 //     }
 // });
