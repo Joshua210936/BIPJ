@@ -137,6 +137,34 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+app.use(async (req, res, next) => {
+    res.locals.userType = null;
+    res.locals.isMember = false;  // Default value for membership status
+
+    if (req.session.customerID) {
+        res.locals.userType = 'customer';
+
+        // Fetch user membership status
+        try {
+            const customer = await Customer.findByPk(req.session.customerID);
+            if (customer && customer.membershiptype === 'Member') {
+                res.locals.isMember = true;
+            }
+        } catch (err) {
+            console.error('Error fetching customer membership status:', err);
+        }
+    } else if (req.session.agentID) {
+        res.locals.userType = 'agent';
+    } else if (req.session.adminID) {
+        res.locals.userType = 'admin';
+    }
+    console.log('Middleware - Is member:', res.locals.isMember); // Check value
+    console.log('User type:', res.locals.userType);
+    console.log('Is member:', res.locals.isMember);
+    next();
+});
+
+
 //guest
 app.get('/', function (req, res) { //home page
     res.render('home', { layout: 'main' })
@@ -832,7 +860,9 @@ app.get('/subscription', async (req, res) => {
 
 app.post('/subscriptions/select/:plan_ID', async (req, res) => {
     const planID = req.params.plan_ID;
-
+    if (!req.session.customerID) {
+        return res.redirect(`/login?redirectTo=${encodeURIComponent(req.originalUrl)}`);
+    }
     try {
         const plan = await SubscriptionPlans.findOne({
             where: {
@@ -876,12 +906,21 @@ app.get('/payment/success', async (req, res) => {
     const planID = req.query.plan_ID;
     const orderID = req.query.token;
 
+    if (!req.session.customerID) {
+        return res.redirect(`/login?redirectTo=${encodeURIComponent(req.originalUrl)}`);
+    }
+
     let request = new paypal.orders.OrdersCaptureRequest(orderID);
     request.requestBody({});
 
     try {
         const capture = await client.execute(request);
         console.log('Capture result:', capture.result);
+        const customerID = req.session.customerID;
+        await Customer.update(
+            { membershiptype: 'Member' }, // Update membership status to 'Member'
+            { where: { Customer_id: customerID } }
+        );
         res.render('payment-success', { planID });
     } catch (err) {
         console.error('Error capturing PayPal payment:', err);
@@ -1009,9 +1048,11 @@ app.post('/addSubscription', async (req, res) => {
     try {
         const { plan_name, description, price, duration, duration_unit } = req.body;
 
+        const parsedDescription = [description];
+
         const newPlan = await SubscriptionPlans.create({
             plan_name,
-            description,
+            description:parsedDescription,
             price,
             duration,
             duration_unit,
@@ -1438,12 +1479,26 @@ app.post('/userQuiz/:testID', async (req, res) => {
 
 app.get('/userQuizList', async (req, res) => {
     try {
-        const customerID = req.session.customerID; // Assuming customerID is stored in session
-        
-        // Fetch tests with details
-        const tests = await fetchTestsAndDetails();
+        const customerID = req.session.customerID;
 
-        // Fetch number of attempts and highest score for each test
+        if (!customerID) {
+            // Redirect to login if not logged in
+            return res.redirect(`/login?redirectTo=${encodeURIComponent(req.originalUrl)}`);
+        }
+
+        // Fetch user membership status
+        const customer = await Customer.findByPk(customerID);
+
+        if (!customer || customer.membershiptype !== 'Member') {
+            // Pass isMember as false to the view
+            return res.render('userQuizList', {
+                layout: 'main',
+                isMember: false
+            });
+        }
+
+        // Fetch tests if the user is a member
+        const tests = await fetchTestsAndDetails();
         const testsWithAttemptsAndScores = await Promise.all(tests.map(async test => {
             const attempts = await QuizResult.countAttempts(customerID, test.testID);
             const highestScore = await QuizResult.highestScore(customerID, test.testID);
@@ -1455,16 +1510,21 @@ app.get('/userQuizList', async (req, res) => {
             };
         }));
 
-        // Render userQuizList template with tests data
-        res.render('userQuizList3', {
+        res.render('userQuizList', {
             layout: 'main',
-            tests: testsWithAttemptsAndScores
+            tests: testsWithAttemptsAndScores,
+            isMember: true
         });
     } catch (error) {
         console.error('Error fetching tests:', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+
+
+
 
 // Admin Quiz
 app.get('/adminQuiz', function (req, res) {

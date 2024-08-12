@@ -28,10 +28,10 @@ const Customer = db.define('customer', {
     OTP_Expiration: {
         type: sequelize.DATE
     },
-    // membershiptype: {
-    //     type: sequelize.STRING,
-    //     defaultValue: 'Free'
-    // },
+    membershiptype: {
+        type: sequelize.STRING,
+        defaultValue: 'Free'
+    },
 });
 
 
