@@ -24,11 +24,14 @@
 </head>
     <body>
         <div class="gradient">
+            {{#if userType}}
+            {{> _userNavbar}}
+        {{/if}}
             {{#renderNavbar userType}}
                 {{> (lookup . 'partial') }}
             {{/renderNavbar}}
             <div>
-                {{> _userNavbar}}
+                
                 {{> _msg}}
                 {{> _errors}}
                 {{> _chatbot}}
