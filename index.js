@@ -177,7 +177,7 @@ app.get('/customerHome', function (req, res) {
 
 // Admin Logged In
 app.get('/adminHome', function(req, res){
-    res.render('adminHome', {layout:'adminMain'});
+    res.render('home', {layout:'adminMain'});
 });
 
 // ---------------------- Customer Account Routes --------------------------
@@ -1628,7 +1628,7 @@ app.get('/adminViewQuiz', async (req, res) => {
         const testsWithDetails = await fetchTestsAndDetails();
 
         // Render adminViewQuiz template with tests data
-        res.render('adminViewQuiz', {
+        res.render('adminViewQuiz2', {
             layout: 'adminMain',
             tests: testsWithDetails
         });
