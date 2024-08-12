@@ -23,34 +23,37 @@
             <div class="goal-slider">
                 {{#if savings.length}}
                     {{#each savings}}
-                        <div class="goal-item" data-status="{{#if this.isCompleted}}completed{{else}}ongoing{{/if}}">
-                            <div class="goal-header">
-                                <h2>{{this.Saving_goalName}}</h2>
-                                <div class="goal-actions">
-                                    <button class="goal-action-btn" onclick="showPopup('{{this.Saving_goalName}}', '{{this.Saving_id}}')">Add Savings</button>
-                                    <button class="goal-action-btn" onclick="showEditPopup('{{this.Saving_id}}', '{{this.Saving_goalName}}', '{{this.Saving_amount}}', '{{this.Saving_startDate}}', '{{this.Saving_endDate}}', '{{this.Saving_frequency}}', '{{this.Saving_calculate}}', '{{this.Saving_picture}}')">Edit Goal</button>
-                                    <button class="goal-action-btn" onclick="deleteGoal('{{this.Saving_id}}')">Delete Goal</button>
-                                </div>
-                            </div>
-                            <div class="goal-details">
-                                <img src="images/{{this.Saving_picture}}" alt="{{this.Saving_goalName}}" class="savings-image">
-                                <p>Target Amount: ${{this.Saving_amount}}</p>
-                                <p>{{this.Saving_frequency}} Target: ${{this.Saving_calculate}}</p>
-                                <p>Start Date: {{this.Saving_startDate}}</p>
-                                <p>End Date: {{this.Saving_endDate}}</p>
-                                {{#if this.isCompleted}}
-                                    <p class="status-completed">Status: Completed</p>
-                                {{else}}
-                                    <form action="/completeGoal" method="POST">
-                                        <input type="hidden" name="saving_id" value="{{this.Saving_id}}">
-                                        <button type="submit" class="complete-btn">Mark as Completed</button>
-                                    </form>
-                                {{/if}}
-                            </div>
-                            <div class="goal-graph">
-                                <canvas id="graph-{{this.Saving_id}}"></canvas>
-                            </div>
-                        </div>
+                       <div class="goal-item" data-status="{{#if this.isCompleted}}completed{{else}}ongoing{{/if}}">
+    <div class="goal-header">
+    <h2>{{this.Saving_goalName}}</h2>
+    {{#unless this.isCompleted}}
+    <div class="goal-actions">
+        <button class="goal-action-btn" onclick="showPopup('{{this.Saving_goalName}}', '{{this.Saving_id}}')">Add Savings</button>
+        <button class="goal-action-btn" onclick="showEditPopup('{{this.Saving_id}}', '{{this.Saving_goalName}}', '{{this.Saving_amount}}', '{{this.Saving_startDate}}', '{{this.Saving_endDate}}', '{{this.Saving_frequency}}', '{{this.Saving_calculate}}', '{{this.Saving_picture}}')">Edit Goal</button>
+        <button class="goal-action-btn" onclick="deleteGoal('{{this.Saving_id}}')">Delete Goal</button>
+    </div>
+    {{/unless}}
+</div>
+
+    <div class="goal-details">
+        <img src="images/{{this.Saving_picture}}" alt="{{this.Saving_goalName}}" class="savings-image">
+        <p>Target Amount: ${{this.Saving_amount}}</p>
+        <p>{{this.Saving_frequency}} Target: ${{this.Saving_calculate}}</p>
+        <p>Start Date: {{this.Saving_startDate}}</p>
+        <p>End Date: {{this.Saving_endDate}}</p>
+        {{#if this.isCompleted}}
+            <p class="status-completed">Status: Completed</p>
+        {{else}}
+           <form action="/completeGoal" method="POST">
+    <input type="hidden" name="saving_id" value="{{this.Saving_id}}">
+    <button type="submit" class="complete-btn">Complete Goal</button>
+</form>
+        {{/if}}
+    </div>
+    <div class="goal-graph">
+        <canvas id="graph-{{this.Saving_id}}"></canvas>
+    </div>
+</div>
                     {{/each}}
                 {{else}}
                     <p class="no-goals-message">You currently have no savings goals. Start a new one today!</p>
